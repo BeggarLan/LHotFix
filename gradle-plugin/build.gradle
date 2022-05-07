@@ -1,0 +1,30 @@
+plugins {
+    id 'groovy'
+    id 'maven-publish'
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:transform-api:1.5.0'
+    implementation "com.android.tools.build:gradle:4.1.1"
+    implementation 'org.javassist:javassist:3.20.0-GA'
+    implementation project(path:':hotfix-base')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.beggar.hotfix'
+            artifactId = 'hotfix-plugin'
+            version = '1.0.0'
+
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = "../repo"
+        }
+    }
+}
