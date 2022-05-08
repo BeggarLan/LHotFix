@@ -7,8 +7,9 @@ import com.android.build.api.transform.Transform;
 import com.android.build.api.transform.TransformException;
 import com.android.build.api.transform.TransformInvocation;
 import com.android.build.api.transform.TransformOutputProvider;
-import com.android.build.gradle.internal.pipeline.TransformManager;
-
+import com.android.build.gradle.internal.pipeline.TransformManager
+import com.beggar.hotfix.gradle.plugin.javassist.JavassistUtil
+import javassist.CtClass;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
 
@@ -25,7 +26,7 @@ import javassist.ClassPool;
  * created on: 2022/5/7 17:48
  * description:
  */
-public class HotFixTransform extends Transform {
+class HotFixTransform extends Transform {
     @NonNull
     private Project mProject;
     @NonNull
@@ -36,7 +37,7 @@ public class HotFixTransform extends Transform {
     private List<String> mExceptPackageList = new ArrayList<>();
     private List<String> mExceptMethodList = new ArrayList<>();
 
-    public HotFixTransform(
+    HotFixTransform(
             @NonNull Project project,
             @NonNull List<String> hotfixPackageList,
             @NonNull List<String> hotfixMethodList,
@@ -52,7 +53,7 @@ public class HotFixTransform extends Transform {
 
     // Transform对应的task的名称
     @Override
-    public String getName() {
+    String getName() {
         return "hotfix-plugin";
     }
 
@@ -74,8 +75,7 @@ public class HotFixTransform extends Transform {
      * TESTED_CODE：测试代码
      */
     @Override
-    public Set<QualifiedContent.ScopeType> getScopes() {
-        // PROJECT ｜ SUB_PROJECTS ｜ EXTERNAL_LIBRARIES
+    Set<QualifiedContent.ScopeType> getScopes() {
         return TransformManager.SCOPE_FULL_PROJECT;
     }
 
@@ -87,7 +87,7 @@ public class HotFixTransform extends Transform {
     }
 
     @Override
-    public void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
+    void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         mLogger.quiet("******************************hotfix plugin transform start*************************");
         long startTime = System.currentTimeMillis();
         TransformOutputProvider outputProvider = transformInvocation.getOutputProvider();
@@ -107,9 +107,15 @@ public class HotFixTransform extends Transform {
 
         ClassPool classPool = new ClassPool();
 
+        //project.android.bootClasspath 加入android.jar，不然找不到android相关的所有类
         mProject.android.bootClasspath.each {
             classPool.appendClassPath((String) it.absolutePath)
         }
+
+        // class --> CtClass
+        List<CtClass> ctClasses = JavassistUtil.toCtClasses(transformInvocation.getInputs(), classPool)
+
+        
 
     }
 }

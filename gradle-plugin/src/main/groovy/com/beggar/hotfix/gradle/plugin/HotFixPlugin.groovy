@@ -1,4 +1,4 @@
-package com.beggar.hotfix.gradle.plugin;
+package com.beggar.hotfix.gradle.plugin
 
 import com.android.build.gradle.BaseExtension;
 
