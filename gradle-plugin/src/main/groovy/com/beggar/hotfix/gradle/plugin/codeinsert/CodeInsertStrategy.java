@@ -3,13 +3,17 @@ package com.beggar.hotfix.gradle.plugin.codeinsert;
 import com.android.annotations.NonNull;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javassist.CannotCompileException;
 import javassist.CtClass;
 
 /**
@@ -28,7 +32,10 @@ public abstract class CodeInsertStrategy {
     @NonNull
     protected List<String> mExceptMethodList = new ArrayList<>();
 
-    protected AtomicInteger insertMethodCount = new AtomicInteger(0);
+    protected AtomicInteger mInsertMethodCount = new AtomicInteger(0);
+
+    // 代码插入的方法，key: , value:
+    public Map<String, Integer> mMethodMap = new LinkedHashMap<>();
 
     public CodeInsertStrategy(
             @NonNull List<String> hotfixPackageList,
@@ -47,7 +54,7 @@ public abstract class CodeInsertStrategy {
      * @param ctClasses 所有需要打入apk中的类
      * @param jarFile   所有插桩处理过的class都会被输出到jarFile
      */
-    protected abstract void insertCode(@NonNull List<CtClass> ctClasses, @NonNull File jarFile);
+    public abstract void insertCode(@NonNull List<CtClass> ctClasses, @NonNull File jarFile) throws IOException, CannotCompileException;
 
     /**
      * 该类是否需要插入代码
@@ -70,15 +77,14 @@ public abstract class CodeInsertStrategy {
     }
 
     /**
-     * 打成zip
+     * 将文件打入zip
      *
      * @param classBytes      文件内容
-     * @param zipOutputStream
-     * @param zipName         zip名
+     * @param entryName         zip名
      */
-    protected void zipFile(@NonNull byte[] classBytes, @NonNull ZipOutputStream zipOutputStream, @NonNull String zipName) {
+    protected void zipFile(@NonNull byte[] classBytes, @NonNull ZipOutputStream zipOutputStream, @NonNull String entryName) {
         try {
-            ZipEntry zipEntry = new ZipEntry(zipName);
+            ZipEntry zipEntry = new ZipEntry(entryName);
             zipOutputStream.putNextEntry(zipEntry);
             zipOutputStream.write(classBytes, 0, classBytes.length);
             zipOutputStream.closeEntry();

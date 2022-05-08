@@ -8,7 +8,11 @@ import com.android.build.api.transform.TransformException;
 import com.android.build.api.transform.TransformInvocation;
 import com.android.build.api.transform.TransformOutputProvider;
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.beggar.hotfix.base.Constants
+import com.beggar.hotfix.gradle.plugin.codeinsert.CodeInsertStrategy
+import com.beggar.hotfix.gradle.plugin.codeinsert.JavassistCodeInsertImpl
 import com.beggar.hotfix.gradle.plugin.javassist.JavassistUtil
+import com.google.common.util.concurrent.AtomicDouble
 import javassist.CtClass;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
@@ -19,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javassist.ClassPool;
+import javassist.ClassPool
+
+import java.util.zip.GZIPOutputStream;
 
 /**
  * author: BeggarLan
@@ -88,14 +94,14 @@ class HotFixTransform extends Transform {
 
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
-        mLogger.quiet("******************************hotfix plugin transform start*************************");
-        long startTime = System.currentTimeMillis();
+        mLogger.quiet("******************************hotfix plugin transform start.*************************");
+        long startTimeMs = System.currentTimeMillis();
         TransformOutputProvider outputProvider = transformInvocation.getOutputProvider();
         // 非增量编译的情况下，删除之前生成的文件
         if (!transformInvocation.isIncremental()) {
             outputProvider.deleteAll();
         }
-        // 数出文件
+        // 输出文件
         File jarFile = outputProvider.getContentLocation("main", getOutputTypes(), getScopes(), Format.JAR);
         // TODO: 2022/5/7  getParentFile没懂
 //        if(!jarFile.getParentFile().exists()){
@@ -115,7 +121,46 @@ class HotFixTransform extends Transform {
         // class --> CtClass
         List<CtClass> ctClasses = JavassistUtil.toCtClasses(transformInvocation.getInputs(), classPool)
 
-        
+        // 代码插入
+        // todo 最好用asm，快
+        CodeInsertStrategy codeInsertStrategy = new JavassistCodeInsertImpl(
+                mHotfixPackageList, mHotfixMethodList, mExceptPackageList, mExceptMethodList);
+        codeInsertStrategy.insertCode(ctClasses, jarFile);
+        writeMethodMapToFile(codeInsertStrategy.mMethodMap, Constants.METHOD_MAP_OUT_PATH);
 
+        // 打印
+        mLogger.quiet("********** hitFix code insert method list start. *****************")
+        for (String method : codeInsertStrategy.mMethodMap.keySet()) {
+            int id = codeInsertStrategy.mMethodMap.get(method);
+            System.out.println("key is   " + method + "  value is    " + id)
+        }
+        mLogger.quiet("********** hitFix code insert method list end. *****************")
+
+        long costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
+        mLogger.quiet("hitFix plugin transform time cost " + costTimeSec + "s")
+
+        mLogger.quiet("******************************hotfix plugin transform end*************************");
     }
+
+    // 改造过的方法名写入文件p
+    private void writeMethodMapToFile(@NonNull Map<String, Integer> methodMap, @NonNull String path) {
+        File file = new File(project.buildDir.path + path)
+
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream()
+        ObjectOutputStream objectOut = new ObjectOutputStream(byteOut)
+        objectOut.write(methodMap)
+
+        FileOutputStream fileOut = new FileOutputStream(file)
+        //gzip压缩
+        GZIPOutputStream gzip = new GZIPOutputStream(fileOut)
+        gzip.write(byteOut.toByteArray())
+        objOut.close()
+
+        gzip.flush()
+        gzip.close()
+
+        fileOut.flush()
+        fileOut.close()
+    }
+
 }

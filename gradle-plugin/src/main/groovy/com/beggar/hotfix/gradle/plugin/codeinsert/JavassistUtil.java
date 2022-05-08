@@ -1,4 +1,4 @@
-package com.beggar.hotfix.gradle.plugin.codeinsert.javassist;
+package com.beggar.hotfix.gradle.plugin.codeinsert;
 
 import com.android.SdkConstants;
 import com.android.annotations.NonNull;
