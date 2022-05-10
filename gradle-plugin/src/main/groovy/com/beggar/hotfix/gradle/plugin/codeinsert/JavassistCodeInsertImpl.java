@@ -15,6 +15,7 @@ import javassist.ClassPool;
 import javassist.CtBehavior;
 import javassist.CtClass;
 import javassist.CtField;
+import javassist.CtMethod;
 import javassist.bytecode.AccessFlag;
 
 /**
@@ -64,9 +65,29 @@ public class JavassistCodeInsertImpl extends CodeInsertStrategy {
             ctField.setModifiers(AccessFlag.PUBLIC | AccessFlag.STATIC);
             ctClass.addField(ctField);
           }
-
+          // 不满足修复条件
           if (!isQualifiedMethod(ctBehavior)) {
             continue;
+          }
+
+          // longName : such as javassist.CtBehavior.stBody(String).
+          mMethodMap.put(ctBehavior.getLongName(), mInsertMethodCount.incrementAndGet());
+
+          // Returns true if this is not a constructor or a class initializer (static initializer)
+          if (ctBehavior.getMethodInfo().isMethod()) {
+            try {
+              CtMethod ctMethod = (CtMethod) ctBehavior;
+              boolean isStatic = (AccessFlag.STATIC & ctMethod.getModifiers()) != 0;
+              CtClass returnType = ctMethod.getReturnType();
+              String returnTypeString = returnType.getName();
+
+              // 代码插入
+
+            }catch (Throwable e) {
+              e.printStackTrace();
+            }
+
+
           }
 
         }
