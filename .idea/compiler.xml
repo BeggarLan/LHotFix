@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="1.8">
       <module name="LHotFix.app" target="11" />
       <module name="LHotFix.gradle-plugin" target="11" />
+      <module name="LHotFix.patch" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

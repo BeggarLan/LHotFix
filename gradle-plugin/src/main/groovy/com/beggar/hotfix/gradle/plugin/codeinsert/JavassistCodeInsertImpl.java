@@ -16,6 +16,7 @@ import javassist.CtBehavior;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMethod;
+import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
 
 /**
@@ -82,8 +83,27 @@ public class JavassistCodeInsertImpl extends CodeInsertStrategy {
               String returnTypeString = returnType.getName();
 
               // 代码插入
-
-            }catch (Throwable e) {
+              StringBuilder body = new StringBuilder("Object argThis = null;");
+              if (!isStatic) {
+                body.append("argThis = $0;");
+              }
+              String parameterClassTypesBody = getParameterClassTypesBody(ctMethod);
+              // body += "   if (com.beggar.hotfix.patch.PatchProxy.isSupport(\$args, argThis,
+              // ${Constants.INSERT_FIELD_NAME}, $isStatic, " + methodMap.get(ctBehavior
+              // .longName) + ",${parametersClassType},${returnTypeString}.class)) {"
+              body.append("   if (com.beggar.hotfix.patch.PatchProxy.isSupport($args, argThis, " +
+                  Constants.HOTFIX_INSERT_FIELD_NAME + ", " + isStatic +
+                  ", " + mMethodMap.get(ctBehavior.getLongName()) + "," + parameterClassTypesBody +
+                  "," + returnTypeString + ".class)) {");
+              body.append(getReturnStatement(
+                  returnTypeString,
+                  isStatic,
+                  mMethodMap.get(ctBehavior.getLongName()),
+                  parameterClassTypesBody,
+                  returnTypeString + ".class"));
+              body.append("  }");
+              ctBehavior.insertBefore(body.toString());
+            } catch (Throwable e) {
               e.printStackTrace();
             }
 
@@ -96,6 +116,46 @@ public class JavassistCodeInsertImpl extends CodeInsertStrategy {
       zipFile(ctClass.toBytecode(), zipOutputStream,
           ctClass.getName().replaceAll("\\.", "/") + ".class");
     }
+  }
+
+  /**
+   * 返回的code
+   * @param type
+   * @param isStatic
+   * @param methodNumber
+   * @param parameterClassTypesBody
+   * @param returnTypeString
+   * @return
+   */
+  private String getReturnStatement(
+      String type,
+      boolean isStatic,
+      Integer methodNumber,
+      String parameterClassTypesBody,
+      String returnTypeString) {
+    return "";
+  }
+
+  /**
+   * 获得方法的参数类型列表
+   *
+   * @return String： new Class[] {com.xx.xx.xx.class, com.xx.xx.xx.class}
+   */
+  private String getParameterClassTypesBody(@NonNull CtMethod ctMethod) throws NotFoundException {
+    if (ctMethod.getParameterTypes().length == 0) {
+      return "null";
+    }
+    StringBuilder parameterTypes = new StringBuilder();
+    parameterTypes.append("new Class[] {");
+    for (CtClass parameterClass : ctMethod.getParameterTypes()) {
+      parameterTypes.append(parameterClass.getName()).append(".class, ");
+    }
+
+    if (',' == parameterTypes.charAt(parameterTypes.length() - 1)) {
+      parameterTypes.deleteCharAt(parameterTypes.length() - 1);
+    }
+    parameterTypes.append("}");
+    return parameterTypes.toString();
   }
 
   /**

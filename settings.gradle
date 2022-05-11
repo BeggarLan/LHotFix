@@ -20,3 +20,4 @@ rootProject.name = "LHotFix"
 include ':app'
 include ':hotfix-base'
 include ':gradle-plugin'
+include ':patch'
