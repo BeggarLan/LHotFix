@@ -34,10 +34,9 @@ class HotFixPlugin implements Plugin<Project> {
             mXmlResult = new XmlSlurper().parse(new File(mProject.getProjectDir() + File.separator + Constants.ROBUST_XML))
             initConfig()
             // 注册transform
-            BaseExtension extension = project.getExtensions().findByType(BaseExtension.class)
-            extension.registerTransform(new HotFixTransform(project))
-
-//            project.afterEvaluate(new )
+            project.android.registerTransform(new HotFixTransform(project))
+            //
+            project.afterEvaluate(new HotfixApkHashAction())
         } catch (Throwable e) {
             mLogger.error("parse " + Constants.ROBUST_XM + " error");
         }

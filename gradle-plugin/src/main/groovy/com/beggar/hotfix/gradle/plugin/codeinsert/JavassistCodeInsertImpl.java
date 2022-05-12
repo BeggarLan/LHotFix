@@ -88,9 +88,6 @@ public class JavassistCodeInsertImpl extends CodeInsertStrategy {
                 body.append("argThis = $0;");
               }
               String parameterClassTypesBody = getParameterClassTypesBody(ctMethod);
-              // body += "   if (com.beggar.hotfix.patch.PatchProxy.isSupport(\$args, argThis,
-              // ${Constants.INSERT_FIELD_NAME}, $isStatic, " + methodMap.get(ctBehavior
-              // .longName) + ",${parametersClassType},${returnTypeString}.class)) {"
               body.append("   if (com.beggar.hotfix.patch.PatchProxy.isSupport($args, argThis, " +
                   Constants.HOTFIX_INSERT_FIELD_NAME + ", " + isStatic +
                   ", " + mMethodMap.get(ctBehavior.getLongName()) + "," + parameterClassTypesBody +
@@ -106,26 +103,24 @@ public class JavassistCodeInsertImpl extends CodeInsertStrategy {
             } catch (Throwable e) {
               e.printStackTrace();
             }
-
-
           }
-
         }
       }
       // 把class文件打入zip
       zipFile(ctClass.toBytecode(), zipOutputStream,
           ctClass.getName().replaceAll("\\.", "/") + ".class");
     }
+    zipOutputStream.close();
   }
 
   /**
-   * 返回的code
-   * @param type
-   * @param isStatic
+   * 返回return语句
+   *
+   * @param type                    函数返回类型
+   * @param isStatic                是否是静态方法
    * @param methodNumber
-   * @param parameterClassTypesBody
-   * @param returnTypeString
-   * @return
+   * @param parameterClassTypesBody 函数的参数类型
+   * @param returnTypeString        返回类型(.class)
    */
   private String getReturnStatement(
       String type,
@@ -133,7 +128,56 @@ public class JavassistCodeInsertImpl extends CodeInsertStrategy {
       Integer methodNumber,
       String parameterClassTypesBody,
       String returnTypeString) {
-    return "";
+    switch (type) {
+      case Constants.VOID:
+       return "    com.beggar.hotfix.patch.PatchProxy.accessDispatchVoid( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + ", " + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + ");";
+      case Constants.LANG_VOID:
+        return "    com.beggar.hotfix.patch.PatchProxy.accessDispatchVoid( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + ", " + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + ");   return null;";
+
+
+      case Constants.BOOLEAN:
+        return "   return (("+Constants.BOOLEAN+")com.beggar.hotfix.patch.PatchProxy.accessDispatch($args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+      case Constants.LANG_BOOLEAN:
+        return "   return ((java.lang.Boolean)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+
+      case Constants.INT:
+        return "   return (("+Constants.INT+")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + ")).intValue();";
+      case Constants.LANG_INT:
+        return "   return ((java.lang.Integer)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + ")); ";
+
+      case Constants.LONG:
+        return "   return (("+Constants.LONG+")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+      case Constants.LANG_LONG:
+        return "   return ((java.lang.Long)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+
+      case Constants.DOUBLE:
+        return "   return (("+Constants.DOUBLE+")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+      case Constants.LANG_DOUBLE:
+        return "   return ((java.lang.Double)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+
+      case Constants.FLOAT:
+        return "   return (("+Constants.FLOAT+")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+      case Constants.LANG_FLOAT:
+        return "   return ((java.lang.Float)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+
+      case Constants.SHORT:
+        return "   return (("+Constants.SHORT+")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+      case Constants.LANG_SHORT:
+        return "   return ((java.lang.Short)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+
+      case Constants.BYTE:
+        return "   return (("+Constants.BYTE+")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+      case Constants.LANG_BYTE:
+        return "   return ((java.lang.Byte)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+        
+        case Constants.CHAR:
+        return "   return (("+Constants.CHAR+")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + ");";
+      case Constants.LANG_CHARACTER:
+        return "   return ((java.lang.Character)com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + "));";
+
+        default:
+        return "   return (" + type + ")com.beggar.hotfix.patch.PatchProxy.accessDispatch( $args, argThis, "+Constants.HOTFIX_INSERT_FIELD_NAME+", " + isStatic + "," + methodNumber + "," + parameterClassTypesBody + "," + returnTypeString + ");";
+    }
   }
 
   /**
@@ -196,11 +240,11 @@ public class JavassistCodeInsertImpl extends CodeInsertStrategy {
       }
     }
 
-    for (String name : mHotfixMethodList) {
-      if (ctBehavior.getName().matches(name)) {
-        return true;
-      }
-    }
+//    for (String name : mHotfixMethodList) {
+//      if (ctBehavior.getName().matches(name)) {
+//        return true;
+//      }
+//    }
     return true;
   }
 
