@@ -1,10 +1,13 @@
-package com.beggar.lhotfix;
+package com.beggar.lhotfix.demo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.beggar.lhotfix.R;
+
+public class
+MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
