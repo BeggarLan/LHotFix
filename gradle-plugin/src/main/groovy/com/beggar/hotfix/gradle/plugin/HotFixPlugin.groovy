@@ -44,10 +44,10 @@ class HotFixPlugin implements Plugin<Project> {
 
     // 拿到需要插桩的类、方法
     private void initConfig() {
-        for (name in mXmlResult.packname.name) {
+        for (name in mXmlResult.hotfixPackage.name) {
             mHotfixPackageList.add(name.text())
         }
-        for (name in mXmlResult.exceptPackname.name) {
+        for (name in mXmlResult.exceptPackage.name) {
             mExceptPackageList.add(name.text())
         }
         for (name in mXmlResult.hotfixMethod.name) {
