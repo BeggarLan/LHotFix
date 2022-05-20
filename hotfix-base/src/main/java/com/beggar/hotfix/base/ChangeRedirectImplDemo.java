@@ -1,6 +1,5 @@
 package com.beggar.hotfix.base;
 
-import androidx.annotation.NonNull;
 
 /**
  * author: BeggarLan
@@ -9,12 +8,12 @@ import androidx.annotation.NonNull;
  */
 public class ChangeRedirectImplDemo implements ChangeRedirect{
     @Override
-    public boolean isSupport(@NonNull String methodName, Object[] params) {
+    public boolean isSupport(String methodName, Object[] params) {
         return true;
     }
 
     @Override
-    public Object patch(@NonNull String methodName, Object[] params) {
+    public Object patch(String methodName, Object[] params) {
         return null;
     }
 }
