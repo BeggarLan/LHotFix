@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.5",
-      "buildId": "pc67tgrlnrd7hokcqoabotahzm"
+      "buildId": "d2axpdzqnbbdrjezgpkawwsgum"
     }
   },
   "variants": [
@@ -68,10 +68,10 @@
           }
         },
         {
-          "group": "LHotFix",
+          "group": "com.beggar.hotfix",
           "module": "hotfix-base",
           "version": {
-            "requires": "unspecified"
+            "requires": "1.0.0"
           }
         }
       ],

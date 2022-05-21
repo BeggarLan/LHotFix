@@ -1,4 +1,23 @@
+apply plugin: 'maven'
 apply plugin: 'maven-publish'
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            snapshotRepository(url: 'http://nexus.corp.kuaishou.com:88/nexus/content/repositories/snapshots/') {
+//                authentication(userName: 'maven_user', password: 'woShiMiMamuserwoiesldf')
+//            }
+//            repository(url: 'http://nexus.corp.kuaishou.com:88/nexus/content/repositories/releases/') {
+//                authentication(userName: 'maven_user', password: 'woShiMiMamuserwoiesldf')
+//            }
+            pom.project {
+                groupId = "com.beggar.hotfix.${project.getName()}"
+                artifactId "${project.getName()}"
+            }
+        }
+    }
+}
 
 afterEvaluate {
     publishing {
@@ -6,7 +25,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 // aar还是jar
                 def isAARPackaging = "aar" == "${project.ext.packaging}"
-                if(isAARPackaging) {
+                if (isAARPackaging) {
                     // aar
 
 

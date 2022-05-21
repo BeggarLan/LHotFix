@@ -11,4 +11,12 @@ dependencies {
 
 }
 
+ext {
+    mvngroupId = "com.beggar.hotfix"
+    mvnartifactId = "${project.getName()}"
+    mvnversion = "1.0.0"
+
+    packaging = 'jar'
+}
+
 apply from: rootProject.file('gradle/maven-publish.gradle')
