@@ -1,21 +1,22 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-        // 本地的插件
-        maven { url('./repo') }
-    }
-}
-
-dependencyResolutionManagement {
-    // todo
-//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+// gralde7搞晕了。还是用6.5吧。。。。。
+//pluginManagement {
+//    repositories {
+//        gradlePluginPortal()
+//        google()
+//        mavenCentral()
+//        // 本地的插件
+//        maven { url('./repo') }
+//    }
+//}
+//
+//dependencyResolutionManagement {
+//    // todo
+////    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//}
 rootProject.name = "LHotFix"
 include ':app'
 include ':hotfix-base'

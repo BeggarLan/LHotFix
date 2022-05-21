@@ -11,17 +11,10 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import com.beggar.hotfix.base.Constants
 import com.beggar.hotfix.gradle.plugin.codeinsert.CodeInsertStrategy
 import com.beggar.hotfix.gradle.plugin.codeinsert.JavassistCodeInsertImpl
-import com.beggar.hotfix.gradle.plugin.javassist.JavassistUtil
-import com.google.common.util.concurrent.AtomicDouble
 import javassist.CtClass;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import javassist.ClassPool
 

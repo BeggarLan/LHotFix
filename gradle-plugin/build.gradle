@@ -12,19 +12,11 @@ dependencies {
     implementation project(path:':hotfix-base')
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.beggar.hotfix'
-            artifactId = 'hotfix-plugin'
-            version = '1.0.0'
+ext.mvngroupId = "com.beggar.hotfix"
+ext.mvnartifactId = "${project.getName()}"
+ext.mvnversion = "1.0.0"
 
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url = "../repo"
-        }
-    }
-}
+ext.packaging = 'jar'
+
+apply from: rootProject.file('gradle/maven-publish.gradle')
+

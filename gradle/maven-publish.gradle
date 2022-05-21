@@ -1,0 +1,43 @@
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                // aar还是jar
+                def isAARPackaging = "aar" == "${project.ext.packaging}"
+                if(isAARPackaging) {
+                    // aar
+
+
+                } else {
+                    // jar
+                    from components.java
+
+                    task javaJavadocsJar(type: Jar) {
+                        javadoc.options.encoding = "UTF-8"
+                        from javadoc
+                        classifier = 'javadoc'
+                    }
+
+                    task javaSourcesJar(type: Jar) {
+                        from sourceSets.main.allJava
+                        classifier = 'sources'
+                    }
+
+                    artifact javaSourcesJar
+                    artifact javaJavadocsJar
+                }
+
+                groupId = "${project.ext.mvngroupId}"
+                artifactId = "${project.ext.mvnartifactId}"
+                version = "${project.ext.mvnversion}"
+            }
+        }
+        repositories {
+            maven {
+                url = "../myrepo"
+            }
+        }
+    }
+}
