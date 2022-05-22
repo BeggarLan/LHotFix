@@ -27,7 +27,31 @@ afterEvaluate {
                 def isAARPackaging = "aar" == "${project.ext.packaging}"
                 if (isAARPackaging) {
                     // aar
+                    task androidJavadocs(type: Javadoc) {
+                        source = android.sourceSets.main.java.srcDirs
+                        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+                        android.libraryVariants.all { variant ->
+                            if (variant.name == 'release') {
+                                owner.classpath += variant.javaCompile.classpath
+                            }
+                        }
+                        failOnError false
+                        exclude '**/R.html', '**/R.*.html', '**/index.html'
+                    }
 
+                    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+                        classifier = 'javadoc'
+                        from androidJavadocs.destinationDir
+                    }
+
+                    task androidSourcesJar(type: Jar) {
+                        classifier = 'sources'
+                        from android.sourceSets.main.java.srcDirs
+                    }
+
+                    artifact bundleReleaseAar
+                    artifact androidSourcesJar
+                    artifact androidJavadocsJar
 
                 } else {
                     // jar
@@ -46,6 +70,55 @@ afterEvaluate {
 
                     artifact javaSourcesJar
                     artifact javaJavadocsJar
+                }
+
+                // 打入插件包的依赖
+                if (isAARPackaging) {
+                    pom.withXml {
+                        final DependenciesNode = asNode().appendNode('dependencies')
+                        // 定义添加依赖的函数
+                        ext.addDependency = { Dependency dep, String scope ->
+                            if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified") {
+                                return // ignore invalid dependencies
+                            }
+                            final dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('artifactId', dep.name)
+                            dependencyNode.appendNode('version', dep.version)
+                            dependencyNode.appendNode('scope', scope)
+
+                            // 非传递性依赖
+                            if (!dep.transitive) {
+                                // If this dependency is transitive, we should force exclude all its dependencies them from the POM
+                                final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                                exclusionNode.appendNode('groupId', '*')
+                                exclusionNode.appendNode('artifactId', '*')
+                            } else if (!dep.properties.excludeRules.empty) {
+                                // Otherwise add specified exclude rules
+                                final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                                dep.properties.excludeRules.each { ExcludeRule rule ->
+                                    exclusionNode.appendNode('groupId', rule.group ?: '*')
+                                    exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                                }
+                            }
+                        }
+
+                        // 处理compile、api、implementation
+                        configurations.compile.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                        configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                        configurations.implementation.getAllDependencies().each { dep ->
+                            Boolean dup = false
+                            // api中已经依赖过了就不需要在添加了
+                            configurations.api.getAllDependencies().each { apiDep ->
+                                if (apiDep.contentEquals(dep)) {
+                                    dup = true
+                                }
+                            }
+                            if (!dup) {
+                                addDependency(dep, "runtime")
+                            }
+                        }
+                    }
                 }
 
                 groupId = "${project.ext.mvngroupId}"

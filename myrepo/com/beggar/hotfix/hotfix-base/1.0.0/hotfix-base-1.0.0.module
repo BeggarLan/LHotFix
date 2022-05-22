@@ -1,0 +1,61 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.beggar.hotfix",
+    "module": "hotfix-base",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.5",
+      "buildId": "46wj453kxvc2fcncsp5xvdy5za"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "hotfix-base-1.0.0.jar",
+          "url": "hotfix-base-1.0.0.jar",
+          "size": 3516,
+          "sha512": "29a0f62d52dc1ee2259d9c8eed041eddbad2217b1f6e7c7faf2dd52b0467c02e334510ad6d07e63fea3e31fdc5068de5246da69a9d413ca9bd932ea76b7aeb01",
+          "sha256": "c8088c7ac8267d8d2c08c090a34e060c5a032907fda9fc95ca1f30848ae4fa3f",
+          "sha1": "61b0d588cdd888ff72bfd620535ca9f41add0257",
+          "md5": "853f441c733d025f5ab3b94bed398bfa"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "hotfix-base-1.0.0.jar",
+          "url": "hotfix-base-1.0.0.jar",
+          "size": 3516,
+          "sha512": "29a0f62d52dc1ee2259d9c8eed041eddbad2217b1f6e7c7faf2dd52b0467c02e334510ad6d07e63fea3e31fdc5068de5246da69a9d413ca9bd932ea76b7aeb01",
+          "sha256": "c8088c7ac8267d8d2c08c090a34e060c5a032907fda9fc95ca1f30848ae4fa3f",
+          "sha1": "61b0d588cdd888ff72bfd620535ca9f41add0257",
+          "md5": "853f441c733d025f5ab3b94bed398bfa"
+        }
+      ]
+    }
+  ]
+}
