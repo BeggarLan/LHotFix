@@ -2,6 +2,7 @@ package com.beggar.hotfix.gradle.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger;
+import com.beggar.hotfix.base.Constants
 
 import groovy.xml.*
 
@@ -25,17 +26,21 @@ class HotFixPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        mProject = project;
-        mLogger = project.getLogger();
+        mProject = project
+        mLogger = project.getLogger()
+
         try {
-            mXmlResult = new XmlSlurper().parse(new File(mProject.getProjectDir() + File.separator + Constants.ROBUST_XML))
+            mLogger.quiet("********** hitFix codeInsert plugin parse xml start. *****************")
+            mXmlResult = new XmlSlurper().parse(new File("${project.projectDir}/${Constants.ROBUST_XML}"))
+            mLogger.quiet("********** hitFix codeInsert plugin parse xml end. *****************")
             initConfig()
             // 注册transform
             project.android.registerTransform(new HotFixTransform(project))
             //
             project.afterEvaluate(new HotfixApkHashAction())
         } catch (Throwable e) {
-            mLogger.error("parse " + Constants.ROBUST_XM + " error");
+            e.printStackTrace()
+            mLogger.error("********** hitFix codeInsert plugin parse " + Constants.ROBUST_XML + " error.*********");
         }
     }
 

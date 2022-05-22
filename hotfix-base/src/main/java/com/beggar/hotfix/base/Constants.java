@@ -8,7 +8,7 @@ package com.beggar.hotfix.base;
 public class Constants {
 
     // 热修code的声明文件
-    public static final String ROBUST_XML = "lHotFix/xml";
+    public static final String ROBUST_XML = "LHotfix.xml";
 
     // 代码插入的方法汇总文件
     public static final String METHOD_MAP_OUT_PATH = "/outputs/hotfix/methodsMap.hotfix";

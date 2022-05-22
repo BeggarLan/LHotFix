@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.5",
-      "buildId": "4ue4r43fkjhkboqt4y7ejopwxa"
+      "buildId": "d72puvpppra3tpnuem6edtxn3u"
     }
   },
   "variants": [
@@ -28,11 +28,11 @@
         {
           "name": "gradle-plugin-1.0.0.jar",
           "url": "gradle-plugin-1.0.0.jar",
-          "size": 22577,
-          "sha512": "6702cfcc971fbc68e8d6e30367eb385bb44b8cc09fb76fbf10612a7739d536922d69410e8a3c98fdcb06f596fd92004112ed7f6a4f18904aa2dcad63c09340a2",
-          "sha256": "46fc4cff0a9d272db5dd512c183bea868c569f84c521f25358c354e7571d9e8c",
-          "sha1": "c9857179970397d2ba58d592780fac96eacb7ba3",
-          "md5": "cade0f21b57af400e868873ee51a0868"
+          "size": 22689,
+          "sha512": "03fcd2a5671f629c32e43a7acd874c3dface8c4e46ed4089a369f7ecdfeeff7b46e20af19c614a8d747a27fa0ebe79e6f8ed12b743da8c16b12f92e39c7e1cc1",
+          "sha256": "6fb8ff98e5e8a7ae38ec032bf39d913af17a172bb253e892e04f7c1fc7abebf5",
+          "sha1": "2a389558f62e154aed07527352c998c896269f39",
+          "md5": "d4f05ee69d6428a70c976bb207d46a4c"
         }
       ]
     },
@@ -79,11 +79,11 @@
         {
           "name": "gradle-plugin-1.0.0.jar",
           "url": "gradle-plugin-1.0.0.jar",
-          "size": 22577,
-          "sha512": "6702cfcc971fbc68e8d6e30367eb385bb44b8cc09fb76fbf10612a7739d536922d69410e8a3c98fdcb06f596fd92004112ed7f6a4f18904aa2dcad63c09340a2",
-          "sha256": "46fc4cff0a9d272db5dd512c183bea868c569f84c521f25358c354e7571d9e8c",
-          "sha1": "c9857179970397d2ba58d592780fac96eacb7ba3",
-          "md5": "cade0f21b57af400e868873ee51a0868"
+          "size": 22689,
+          "sha512": "03fcd2a5671f629c32e43a7acd874c3dface8c4e46ed4089a369f7ecdfeeff7b46e20af19c614a8d747a27fa0ebe79e6f8ed12b743da8c16b12f92e39c7e1cc1",
+          "sha256": "6fb8ff98e5e8a7ae38ec032bf39d913af17a172bb253e892e04f7c1fc7abebf5",
+          "sha1": "2a389558f62e154aed07527352c998c896269f39",
+          "md5": "d4f05ee69d6428a70c976bb207d46a4c"
         }
       ]
     }
