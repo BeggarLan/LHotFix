@@ -107,6 +107,7 @@ class HotFixTransform extends Transform {
         //project.android.bootClasspath 加入android.jar，不然找不到android相关的所有类
         mProject.android.bootClasspath.each {
             classPool.appendClassPath((String) it.absolutePath)
+//            println("bootClasspath" + (String) it.absolutePat)
         }
 
         // class --> CtClass

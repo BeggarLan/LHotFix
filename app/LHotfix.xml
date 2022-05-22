@@ -2,14 +2,14 @@
 <resources>
 
   <!--需要热补的包名或者类名，这些包名下的所有类都被会插入代码-->
-  <packname name="hotfixPackage">
+  <hotfixPackage>
     <name>com.beggar.lhotfix.demo</name>
     <name>com.beggar.lhotfix.demo2</name>
-  </packname>
+  </hotfixPackage>
 
   <!--不需要Robust插入代码的包名，Robust库不需要插入代码，如下的配置项请保留，还可以根据各个APP的情况执行添加-->
-  <exceptPackname name="exceptPackage">
+  <exceptPackage>
     <name>com.beggar.lhotfix.demo1</name>
-  </exceptPackname>
+  </exceptPackage>
 
 </resources>

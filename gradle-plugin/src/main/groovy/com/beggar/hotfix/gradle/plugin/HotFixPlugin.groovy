@@ -51,11 +51,14 @@ class HotFixPlugin implements Plugin<Project> {
 
     // 拿到需要插桩的类、方法
     private void initConfig() {
+        println("hotfix initConfig")
         for (name in mXmlResult.hotfixPackage.name) {
             mHotfixPackageList.add(name.text())
+            println("hotfix mHotfixPackageList :" +name.text())
         }
         for (name in mXmlResult.exceptPackage.name) {
             mExceptPackageList.add(name.text())
+            println("hotfix mExceptPackageList :" +name.text())
         }
         for (name in mXmlResult.hotfixMethod.name) {
             mHotfixMethodList.add(name.text())

@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.5",
-      "buildId": "4pk5t3uqhvemfdld4ir5m66sza"
+      "buildId": "elcgmrlbq5enjjj5flt2lgcr3i"
     }
   },
   "variants": [
@@ -29,10 +29,10 @@
           "name": "hotfix-base-1.0.0.jar",
           "url": "hotfix-base-1.0.0.jar",
           "size": 3514,
-          "sha512": "c1fb4789ae5f581f43c27de3d121e1c7a7f303393ae61b71fcd7f3e5d1cc1a35a1ac0d8ed673a46f8b89d8ee487f9d75d94d0326a8fc4efb73ae89e8a6932a69",
-          "sha256": "0d036131762ff3b4224a894a56093fde0d863de3586c1a14abaf6bf0c572e3a5",
-          "sha1": "8ddcc2c19a61e59b2cb8c1f871c16f3db0641abb",
-          "md5": "bde201425fefe4456e7f946f94248e4b"
+          "sha512": "3b6c6dc14a5cd10e539edd040eb630eb11bf3e2f5a1acf5f5964d92b691d6e23908f3046c26284063660f5ed2278a6780c95225a297a9ae4f93f61f309567a5f",
+          "sha256": "c7ef9bc86b3382895dcea172edcbea7e69b73b55aab433a6b2d804c8fc25c466",
+          "sha1": "e6a3e8a3c1ee8f5ddb82832e78a80c2e56995a92",
+          "md5": "093b3db87175e51438fc4b06ef0a9301"
         }
       ]
     },
@@ -50,10 +50,10 @@
           "name": "hotfix-base-1.0.0.jar",
           "url": "hotfix-base-1.0.0.jar",
           "size": 3514,
-          "sha512": "c1fb4789ae5f581f43c27de3d121e1c7a7f303393ae61b71fcd7f3e5d1cc1a35a1ac0d8ed673a46f8b89d8ee487f9d75d94d0326a8fc4efb73ae89e8a6932a69",
-          "sha256": "0d036131762ff3b4224a894a56093fde0d863de3586c1a14abaf6bf0c572e3a5",
-          "sha1": "8ddcc2c19a61e59b2cb8c1f871c16f3db0641abb",
-          "md5": "bde201425fefe4456e7f946f94248e4b"
+          "sha512": "3b6c6dc14a5cd10e539edd040eb630eb11bf3e2f5a1acf5f5964d92b691d6e23908f3046c26284063660f5ed2278a6780c95225a297a9ae4f93f61f309567a5f",
+          "sha256": "c7ef9bc86b3382895dcea172edcbea7e69b73b55aab433a6b2d804c8fc25c466",
+          "sha1": "e6a3e8a3c1ee8f5ddb82832e78a80c2e56995a92",
+          "md5": "093b3db87175e51438fc4b06ef0a9301"
         }
       ]
     }

@@ -49,6 +49,7 @@ public class JavassistUtil {
                 String dirPath = dirFile.getAbsolutePath();
                 //将当前路径加入类池,不然找不到这个类
                 try {
+                    System.out.println(dirPath);
                     classPool.insertClassPath(dirPath);
                     // 所有的子文件(递归)
                     Collection<File> childFiles = FileUtils.listFiles(dirFile, null, true);
@@ -60,7 +61,7 @@ public class JavassistUtil {
                                     .substring(dirPath.length() + 1, childFileAbsolutePath.length() - SdkConstants.DOT_CLASS.length())
                                     .replaceAll(Matcher.quoteReplacement(File.separator), ".");
                             if (classNames.contains(className)) {
-                                throw new RuntimeException("You have duplicate classes with the same name : " + className + " please remove duplicate classes ");
+                                throw new RuntimeException("with the same name : " + className + " please remove duplicate classes ");
                             }
                             classNames.add(className);
                         }
@@ -74,9 +75,10 @@ public class JavassistUtil {
 
             //jar(aar等)
             for (JarInput jarInput : input.getJarInputs()) {
-                JarFile jarFile = null;
                 try {
-                    jarFile = new JarFile(jarInput.getFile());
+                    System.out.println(jarInput.getFile().getAbsolutePath());
+                    classPool.insertClassPath(jarInput.getFile().getAbsolutePath());
+                    JarFile jarFile = new JarFile(jarInput.getFile());
                     Enumeration<JarEntry> classes = jarFile.entries();
 
                     while (classes.hasMoreElements()) {
@@ -95,6 +97,9 @@ public class JavassistUtil {
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("jarInput to JarFile IOException");
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                    System.out.println("jarInput to JarFile NotFoundException");
                 }
             }
         }
