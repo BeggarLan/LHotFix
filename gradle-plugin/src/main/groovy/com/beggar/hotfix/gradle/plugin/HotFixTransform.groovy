@@ -13,11 +13,9 @@ import com.beggar.hotfix.gradle.plugin.codeinsert.CodeInsertStrategy
 import com.beggar.hotfix.gradle.plugin.codeinsert.JavassistCodeInsertImpl
 import javassist.CtClass;
 import org.gradle.api.Project;
-import org.gradle.api.logging.Logger;
-
-
+import org.gradle.api.logging.Logger
+import com.beggar.hotfix.gradle.plugin.codeinsert.JavassistUtil
 import javassist.ClassPool
-
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -137,17 +135,21 @@ class HotFixTransform extends Transform {
 
     // 改造过的方法名写入文件p
     private void writeMethodMapToFile(@NonNull Map<String, Integer> methodMap, @NonNull String path) {
-        File file = new File(project.buildDir.path + path)
+        File file = new File("${mProject.buildDir.path}/${path}")
+        // 如果文件不存在的话，创建文件
+        if (!file.exists() && (!file.parentFile.mkdirs() || !file.createNewFile())) {
+            logger.error(path + " file create error!!")
+        }
 
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream()
         ObjectOutputStream objectOut = new ObjectOutputStream(byteOut)
-        objectOut.write(methodMap)
+        objectOut.writeObject(methodMap)
 
         FileOutputStream fileOut = new FileOutputStream(file)
         //gzip压缩
         GZIPOutputStream gzip = new GZIPOutputStream(fileOut)
         gzip.write(byteOut.toByteArray())
-        objOut.close()
+        objectOut.close()
 
         gzip.flush()
         gzip.close()

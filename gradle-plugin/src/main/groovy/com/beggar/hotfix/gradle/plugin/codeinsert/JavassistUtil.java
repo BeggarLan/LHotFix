@@ -105,8 +105,8 @@ public class JavassistUtil {
             try {
                 ctClasses.add(classPool.get(className));
             } catch (NotFoundException e) {
-                e.printStackTrace();
-                System.out.println("class not found exception class name: " + className);
+//                e.printStackTrace();
+//                System.out.println("class not found exception class name: " + className);
             }
         }
 

@@ -35,7 +35,12 @@ class HotFixPlugin implements Plugin<Project> {
             mLogger.quiet("********** hitFix codeInsert plugin parse xml end. *****************")
             initConfig()
             // 注册transform
-            project.android.registerTransform(new HotFixTransform(project))
+            project.android.registerTransform(new HotFixTransform(
+                project,
+                mHotfixPackageList,
+                mHotfixMethodList,
+                mExceptPackageList,
+                mExceptMethodList))
             //
             project.afterEvaluate(new HotfixApkHashAction())
         } catch (Throwable e) {
