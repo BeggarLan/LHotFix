@@ -12,29 +12,42 @@ import com.beggar.hotfix.base.ChangeRedirect;
  */
 public class PatchProxy {
 
-  /**
-   * 方法是否支持修复
-   *
-   * @param params           参数
-   * @param FixClassThis     所在类对象，如果方法是static的话，该值为null
-   * @param changeRedirect   具体的修复类
-   * @param isStatic         是否是静态
-   * @param methodNumber     方法的索引
-   * @param paramsClassTypes 参数的类型
-   * @param returnType       函数返回值的类型
-   * @return {@code true} 支持修复
-   */
-  public static boolean isSupport(
-      @NonNull Object[] params,
-      @Nullable Object FixClassThis,
-      @NonNull ChangeRedirect changeRedirect,
-      boolean isStatic,
-      int methodNumber,
-      @NonNull Class<?>[] paramsClassTypes,
-      @NonNull Class<?> returnType) {
+    /**
+     * 方法是否支持修复
+     *
+     * @param params           参数
+     * @param FixClassThis     所在类对象，如果方法是static的话，该值为null
+     * @param changeRedirect   具体的修复类
+     * @param isStatic         是否是静态
+     * @param methodNumber     方法的索引
+     * @param paramsClassTypes 参数的类型
+     * @param returnType       函数返回值的类型
+     * @return {@code true} 支持修复
+     */
+    public static boolean isSupport(
+            @NonNull Object[] params,
+            @Nullable Object FixClassThis,
+            @Nullable ChangeRedirect changeRedirect,
+            boolean isStatic,
+            int methodNumber,
+            @NonNull Class<?>[] paramsClassTypes,
+            @NonNull Class<?> returnType) {
+         if(changeRedirect == null) {
+             return false;
+         }
+         
+        return false;
+    }
 
-    return false;
-  }
+    public static void accessDispatchVoid(
+            @NonNull Object[] params,
+            @Nullable Object FixClassThis,
+            @NonNull ChangeRedirect changeRedirect,
+            boolean isStatic,
+            int methodNumber,
+            @NonNull Class<?>[] paramsClassTypes,
+            @NonNull Class<?> returnType) {
 
+    }
 
 }

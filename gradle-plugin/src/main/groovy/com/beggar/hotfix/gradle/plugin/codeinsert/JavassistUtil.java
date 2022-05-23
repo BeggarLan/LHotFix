@@ -49,7 +49,6 @@ public class JavassistUtil {
                 String dirPath = dirFile.getAbsolutePath();
                 //将当前路径加入类池,不然找不到这个类
                 try {
-                    System.out.println(dirPath);
                     classPool.insertClassPath(dirPath);
                     // 所有的子文件(递归)
                     Collection<File> childFiles = FileUtils.listFiles(dirFile, null, true);
@@ -76,7 +75,6 @@ public class JavassistUtil {
             //jar(aar等)
             for (JarInput jarInput : input.getJarInputs()) {
                 try {
-                    System.out.println(jarInput.getFile().getAbsolutePath());
                     classPool.insertClassPath(jarInput.getFile().getAbsolutePath());
                     JarFile jarFile = new JarFile(jarInput.getFile());
                     Enumeration<JarEntry> classes = jarFile.entries();
@@ -110,8 +108,8 @@ public class JavassistUtil {
             try {
                 ctClasses.add(classPool.get(className));
             } catch (NotFoundException e) {
-//                e.printStackTrace();
-//                System.out.println("class not found exception class name: " + className);
+                e.printStackTrace();
+                System.out.println("class not found exception class name: " + className);
             }
         }
 
