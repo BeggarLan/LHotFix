@@ -22,12 +22,14 @@ public interface ChangeRedirect {
    */
   boolean isSupport(@NotNull String patchMethodName, @Nullable Object[] params);
 
+
   /**
-   * patch
+   * 访问方法
    *
-   * @param methodName
-   * @param params
+   * @param patchMethodName 格式为isStatic:methodNumber
+   * @param params          最后一项为所属类对象(若是静态方法则没有类对象)。null代表函数无参数
+   * @return 函数的返回值
    */
-  Object patch(String methodName, Object[] params);
+  Object accessDispatch(String patchMethodName, Object[] params);
 
 }

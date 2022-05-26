@@ -9,6 +9,7 @@ import com.beggar.hotfix.base.ChangeRedirect;
  * author: lanweihua
  * created on: 2022/5/11 1:04 下午
  * description: 补丁代理类
+ * TODO: 2022/5/26 可以对外暴露各个事件供其他业务(如access方法的时候等)
  */
 public class PatchProxy {
 
@@ -40,6 +41,9 @@ public class PatchProxy {
     return changeRedirect.isSupport(proxyMethodStr, objects);
   }
 
+  /**
+   * 访问void方法
+   */
   public static void accessDispatchVoid(
       @NonNull Object[] params,
       @Nullable Object FixClassThis,
@@ -48,7 +52,25 @@ public class PatchProxy {
       int methodNumber,
       @NonNull Class<?>[] paramsClassTypes,
       @NonNull Class<?> returnType) {
+    String proxyMethodStr = getProxyMethodStr(isStatic, methodNumber);
+    Object[] objects = getObjects(params, FixClassThis, isStatic);
+    changeRedirect.accessDispatch(proxyMethodStr, objects);
+  }
 
+  /**
+   * 访问void方法
+   */
+  public static Object accessDispatch(
+      @NonNull Object[] params,
+      @Nullable Object FixClassThis,
+      @NonNull ChangeRedirect changeRedirect,
+      boolean isStatic,
+      int methodNumber,
+      @NonNull Class<?>[] paramsClassTypes,
+      @NonNull Class<?> returnType) {
+    String proxyMethodStr = getProxyMethodStr(isStatic, methodNumber);
+    Object[] objects = getObjects(params, FixClassThis, isStatic);
+    return changeRedirect.accessDispatch(proxyMethodStr, objects);
   }
 
   /**
