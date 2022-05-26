@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import com.beggar.hotfix.base.ChangeRedirect;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/5/11 1:04 下午
  * description: 补丁代理类
  * TODO: 2022/5/26 可以对外暴露各个事件供其他业务(如access方法的时候等)
