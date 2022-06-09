@@ -51,14 +51,17 @@ public class PatchExecutor extends Thread {
         Log.i(TAG, "patch isApplySucceed : " + patch.getPatchLocalPath());
         continue;
       }
-      if (!mPatchManipulate.ensurePatchExist(patch)) {
-        Log.i(TAG, "patch is not exist : " + patch.getPatchLocalPath());
-        return;
-      }
+
+      // 执行布丁
       boolean patchSucceed = patch(patch);
-
+      Log.i(TAG, "patch path: " + patch.getPatchLocalPath() + ", patch result :" + patchSucceed);
+      if (patchSucceed) {
+        patch.setApplySucceed(true);
+        mHotfixCallback.onPatchApplied(true, patch);
+      } else {
+        mHotfixCallback.onPatchApplied(false, patch);
+      }
     }
-
   }
 
   /**
@@ -67,6 +70,12 @@ public class PatchExecutor extends Thread {
    * @return {@code true} 成功
    */
   private boolean patch(@NonNull Patch patch) {
+    if (!mPatchManipulate.verifyPatch(mContext, patch)) {
+      Log.i(TAG, "verifyPatch fail :" + patch.getPatchLocalPath());
+      return false;
+    }
+
+
     return false;
   }
 
