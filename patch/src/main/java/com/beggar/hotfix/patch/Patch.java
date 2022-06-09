@@ -22,6 +22,9 @@ public class Patch {
   // TODO: 2022/5/26 app hash值,避免应用内升级导致低版本app的补丁应用到了高版本app上
   private int mAppHash;
 
+  // 是否apply成功
+  private boolean mIsApplySucceed;
+
   public String getName() {
     return mName;
   }
@@ -62,4 +65,11 @@ public class Patch {
     mAppHash = appHash;
   }
 
+  public boolean isApplySucceed() {
+    return mIsApplySucceed;
+  }
+
+  public void setApplySucceed(boolean applySucceed) {
+    mIsApplySucceed = applySucceed;
+  }
 }

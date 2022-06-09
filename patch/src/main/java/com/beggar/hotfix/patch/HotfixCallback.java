@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
  * created on: 2022/5/26 11:22 下午
  * description: 回调
  */
-public interface LHotfixCallback {
+public interface HotfixCallback {
 
   /**
    * 获取到补丁列表
