@@ -76,14 +76,14 @@ public class PatchExecutor extends Thread {
    *
    * @return {@code true} 成功
    */
-  // TODO: 2022/6/10 log
   private boolean patch(@NonNull Patch patch) {
+    Log.i(TAG, "start patch");
     if (!mPatchManipulate.verifyPatch(mContext, patch)) {
       Log.i(TAG, "verifyPatch fail :" + patch.getPatchLocalPath());
       return false;
     }
 
-    File patchCacheDir = getPatchCacheDir(patch.getName() + patch.getPatchMd5());
+    File patchCacheDir = getPatchCacheDir(patch);
     DexClassLoader classLoader = new DexClassLoader(
         patch.getPatchLocalPath(),
         patchCacheDir.getAbsolutePath(),
@@ -91,6 +91,7 @@ public class PatchExecutor extends Thread {
         PatchExecutor.class.getClassLoader());
 
     // 获取原类和其对应的补丁类
+    Log.i(TAG, "start load patchClassInfoProviderClass");
     String patchClassInfoProviderClassFullName = patch.getPatchClassInfoProviderClassFullName();
     PatchClassInfoProvider patchClassInfoProvider = null;
     try {
@@ -101,23 +102,28 @@ public class PatchExecutor extends Thread {
       throwable.printStackTrace();
     }
     if (patchClassInfoProvider == null) {
+      Log.i(TAG, "patchClassInfoProvider is null");
       return false;
     }
 
     List<PatchClassInfo> patchClassInfoList = patchClassInfoProvider.getPatchClassInfoList();
     if (patchClassInfoList == null || patchClassInfoList.size() == 0) {
+      Log.i(TAG, "patchClassInfoList is empty");
       return true;
     }
 
+    // 是否出错(一个错了，这个值就为true)
     boolean isError = false;
     // 每个类打补丁
     for (PatchClassInfo patchClassInfo : patchClassInfoList) {
-      // 补丁类
-      String patchClassName = patchClassInfo.getPatchClassName();
+      Log.i(TAG, "start patch class, patchClassInfo :" + patchClassInfo.toString());
       // 原类
       String sourceClassName = patchClassInfo.getSourceClassName();
+      // 补丁类
+      String patchClassName = patchClassInfo.getPatchClassName();
 
       if (TextUtils.isEmpty(patchClassName) || TextUtils.isEmpty(sourceClassName)) {
+        Log.i(TAG, "patchClassName or sourceClassName is empty");
         continue;
       }
 
@@ -125,33 +131,45 @@ public class PatchExecutor extends Thread {
       try {
         sourceClass = classLoader.loadClass(sourceClassName);
       } catch (ClassNotFoundException e) {
+        Log.i(TAG, "load sourceClass ClassNotFoundException");
         isError = true;
         e.printStackTrace();
         continue;
       }
+
+      Log.i(TAG, "start find changeRedirect");
       // 代理
       Field changeRedirect = null;
       Field[] fields = sourceClass.getDeclaredFields();
       for (Field field : fields) {
-        // 要求field所在的声明类是sourceClass: 避免父类的changeRedirect被替换
-        if (TextUtils
-            .equals(field.getType().getCanonicalName(), ChangeRedirect.class.getCanonicalName())
-            && TextUtils.equals(field.getDeclaringClass().getCanonicalName(),
-            sourceClass.getCanonicalName())) {
-          changeRedirect = field;
+        if (!TextUtils.equals(
+            field.getType().getCanonicalName(), ChangeRedirect.class.getCanonicalName())) {
+          continue;
         }
+        // 要求field所在的声明类是sourceClass: 避免父类的changeRedirect被替换
+        if (!TextUtils.equals(
+            field.getDeclaringClass().getCanonicalName(), sourceClass.getCanonicalName())) {
+          continue;
+        }
+        changeRedirect = field;
+        Log.i(TAG, "find changeRedirect success");
+        break;
       }
 
       if (changeRedirect == null) {
+        Log.i(TAG, "can not find changeRedirect");
         continue;
       }
 
+      Log.i(TAG, "start assign changeRedirect");
       try {
         Class<?> patchClass = classLoader.loadClass(patchClassName);
         Object patchObject = patchClass.newInstance();
         changeRedirect.setAccessible(true);
         changeRedirect.set(null, patchObject);
+        Log.i(TAG, "assign changeRedirect success");
       } catch (Throwable e) {
+        Log.i(TAG, "assign changeRedirect fail: " + e.getMessage());
         isError = true;
         e.printStackTrace();
       }
@@ -161,16 +179,14 @@ public class PatchExecutor extends Thread {
 
   /**
    * 打布丁时的cache文件夹
-   *
-   * @param key
    */
-  private File getPatchCacheDir(@NonNull String key) {
+  private File getPatchCacheDir(@NonNull Patch patch) {
+    String key = patch.getName() + patch.getPatchMd5();
     File dir = mContext.getDir("patch_cache" + key, Context.MODE_PRIVATE);
     if (!dir.exists()) {
       dir.mkdir();
     }
     return dir;
   }
-
 
 }

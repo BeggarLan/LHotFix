@@ -30,4 +30,12 @@ public class PatchClassInfo {
   public String getPatchClassName() {
     return mPatchClassName;
   }
+
+  @Override
+  public String toString() {
+    return "PatchClassInfo{" +
+        "mSourceClassName='" + mSourceClassName + '\'' +
+        ", mPatchClassName='" + mPatchClassName + '\'' +
+        '}';
+  }
 }
