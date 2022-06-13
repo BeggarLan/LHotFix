@@ -1,0 +1,26 @@
+plugins {
+    id 'groovy'
+    id 'java'
+    id 'maven-publish'
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:transform-api:1.5.0'
+    implementation "com.android.tools.build:gradle:4.1.1"
+    implementation 'org.javassist:javassist:3.20.0-GA'
+    implementation project(path: ':hotfix-base')
+}
+
+ext {
+    mvngroupId = "com.beggar.hotfix"
+    mvnartifactId = "${project.getName()}"
+    mvnversion = "1.0.0"
+
+    packaging = 'jar'
+}
+
+
+apply from: rootProject.file('gradle/maven-publish.gradle')
+
