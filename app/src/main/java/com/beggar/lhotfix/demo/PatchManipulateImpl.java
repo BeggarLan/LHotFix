@@ -19,6 +19,7 @@ public class PatchManipulateImpl implements PatchManipulate {
   @Nullable
   @Override
   public List<Patch> fetchPatchList(@NonNull Context context) {
+    // TODO: 2022/6/13  网络获取补丁列表
     return null;
   }
 
