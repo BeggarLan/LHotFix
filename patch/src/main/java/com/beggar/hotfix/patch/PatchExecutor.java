@@ -164,6 +164,7 @@ public class PatchExecutor extends Thread {
       Log.i(TAG, "start assign changeRedirect");
       try {
         Class<?> patchClass = classLoader.loadClass(patchClassName);
+        // TODO: 2022/6/14 无参构造函数
         Object patchObject = patchClass.newInstance();
         changeRedirect.setAccessible(true);
         changeRedirect.set(null, patchObject);
