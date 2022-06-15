@@ -7,7 +7,7 @@ package com.beggar.hotfix.base;
  */
 public class Constants {
 
-    // 热修code的声明文件
+    // 热修配置文件
     public static final String ROBUST_XML = "LHotfix.xml";
 
     // 代码插入的方法汇总文件

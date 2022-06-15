@@ -1,5 +1,7 @@
-package com.beggar.hotfix.plugin.autopatch
+package com.beggar.hotfix.autopatch.plugin
 
+import com.beggar.hotfix.autopatch.AutoPatchConfig
+import com.beggar.hotfix.autopatch.HotfixXMLParser
 import com.beggar.hotfix.base.Constants
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,16 +17,17 @@ class AutoPatchPlugin implements Plugin<Project> {
     private Project mProject
     private Logger mLogger
 
+    private AutoPatchConfig mAutoPatchConfig;
+
     @Override
     void apply(Project project) {
         mProject = project
         mLogger = project.getLogger()
 
         try {
-            mLogger.quiet("********** hitFix codeInsert plugin parse xml start. *****************")
-            mLogger.quiet("********** hitFix codeInsert plugin parse xml end. *****************")
+            mLogger.quiet("********** AutoPatchPlugin apply. *****************")
             initConfig()
-            // 注册transform
+
             project.android.registerTransform(new AutoPatchTransform(project))
         } catch (Throwable e) {
             e.printStackTrace()
@@ -32,7 +35,12 @@ class AutoPatchPlugin implements Plugin<Project> {
         }
     }
 
+    // 初始化配置
     private void initConfig() {
+        // 配置文件path
+        String hotfixXmlPath = "${mProject.projectDir.path}${File.separator}${Constants.ROBUST_XML}"
+        mAutoPatchConfig = HotfixXMLParser.parse(hotfixXmlPath)
+
 
     }
 

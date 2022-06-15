@@ -1,4 +1,4 @@
-package com.beggar.hotfix.plugin.autopatch
+package com.beggar.hotfix.autopatch.plugin
 
 import com.android.annotations.NonNull
 import com.android.build.api.transform.*
