@@ -3,6 +3,7 @@ package com.beggar.hotfix.autopatch.plugin
 import com.android.annotations.NonNull
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.beggar.hotfix.autopatch.AutoPatchConstants
 import javassist.ClassPool
 import javassist.CtClass
 import org.apache.commons.io.FileUtils
@@ -94,7 +95,13 @@ class AutoPatchTransform extends Transform {
     }
 
     void autoPatch(@NonNull List<CtClass> ctClasses) {
+        // patch包生成文件夹
+        String patchGeneratePath =
+            mProject.buildDir.getAbsolutePath() + File.separator + AutoPatchConstants.PATCH_GENERATE_DIR + File.separator;
+        // 先清理一下文件夹
+        FileUtils.deleteDirectory(new File(patchGeneratePath))
 
+        // todo 找出add、modify
     }
 
 }
