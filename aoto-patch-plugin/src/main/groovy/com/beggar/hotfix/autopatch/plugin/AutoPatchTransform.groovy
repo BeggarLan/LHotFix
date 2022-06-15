@@ -3,6 +3,7 @@ package com.beggar.hotfix.autopatch.plugin
 import com.android.annotations.NonNull
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.beggar.hotfix.autopatch.JavassistUtil
 import com.beggar.hotfix.base.Constants
 import javassist.ClassPool
 import javassist.CtClass
@@ -58,7 +59,7 @@ class AutoPatchTransform extends Transform {
     // 是否支持增量编译
     // TODO: 2022/5/7 待确认
     @Override
-    public boolean isIncremental() {
+    boolean isIncremental() {
         return false
     }
 
@@ -70,15 +71,6 @@ class AutoPatchTransform extends Transform {
         // 非增量编译的情况下，删除之前生成的文件
         if (!transformInvocation.isIncremental()) {
             outputProvider.deleteAll();
-        }
-        // 输出文件
-        File jarFile = outputProvider.getContentLocation("main", getOutputTypes(), getScopes(), Format.JAR);
-        // TODO: 2022/5/7  getParentFile没懂
-//        if(!jarFile.getParentFile().exists()){
-//            jarFile.getParentFile().mkdirs();
-//        }
-        if (jarFile.exists()) {
-            jarFile.delete();
         }
 
         ClassPool classPool = new ClassPool();

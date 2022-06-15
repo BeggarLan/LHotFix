@@ -14,7 +14,7 @@ import com.beggar.hotfix.gradle.plugin.codeinsert.JavassistCodeInsertImpl
 import javassist.CtClass;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger
-import com.beggar.hotfix.gradle.plugin.codeinsert.JavassistUtil
+import JavassistUtil
 import javassist.ClassPool
 import java.util.zip.GZIPOutputStream;
 

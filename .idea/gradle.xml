@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/gradle-plugin" />
             <option value="$PROJECT_DIR$/hotfix-base" />
+            <option value="$PROJECT_DIR$/hotfix-util" />
             <option value="$PROJECT_DIR$/patch" />
           </set>
         </option>

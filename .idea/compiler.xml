@@ -5,6 +5,7 @@
       <module name="LHotFix.aoto-patch-plugin" target="11" />
       <module name="LHotFix.app" target="11" />
       <module name="LHotFix.gradle-plugin" target="11" />
+      <module name="LHotFix.hotfix-util" target="11" />
       <module name="LHotFix.patch" target="11" />
     </bytecodeTargetLevel>
   </component>
