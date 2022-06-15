@@ -3,14 +3,11 @@ package com.beggar.hotfix.autopatch.plugin
 import com.android.annotations.NonNull
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.beggar.hotfix.autopatch.JavassistUtil
-import com.beggar.hotfix.base.Constants
 import javassist.ClassPool
 import javassist.CtClass
+import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
-
-import java.util.zip.GZIPOutputStream
 
 /**
  * author: lanweihua
@@ -84,50 +81,20 @@ class AutoPatchTransform extends Transform {
         // class --> CtClass
         List<CtClass> ctClasses = JavassistUtil.toCtClasses(transformInvocation.getInputs(), classPool)
 
-        // 代码插入
-        // todo 最好用asm，快
-        CodeInsertStrategy codeInsertStrategy = new JavassistCodeInsertImpl(
-            mHotfixPackageList, mHotfixMethodList, mExceptPackageList, mExceptMethodList);
-        codeInsertStrategy.insertCode(ctClasses, jarFile);
-        writeMethodMapToFile(codeInsertStrategy.mMethodMap, Constants.METHOD_MAP_OUT_PATH);
+        def costTimeMs = System.currentTimeMillis() - startTimeMs
+        mLogger.quiet("add all CtClasses cost $costTimeMs ms , CtClass count : ${ctClasses.size()}")
 
-        // 打印
-        mLogger.quiet("********** hitFix code insert method list start. *****************")
-        for (String method : codeInsertStrategy.mMethodMap.keySet()) {
-            int id = codeInsertStrategy.mMethodMap.get(method);
-            System.out.println("key is   " + method + "  value is    " + id)
-        }
-        mLogger.quiet("********** hitFix code insert method list end. *****************")
+        autoPatch(ctClasses)
 
-        long costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
-        mLogger.quiet("hitFix plugin transform time cost " + costTimeSec + "s")
-
-        mLogger.quiet("******************************AutoPatchTransform transform end*************************");
+        costTimeMs = (System.currentTimeMillis() - startTimeMs) / 1000
+        mLogger.quiet("AutoPatchTransform transform time cost $costTimeMs ms")
+        mLogger.quiet("******************************AutoPatchTransform transform end*************************")
+        // 本来就是给项目打patch包用的，打完了直接终止
+        throw new RuntimeException("auto patch successfully")
     }
 
-    // 改造过的方法名写入文件p
-    private void writeMethodMapToFile(@NonNull Map<String, Integer> methodMap, @NonNull String path) {
-        File file = new File("${mProject.buildDir.path}/${path}")
-        // 如果文件不存在的话，创建文件
-        if (!file.exists() && (!file.parentFile.mkdirs() || !file.createNewFile())) {
-            logger.error(path + " file create error!!")
-        }
+    void autoPatch(@NonNull List<CtClass> ctClasses) {
 
-        ByteArrayOutputStream byteOut = new ByteArrayOutputStream()
-        ObjectOutputStream objectOut = new ObjectOutputStream(byteOut)
-        objectOut.writeObject(methodMap)
-
-        FileOutputStream fileOut = new FileOutputStream(file)
-        //gzip压缩
-        GZIPOutputStream gzip = new GZIPOutputStream(fileOut)
-        gzip.write(byteOut.toByteArray())
-        objectOut.close()
-
-        gzip.flush()
-        gzip.close()
-
-        fileOut.flush()
-        fileOut.close()
     }
 
 }
