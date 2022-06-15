@@ -22,22 +22,22 @@ class AutoPatchTransform extends Transform {
     @NonNull
     private Logger mLogger;
 
-    HotFixTransform(@NonNull Project project) {
-        this.mProject = project;
-        mLogger = project.getLogger();
+    AutoPatchTransform(@NonNull Project project) {
+        this.mProject = project
+        mLogger = project.getLogger()
     }
 
     // Transform对应的task的名称
     @Override
     String getName() {
-        return "hotfix-plugin";
+        return "AutoPatchTransform";
     }
 
     // 输入的类型，这里可以过滤我们想要处理的文件类型
-    // 可供我们去处理的有两种类型, 分别是编译后的java代码, 以及资源文件(非res下文件, 而是assests内的资源)
+    // 可供我们去处理的有两种类型, 分别是编译后的java代码, 以及资源文件(非res下文件, 而是assets内的资源)
     @Override
     public Set<QualifiedContent.ContentType> getInputTypes() {
-        return TransformManager.CONTENT_CLASS;
+        return TransformManager.CONTENT_CLASS
     }
 
     /**
@@ -52,19 +52,19 @@ class AutoPatchTransform extends Transform {
      */
     @Override
     Set<QualifiedContent.ScopeType> getScopes() {
-        return TransformManager.SCOPE_FULL_PROJECT;
+        return TransformManager.SCOPE_FULL_PROJECT
     }
 
     // 是否支持增量编译
     // TODO: 2022/5/7 待确认
     @Override
     public boolean isIncremental() {
-        return false;
+        return false
     }
 
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
-        mLogger.quiet("******************************hotfix plugin transform start.*************************");
+        mLogger.quiet("******************************AutoPatchTransform transform.*************************");
         long startTimeMs = System.currentTimeMillis();
         TransformOutputProvider outputProvider = transformInvocation.getOutputProvider();
         // 非增量编译的情况下，删除之前生成的文件
@@ -110,7 +110,7 @@ class AutoPatchTransform extends Transform {
         long costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
         mLogger.quiet("hitFix plugin transform time cost " + costTimeSec + "s")
 
-        mLogger.quiet("******************************hotfix plugin transform end*************************");
+        mLogger.quiet("******************************AutoPatchTransform transform end*************************");
     }
 
     // 改造过的方法名写入文件p
