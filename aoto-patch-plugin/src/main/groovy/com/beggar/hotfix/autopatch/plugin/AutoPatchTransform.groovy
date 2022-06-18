@@ -3,6 +3,7 @@ package com.beggar.hotfix.autopatch.plugin
 import com.android.annotations.NonNull
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.beggar.hotfix.autopatch.AutoPatchConfig
 import com.beggar.hotfix.autopatch.AutoPatchConstants
 import javassist.ClassPool
 import javassist.CtClass
@@ -21,9 +22,14 @@ class AutoPatchTransform extends Transform {
     @NonNull
     private Logger mLogger;
 
-    AutoPatchTransform(@NonNull Project project) {
+    // 打包的配置
+    @NonNull
+    private AutoPatchConfig mAutoPatchConfig;
+
+    AutoPatchTransform(@NonNull Project project, @NonNull AutoPatchConfig autoPatchConfig) {
         this.mProject = project
         mLogger = project.getLogger()
+        mAutoPatchConfig = autoPatchConfig
     }
 
     // Transform对应的task的名称
@@ -102,6 +108,7 @@ class AutoPatchTransform extends Transform {
         FileUtils.deleteDirectory(new File(patchGeneratePath))
 
         // todo 找出add、modify
+
     }
 
 }

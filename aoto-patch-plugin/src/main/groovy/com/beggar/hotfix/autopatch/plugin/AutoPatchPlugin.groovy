@@ -28,7 +28,7 @@ class AutoPatchPlugin implements Plugin<Project> {
             mLogger.quiet("********** AutoPatchPlugin apply. *****************")
             initConfig()
 
-            project.android.registerTransform(new AutoPatchTransform(project))
+            project.android.registerTransform(new AutoPatchTransform(project, mAutoPatchConfig))
         } catch (Throwable e) {
             e.printStackTrace()
             mLogger.error("********** hitFix codeInsert plugin parse " + Constants.ROBUST_XML + " error.*********");
