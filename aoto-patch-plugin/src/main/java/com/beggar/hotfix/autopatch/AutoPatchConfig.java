@@ -14,8 +14,11 @@ public class AutoPatchConfig {
 
   // 新增的class：ADD注解的class
   @NonNull
-  public List<String> mNewClassList = new ArrayList<>();
+  public final List<String> mNewClassList = new ArrayList<>();
 
+  // 新增的方法
+  @NonNull
+  public final List<String> mNewMethodList = new ArrayList<>();
 
 
 }

@@ -10,6 +10,7 @@ import com.beggar.hotfix.base.annotation.Add;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
+import javassist.CtMethod;
 import javassist.NotFoundException;
 
 /**
@@ -44,8 +45,8 @@ public class HotFixAnnotationHandler {
     mLogger.quiet(TAG + " handleAnnotation start.");
 
     // 拿到两个注解class
-    Class addAnnotationClass = null;
-    Class modifyAnnotationClass = null;
+    Class addAnnotationClass;
+    Class modifyAnnotationClass;
     try {
       addAnnotationClass =
           mCtClasses.get(0).getClassPool().get(Constants.ADD_CLASS_NAME).toClass();
@@ -61,9 +62,10 @@ public class HotFixAnnotationHandler {
       // 先处理该类被add
       boolean isClassAdd = handleAddNewClass(ctClass, addAnnotationClass);
       if (isClassAdd) {
+        // 新增类直接跳过下方
         continue;
       }
-      // TODO: 2022/6/20 方法add和modify
+      handleAddNewMethod(ctClass, addAnnotationClass);
 
     }
     mLogger.quiet(TAG + " handleAnnotation end.");
@@ -75,12 +77,13 @@ public class HotFixAnnotationHandler {
    * @return {@code true} 该类是新增类(被add注解)
    */
   private boolean handleAddNewClass(@NonNull CtClass ctClass, @NonNull Class addAnnotationClass) {
-    mLogger.quiet(TAG + " handleAddNewClass");
     try {
       Add addAnnotation = (Add) ctClass.getAnnotation(addAnnotationClass);
       if (addAnnotation != null) {
-        if (!mAutoPatchConfig.mNewClassList.contains(ctClass.getName())) {
-          mAutoPatchConfig.mNewClassList.add(ctClass.getName());
+        String className = ctClass.getName();
+        mLogger.quiet(TAG + " handleAddNewClass: " + className);
+        if (!mAutoPatchConfig.mNewClassList.contains(className)) {
+          mAutoPatchConfig.mNewClassList.add(className);
         }
         return true;
       }
@@ -89,5 +92,27 @@ public class HotFixAnnotationHandler {
     }
     return false;
   }
+
+  /**
+   * 新增方法
+   */
+  private void handleAddNewMethod(@NonNull CtClass ctClass, @NonNull Class addAnnotationClass) {
+    ctClass.defrost();
+    CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
+    for (CtMethod ctMethod : declaredMethods) {
+      try {
+        if (ctMethod.getAnnotation(addAnnotationClass) != null) {
+          // such as javassist.CtMethod.setBody(String).
+          String longName = ctMethod.getLongName();
+          if (!mAutoPatchConfig.mNewMethodList.contains(longName)) {
+            mAutoPatchConfig.mNewMethodList.add(longName);
+          }
+        }
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
 
 }
