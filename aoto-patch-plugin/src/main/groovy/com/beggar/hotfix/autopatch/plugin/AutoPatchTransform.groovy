@@ -5,6 +5,7 @@ import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.beggar.hotfix.autopatch.AutoPatchConfig
 import com.beggar.hotfix.autopatch.AutoPatchConstants
+import com.beggar.hotfix.autopatch.HotFixAnnotationHandler
 import javassist.ClassPool
 import javassist.CtClass
 import org.apache.commons.io.FileUtils
@@ -107,7 +108,11 @@ class AutoPatchTransform extends Transform {
         // 先清理一下文件夹
         FileUtils.deleteDirectory(new File(patchGeneratePath))
 
-        // todo 找出add、modify
+        // 找出add、modify注解的类和方法
+        HotFixAnnotationHandler annotationHandler
+            = new HotFixAnnotationHandler(mAutoPatchConfig, ctClasses, mLogger)
+        annotationHandler.handleAnnotation()
+
 
     }
 
