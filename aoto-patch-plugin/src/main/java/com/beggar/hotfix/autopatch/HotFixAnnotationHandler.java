@@ -65,8 +65,11 @@ public class HotFixAnnotationHandler {
         // 新增类直接跳过下方
         continue;
       }
-      handleAddNewMethod(ctClass, addAnnotationClass);
 
+      // 处理新增方法
+      handleAddNewMethod(ctClass, addAnnotationClass);
+      // 处理修改的方法
+      handleModifyMethod(ctClass, modifyAnnotationClass);
     }
     mLogger.quiet(TAG + " handleAnnotation end.");
   }
@@ -74,6 +77,7 @@ public class HotFixAnnotationHandler {
   /**
    * 新增类处理
    *
+   * @param addAnnotationClass add注解的class
    * @return {@code true} 该类是新增类(被add注解)
    */
   private boolean handleAddNewClass(@NonNull CtClass ctClass, @NonNull Class addAnnotationClass) {
@@ -95,9 +99,11 @@ public class HotFixAnnotationHandler {
 
   /**
    * 新增方法
+   *
+   * @param addAnnotationClass add注解的class
    */
   private void handleAddNewMethod(@NonNull CtClass ctClass, @NonNull Class addAnnotationClass) {
-    ctClass.defrost();
+//    ctClass.defrost();
     CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
     for (CtMethod ctMethod : declaredMethods) {
       try {
@@ -114,5 +120,27 @@ public class HotFixAnnotationHandler {
     }
   }
 
+  /**
+   * 处理修改的方法
+   *
+   * @param modifyAnnotationClass modify注解的class
+   */
+  // TODO: 2022/6/21 待完成
+  private void handleModifyMethod(@NonNull CtClass ctClass, @NonNull Class modifyAnnotationClass) {
+    CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
+    for (CtMethod ctMethod : declaredMethods) {
+      try {
+        if (ctMethod.getAnnotation(modifyAnnotationClass) != null) {
+          // such as javassist.CtMethod.setBody(String).
+          String longName = ctMethod.getLongName();
+          if (!mAutoPatchConfig.mNewMethodList.contains(longName)) {
+            mAutoPatchConfig.mNewMethodList.add(longName);
+          }
+        }
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
+  }
 
 }
