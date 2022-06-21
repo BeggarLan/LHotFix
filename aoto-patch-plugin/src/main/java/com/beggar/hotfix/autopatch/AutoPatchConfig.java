@@ -1,7 +1,9 @@
 package com.beggar.hotfix.autopatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.android.annotations.NonNull;
 
@@ -16,13 +18,18 @@ public class AutoPatchConfig {
   @NonNull
   public final List<String> mNewClassList = new ArrayList<>();
 
-  // 新增的方法
+  // 新增的方法,String是CtMethod.longName
   @NonNull
   public final List<String> mNewMethodList = new ArrayList<>();
 
-  // 修改的方法
+  // 修改的方法，String是CtMethod.longName
   @NonNull
   public final List<String> mModifyMethodList = new ArrayList<>();
+
+
+  // 经过插桩的方法，key: CtMethod.longName, value: number
+  @NonNull
+  public final Map<String, Integer> mCodeInsertMethodMap = new HashMap<>();
 
 
 }

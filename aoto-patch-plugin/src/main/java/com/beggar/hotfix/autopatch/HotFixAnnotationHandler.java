@@ -130,13 +130,20 @@ public class HotFixAnnotationHandler {
     CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
     for (CtMethod ctMethod : declaredMethods) {
       try {
-        if (ctMethod.getAnnotation(modifyAnnotationClass) != null) {
-          // such as javassist.CtMethod.setBody(String).
-          String longName = ctMethod.getLongName();
-          if (!mAutoPatchConfig.mModifyMethodList.contains(longName)) {
-            mAutoPatchConfig.mModifyMethodList.add(longName);
-          }
+        if (ctMethod.getAnnotation(modifyAnnotationClass) == null) {
+          continue;
         }
+        String methodLongName = ctMethod.getLongName();
+        if (!mAutoPatchConfig.mCodeInsertMethodMap.containsKey(methodLongName)) {
+          throw new IllegalArgumentException(
+              TAG + " handleModifyMethod： method has not insert code, " + methodLongName);
+        }
+
+        // such as javassist.CtMethod.setBody(String).
+        if (!mAutoPatchConfig.mModifyMethodList.contains(methodLongName)) {
+          mAutoPatchConfig.mModifyMethodList.add(methodLongName);
+        }
+
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
       }
