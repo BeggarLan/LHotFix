@@ -1,6 +1,7 @@
 package com.beggar.hotfix.autopatch
 
 import com.android.annotations.NonNull
+import org.gradle.api.logging.Logger
 
 /**
  * author: lanweihua
@@ -9,15 +10,17 @@ import com.android.annotations.NonNull
  */
 class HotfixXMLParser {
 
+    private static final String TAG = "HotfixXMLParser"
+
     /*
      * 解析xml文件获取配置
      */
-    static AutoPatchConfig parse(@NonNull String xmlFilePath) {
+    static void parse(@NonNull String xmlFilePath, @NonNull Logger logger) {
+        logger.quiet(TAG + "parse start.")
         def hotfixConfigNode = new XmlParser().parse(new File(xmlFilePath));
+        // todo 读取必要的配置
 
-        AutoPatchConfig autoPatchConfig = new AutoPatchConfig();
-
-        return autoPatchConfig;
+        logger.quiet(TAG + "parse end.")
     }
 
 }

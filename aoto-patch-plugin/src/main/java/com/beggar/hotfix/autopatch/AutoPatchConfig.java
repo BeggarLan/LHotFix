@@ -1,7 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public class AutoPatchConfig {
 
   // 经过插桩的方法，key: CtMethod.longName, value: number
   @NonNull
-  public final Map<String, Integer> mCodeInsertMethodMap = new HashMap<>();
+  public final Map<String, Integer> mCodeInsertMethodMap = new LinkedHashMap<>();
 
 
 }

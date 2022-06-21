@@ -1,6 +1,7 @@
 package com.beggar.hotfix.autopatch.plugin
 
 import com.beggar.hotfix.autopatch.AutoPatchConfig
+import com.beggar.hotfix.autopatch.CodeInsertMethodZipFileParser
 import com.beggar.hotfix.autopatch.HotfixXMLParser
 import com.beggar.hotfix.base.Constants
 import org.gradle.api.Plugin
@@ -17,7 +18,7 @@ class AutoPatchPlugin implements Plugin<Project> {
     private Project mProject
     private Logger mLogger
 
-    private AutoPatchConfig mAutoPatchConfig;
+    private AutoPatchConfig mAutoPatchConfig = new AutoPatchConfig()
 
     @Override
     void apply(Project project) {
@@ -39,9 +40,11 @@ class AutoPatchPlugin implements Plugin<Project> {
     private void initConfig() {
         // 配置文件path
         String hotfixXmlPath = "${mProject.projectDir.path}${File.separator}${Constants.ROBUST_XML}"
-        mAutoPatchConfig = HotfixXMLParser.parse(hotfixXmlPath)
+        HotfixXMLParser.parse(hotfixXmlPath, mLogger)
 
-
+        // 经过代码插桩的method声明文件
+        String methodZipFilePath = "${mProject.projectDir.path}${File.separator}${Constants.METHOD_MAP_OUT_PATH}"
+        mAutoPatchConfig.mCodeInsertMethodMap = CodeInsertMethodZipFileParser.parse(methodZipFilePath, mLogger)
     }
 
 }
