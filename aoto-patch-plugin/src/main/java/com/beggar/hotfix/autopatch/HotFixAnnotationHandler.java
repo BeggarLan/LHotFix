@@ -125,7 +125,7 @@ public class HotFixAnnotationHandler {
    *
    * @param modifyAnnotationClass modify注解的class
    */
-  // TODO: 2022/6/21 待完成
+  // TODO: 2022/6/21 类修改和lambda表达式修改
   private void handleModifyMethod(@NonNull CtClass ctClass, @NonNull Class modifyAnnotationClass) {
     CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
     for (CtMethod ctMethod : declaredMethods) {
@@ -133,8 +133,8 @@ public class HotFixAnnotationHandler {
         if (ctMethod.getAnnotation(modifyAnnotationClass) != null) {
           // such as javassist.CtMethod.setBody(String).
           String longName = ctMethod.getLongName();
-          if (!mAutoPatchConfig.mNewMethodList.contains(longName)) {
-            mAutoPatchConfig.mNewMethodList.add(longName);
+          if (!mAutoPatchConfig.mModifyMethodList.contains(longName)) {
+            mAutoPatchConfig.mModifyMethodList.add(longName);
           }
         }
       } catch (ClassNotFoundException e) {

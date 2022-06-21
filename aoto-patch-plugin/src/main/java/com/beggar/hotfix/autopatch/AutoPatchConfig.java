@@ -20,5 +20,9 @@ public class AutoPatchConfig {
   @NonNull
   public final List<String> mNewMethodList = new ArrayList<>();
 
+  // 修改的方法
+  @NonNull
+  public final List<String> mModifyMethodList = new ArrayList<>();
+
 
 }
