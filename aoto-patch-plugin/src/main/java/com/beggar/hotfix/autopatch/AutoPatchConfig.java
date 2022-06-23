@@ -25,6 +25,9 @@ public class AutoPatchConfig {
   // 修改的方法，String是CtMethod.longName
   @NonNull
   public final List<String> mModifyMethodList = new ArrayList<>();
+  // 类中含有modify注解的方法时
+  @NonNull
+  public final List<String> mModifyClassList = new ArrayList<>();
 
 
   // 经过插桩的方法，key: CtMethod.longName, value: number

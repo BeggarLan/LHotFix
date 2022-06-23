@@ -143,7 +143,10 @@ public class HotFixAnnotationHandler {
         if (!mAutoPatchConfig.mModifyMethodList.contains(methodLongName)) {
           mAutoPatchConfig.mModifyMethodList.add(methodLongName);
         }
-
+        String className = ctMethod.getDeclaringClass().getName();
+        if (!mAutoPatchConfig.mModifyClassList.contains(className)) {
+          mAutoPatchConfig.mModifyClassList.add(className);
+        }
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
       }
