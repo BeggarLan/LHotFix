@@ -113,6 +113,22 @@ class AutoPatchTransform extends Transform {
             = new HotFixAnnotationHandler(mAutoPatchConfig, ctClasses, mLogger)
         annotationHandler.handleAnnotation()
 
+        // todo 处理混淆
+        if (mAutoPatchConfig.mSupportProGuard) {
+//            MappingUtil.
+        }
+
+        generatePatch(ctClasses, patchGeneratePath);
+
+    }
+
+    // 生成patch
+    private void generatePatch(@NonNull List<CtClass> ctClasses, @NonNull String patchGeneratePath) {
+        // 没有modify方法，说明没有要修改的，直接结束
+        if (mAutoPatchConfig.mModifyMethodList.isEmpty()) {
+            throw new RuntimeException("not has modify method, please check Modify annotation");
+        }
+
 
     }
 

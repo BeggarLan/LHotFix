@@ -15,10 +15,12 @@ class HotfixXMLParser {
     /*
      * 解析xml文件获取配置
      */
-    static void parse(@NonNull String xmlFilePath, @NonNull Logger logger) {
+    static void parse(
+        @NonNull AutoPatchConfig autoPatchConfig, @NonNull String xmlFilePath, @NonNull Logger logger) {
         logger.quiet(TAG + "parse start.")
         def hotfixConfigNode = new XmlParser().parse(new File(xmlFilePath));
         // todo 读取必要的配置
+        autoPatchConfig.mMappingFilePath = "";
 
         logger.quiet(TAG + "parse end.")
     }

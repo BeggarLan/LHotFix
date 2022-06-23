@@ -40,7 +40,7 @@ class AutoPatchPlugin implements Plugin<Project> {
     private void initConfig() {
         // 配置文件path
         String hotfixXmlPath = "${mProject.projectDir.path}${File.separator}${Constants.ROBUST_XML}"
-        HotfixXMLParser.parse(hotfixXmlPath, mLogger)
+        HotfixXMLParser.parse(mAutoPatchConfig, hotfixXmlPath, mLogger)
 
         // 经过代码插桩的method声明文件
         String methodZipFilePath = "${mProject.projectDir.path}${File.separator}${Constants.METHOD_MAP_OUT_PATH}"

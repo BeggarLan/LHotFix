@@ -31,5 +31,10 @@ public class AutoPatchConfig {
   @NonNull
   public final Map<String, Integer> mCodeInsertMethodMap = new LinkedHashMap<>();
 
+  // TODO: 2022/6/23 支持混淆
+  // 是否支持混淆
+  public boolean mSupportProGuard = true;
+  // mapping文件路径
+  public String mMappingFilePath;
 
 }
