@@ -138,6 +138,11 @@ class AutoPatchTransform extends Transform {
         // 找到class中的super方法
         searchSuperMethod(mAutoPatchConfig.mModifyClassList);
 
+        for(String className : mAutoPatchConfig.mModifyClassList) {
+            CtClass ctClass = classPool.get(className)
+
+        }
+
         mLogger.quiet(TAG + "generatePatch end.")
     }
 
