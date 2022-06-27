@@ -6,8 +6,11 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import com.beggar.hotfix.autopatch.AutoPatchConfig
 import com.beggar.hotfix.autopatch.AutoPatchConstants
 import com.beggar.hotfix.autopatch.HotFixAnnotationHandler
+import javassist.CannotCompileException
 import javassist.ClassPool
 import javassist.CtClass
+import javassist.expr.ExprEditor
+import javassist.expr.MethodCall
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -18,6 +21,9 @@ import org.gradle.api.logging.Logger
  * description: 用来打patch包
  */
 class AutoPatchTransform extends Transform {
+
+    private static final String TAG = "AutoPatchTransform"
+
     @NonNull
     private Project mProject;
     @NonNull
@@ -92,7 +98,7 @@ class AutoPatchTransform extends Transform {
         def costTimeMs = System.currentTimeMillis() - startTimeMs
         mLogger.quiet("add all CtClasses cost $costTimeMs ms , CtClass count : ${ctClasses.size()}")
 
-        autoPatch(ctClasses)
+        autoPatch(classPool, ctClasses)
 
         costTimeMs = (System.currentTimeMillis() - startTimeMs) / 1000
         mLogger.quiet("AutoPatchTransform transform time cost $costTimeMs ms")
@@ -101,7 +107,7 @@ class AutoPatchTransform extends Transform {
         throw new RuntimeException("auto patch successfully")
     }
 
-    void autoPatch(@NonNull List<CtClass> ctClasses) {
+    void autoPatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses) {
         // patch包生成文件夹
         String patchGeneratePath =
             mProject.buildDir.getAbsolutePath() + File.separator + AutoPatchConstants.PATCH_GENERATE_DIR + File.separator;
@@ -118,18 +124,49 @@ class AutoPatchTransform extends Transform {
 //            MappingUtil.
         }
 
-        generatePatch(ctClasses, patchGeneratePath);
+        generatePatch(classPool, ctClasses, patchGeneratePath);
 
     }
 
     // 生成patch
-    private void generatePatch(@NonNull List<CtClass> ctClasses, @NonNull String patchGeneratePath) {
+    private void generatePatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses, @NonNull String patchGeneratePath) {
+        mLogger.quiet(TAG + "generatePatch start.")
         // 没有modify方法，说明没有要修改的，直接结束
-        if (mAutoPatchConfig.mModifyMethodList.isEmpty()) {
+        if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
             throw new RuntimeException("not has modify method, please check Modify annotation");
         }
+        // 找到class中的super方法
+        searchSuperMethod(mAutoPatchConfig.mModifyClassList);
 
-
+        mLogger.quiet(TAG + "generatePatch end.")
     }
+
+    // 找出类的super方法
+    private void searchSuperMethod(@NonNull List<String> ctClassNameList) {
+        for (String className : ctClassNameList) {
+            def superMethodList = mAutoPatchConfig.mSuperMethodMap.getOrDefault(className, new ArrayList<String>())
+            def modifiedCtClass = classPool.get(className)
+            modifiedCtClass.defrost()
+            modifiedCtClass.declaredMethods.findAll {
+                // TODO inline的方法
+                return mAutoPatchConfig.mModifyMethodSignatureList.contains(it.longName)
+            }.each { behavior ->
+                {
+                    behavior.instrument(new ExprEditor() {
+                        @Override
+                        void edit(MethodCall m) throws CannotCompileException {
+                            if (m.isSuper()) {
+                                if (!superMethodList.contains(m.method)) {
+                                    superMethodList.add(m.method);
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+            mAutoPatchConfig.mSuperMethodMap.put(className, superMethodList)
+        }
+    }
+
 
 }

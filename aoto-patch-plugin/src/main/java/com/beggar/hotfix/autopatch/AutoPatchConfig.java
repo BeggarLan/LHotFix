@@ -1,6 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import com.android.annotations.NonNull;
  */
 public class AutoPatchConfig {
 
+  // TODO: 2022/6/27 新增clss还未处理
   // 新增的class：ADD注解的class
   @NonNull
   public final List<String> mNewClassList = new ArrayList<>();
@@ -24,11 +26,14 @@ public class AutoPatchConfig {
 
   // 修改的方法，String是CtMethod.longName
   @NonNull
-  public final List<String> mModifyMethodList = new ArrayList<>();
-  // 类中含有modify注解的方法时
+  public final List<String> mModifyMethodSignatureList = new ArrayList<>();
+  // 类中含有modify注解的方法时，CtClass.getName()
   @NonNull
   public final List<String> mModifyClassList = new ArrayList<>();
 
+  // 类的super方法，key：CtClass.getName()  ----  value：<T>->MethodCall.method
+  @NonNull
+  public final Map<String, List<String>> mSuperMethodMap = new HashMap<>();
 
   // 经过插桩的方法，key: CtMethod.longName, value: number
   @NonNull

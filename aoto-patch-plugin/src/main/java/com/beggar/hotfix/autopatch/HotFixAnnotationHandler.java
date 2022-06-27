@@ -140,8 +140,8 @@ public class HotFixAnnotationHandler {
         }
 
         // such as javassist.CtMethod.setBody(String).
-        if (!mAutoPatchConfig.mModifyMethodList.contains(methodLongName)) {
-          mAutoPatchConfig.mModifyMethodList.add(methodLongName);
+        if (!mAutoPatchConfig.mModifyMethodSignatureList.contains(methodLongName)) {
+          mAutoPatchConfig.mModifyMethodSignatureList.add(methodLongName);
         }
         String className = ctMethod.getDeclaringClass().getName();
         if (!mAutoPatchConfig.mModifyClassList.contains(className)) {
