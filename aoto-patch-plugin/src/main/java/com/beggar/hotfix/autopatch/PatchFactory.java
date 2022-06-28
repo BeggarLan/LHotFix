@@ -76,6 +76,7 @@ public class PatchFactory {
     // 添加构造器
     addConstructor(logger, sourceClass, patchClass);
 
+
     logger.quiet(TAG + "createPatchClass end. patchClass:" + patchClass.getName());
     return patchClass;
   }

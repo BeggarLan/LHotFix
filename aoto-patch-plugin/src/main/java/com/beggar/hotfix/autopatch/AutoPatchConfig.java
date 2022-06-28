@@ -31,9 +31,9 @@ public class AutoPatchConfig {
   @NonNull
   public final List<String> mModifyClassList = new ArrayList<>();
 
-  // 类的super方法，key：CtClass.getName()  ----  value：<T>->MethodCall.method
+  // 调用的super方法，key：CtClass.getName()  ----  value：<T>->MethodCall.method
   @NonNull
-  public final Map<String, List<String>> mSuperMethodMap = new HashMap<>();
+  public final Map<String, List<String>> mInvokeSuperMethodMap = new HashMap<>();
 
   // 经过插桩的方法，key: CtMethod.longName, value: number
   @NonNull

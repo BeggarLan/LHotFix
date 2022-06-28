@@ -149,7 +149,7 @@ class AutoPatchTransform extends Transform {
     // 找出类的super方法
     private void searchSuperMethod(@NonNull List<String> ctClassNameList) {
         for (String className : ctClassNameList) {
-            def superMethodList = mAutoPatchConfig.mSuperMethodMap.getOrDefault(className, new ArrayList<String>())
+            def invokeSuperMethodList = mAutoPatchConfig.mInvokeSuperMethodMap.getOrDefault(className, new ArrayList<String>())
             def modifiedCtClass = classPool.get(className)
             modifiedCtClass.defrost()
             modifiedCtClass.declaredMethods.findAll {
@@ -160,16 +160,17 @@ class AutoPatchTransform extends Transform {
                     behavior.instrument(new ExprEditor() {
                         @Override
                         void edit(MethodCall m) throws CannotCompileException {
+                            // super.xxx()
                             if (m.isSuper()) {
-                                if (!superMethodList.contains(m.method)) {
-                                    superMethodList.add(m.method);
+                                if (!invokeSuperMethodList.contains(m.method)) {
+                                    invokeSuperMethodList.add(m.method);
                                 }
                             }
                         }
                     })
                 }
             }
-            mAutoPatchConfig.mSuperMethodMap.put(className, superMethodList)
+            mAutoPatchConfig.mInvokeSuperMethodMap.put(className, invokeSuperMethodList)
         }
     }
 
