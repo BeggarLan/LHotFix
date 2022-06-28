@@ -109,7 +109,7 @@ public class HotFixAnnotationHandler {
       try {
         if (ctMethod.getAnnotation(addAnnotationClass) != null) {
           // such as javassist.CtMethod.setBody(String).
-          String longName = ctMethod.getLongName();
+          String longName = JavassistUtil.getMethodSignatureName(ctMethod);
           if (!mAutoPatchConfig.mNewMethodList.contains(longName)) {
             mAutoPatchConfig.mNewMethodList.add(longName);
           }
@@ -133,7 +133,7 @@ public class HotFixAnnotationHandler {
         if (ctMethod.getAnnotation(modifyAnnotationClass) == null) {
           continue;
         }
-        String methodLongName = ctMethod.getLongName();
+        String methodLongName = JavassistUtil.getMethodSignatureName(ctMethod);
         if (!mAutoPatchConfig.mCodeInsertMethodMap.containsKey(methodLongName)) {
           throw new IllegalArgumentException(
               TAG + " handleModifyMethod： method has not insert code, " + methodLongName);

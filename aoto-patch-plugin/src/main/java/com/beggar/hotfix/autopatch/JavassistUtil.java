@@ -32,7 +32,7 @@ public class JavassistUtil {
       @NonNull ClassPool classPool,
       @NonNull CtClass sourceClass,
       @NonNull String targetClassName,
-      @NonNull List<String> exceptMethodList) throws NotFoundException, CannotCompileException {
+      @NonNull List<CtMethod> exceptMethodList) throws NotFoundException, CannotCompileException {
     CtClass patchClass = classPool.makeClass(targetClassName);
     // 设置java版本
     patchClass.getClassFile().setMajorVersion(ClassFile.JAVA_7);
@@ -52,11 +52,22 @@ public class JavassistUtil {
 
     // clone方法
     for (CtMethod ctMethod : sourceClass.getDeclaredMethods()) {
+      // 过滤
+      if (exceptMethodList.contains(ctMethod)) {
+        continue;
+      }
       CtMethod cloneMethod = new CtMethod(ctMethod, patchClass, classMap);
       patchClass.addMethod(cloneMethod);
     }
 
     return patchClass;
+  }
+
+  /**
+   * 获得方法签名
+   */
+  public static String getMethodSignatureName(@NonNull CtMethod ctMethod) {
+    return ctMethod.getLongName();
   }
 
 }

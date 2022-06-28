@@ -109,10 +109,10 @@ class AutoPatchTransform extends Transform {
 
     void autoPatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses) {
         // patch包生成文件夹
-        String patchGeneratePath =
+        String patchGenerateDirPath =
             mProject.buildDir.getAbsolutePath() + File.separator + AutoPatchConstants.PATCH_GENERATE_DIR + File.separator;
         // 先清理一下文件夹
-        FileUtils.deleteDirectory(new File(patchGeneratePath))
+        FileUtils.deleteDirectory(new File(patchGenerateDirPath))
 
         // 找出add、modify注解的类和方法
         HotFixAnnotationHandler annotationHandler
@@ -124,12 +124,12 @@ class AutoPatchTransform extends Transform {
 //            MappingUtil.
         }
 
-        generatePatch(classPool, ctClasses, patchGeneratePath);
+        generatePatch(classPool, ctClasses, patchGenerateDirPath);
 
     }
 
     // 生成patch
-    private void generatePatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses, @NonNull String patchGeneratePath) {
+    private void generatePatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses, @NonNull String patchGenerateDirPath) {
         mLogger.quiet(TAG + "generatePatch start.")
         // 没有modify方法，说明没有要修改的，直接结束
         if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
