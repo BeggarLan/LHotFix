@@ -1,5 +1,8 @@
 package com.beggar.hotfix.autopatch;
 
+import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCH_CLASS_CONSTRUCTOR_NAME;
+import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +13,10 @@ import com.android.annotations.NonNull;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtField;
 import javassist.CtMethod;
+import javassist.CtNewConstructor;
 import javassist.NotFoundException;
 
 /**
@@ -67,10 +73,37 @@ public class PatchFactory {
     if (patchClass.getDeclaredMethods().length == 0) {
       throw new RuntimeException(patchClass.getName() + ": patch class has no method.");
     }
-
+    // 添加构造器
+    addConstructor(logger, sourceClass, patchClass);
 
     logger.quiet(TAG + "createPatchClass end. patchClass:" + patchClass.getName());
     return patchClass;
+  }
+
+  /**
+   * 给补丁类加构造器
+   *
+   * @param sourceClass 原类
+   * @param patchClass  补丁类
+   */
+  private void addConstructor(
+      @NonNull Logger logger, @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
+    try {
+      // 类型是sourceClass，名字是mSourceClass
+      CtField ctField = new CtField(sourceClass, PATCH_CLASS_FIELD_SOURCE_CLASS, patchClass);
+      patchClass.addField(ctField);
+      StringBuilder constructorCode = new StringBuilder();
+      constructorCode
+          .append("public " + PATCH_CLASS_CONSTRUCTOR_NAME + "(Object o) {")
+          .append(PATCH_CLASS_FIELD_SOURCE_CLASS + "=(" + sourceClass.getName() + ")o;")
+          .append("}");
+      CtConstructor constructor = CtNewConstructor.make(constructorCode.toString(), patchClass);
+      patchClass.addConstructor(constructor);
+    } catch (CannotCompileException e) {
+      logger.error(TAG + "addConstructor error");
+      e.printStackTrace();
+      throw new RuntimeException();
+    }
   }
 
 }
