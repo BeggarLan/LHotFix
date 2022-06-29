@@ -66,8 +66,28 @@ public class JavassistUtil {
   /**
    * 获得方法签名
    */
+  @NonNull
   public static String getMethodSignatureName(@NonNull CtMethod ctMethod) {
     return ctMethod.getLongName();
+  }
+
+
+  /**
+   * 获得方法的参数签名
+   */
+  @NonNull
+  public static String getMethodParameterSignature(@NonNull CtMethod ctMethod)
+      throws NotFoundException {
+    StringBuilder stringBuilder = new StringBuilder();
+    CtClass[] parameterTypes = ctMethod.getParameterTypes();
+    for (int i = 0; i < parameterTypes.length; ++i) {
+      CtClass parameterClass = parameterTypes[i];
+      stringBuilder.append(parameterClass.getName()).append(" arg").append(i);
+      if (i != parameterTypes.length - 1) {
+        stringBuilder.append(", ");
+      }
+    }
+    return stringBuilder.toString();
   }
 
 }

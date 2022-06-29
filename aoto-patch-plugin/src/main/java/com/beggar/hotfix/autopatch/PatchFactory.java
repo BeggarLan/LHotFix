@@ -37,11 +37,9 @@ public class PatchFactory {
   /**
    * 创建补丁
    *
-   * @param sourceClass               要补丁的class
-   * @param patchClassName            补丁类name
-   * @param newMethodList             新增的方法(所有类的)
-   * @param modifyMethodSignatureList 修改的方法(所有类的)
-   * @param patchGenerateDirPath      补丁生成文件夹路径
+   * @param sourceClass          要补丁的class
+   * @param patchClassName       补丁类name
+   * @param patchGenerateDirPath 补丁生成文件夹路径
    * @return 生成的补丁类
    */
   public CtClass createPatchClass(
@@ -49,8 +47,7 @@ public class PatchFactory {
       @NonNull ClassPool classPool,
       @NonNull CtClass sourceClass,
       @NonNull String patchClassName,
-      @NonNull List<String> newMethodList,
-      @NonNull List<String> modifyMethodSignatureList,
+      @NonNull AutoPatchConfig patchConfig,
       @NonNull String patchGenerateDirPath) throws NotFoundException, CannotCompileException {
     logger.quiet(TAG + "createPatchClass start. sourceClass:" + sourceClass.getName());
     // 不需要patch的方法
@@ -58,10 +55,10 @@ public class PatchFactory {
     for (CtMethod ctMethod : sourceClass.getDeclaredMethods()) {
       String methodSignatureName = JavassistUtil.getMethodSignatureName(ctMethod);
       // 新增方法
-      if (newMethodList.contains(methodSignatureName)) {
+      if (patchConfig.mNewMethodList.contains(methodSignatureName)) {
         continue;
       }
-      if (!modifyMethodSignatureList.contains(methodSignatureName)) {
+      if (!patchConfig.mModifyMethodSignatureList.contains(methodSignatureName)) {
         noNeedPatchMethod.add(ctMethod);
       }
     }
@@ -105,6 +102,61 @@ public class PatchFactory {
       e.printStackTrace();
       throw new RuntimeException();
     }
+  }
+
+  /**
+   * 处理调用super方法
+   */
+  private void handleInvokeSuperMethod(
+      @NonNull CtClass sourceClass,
+      @NonNull CtClass patchClass,
+      @NonNull List<CtMethod> invokeSuperMethodList,
+      @NonNull String patchGenerateDirPath) throws NotFoundException {
+    for (CtMethod ctMethod : invokeSuperMethodList) {
+      // 生成新方法
+      /*
+       public static methodName(SourceClass sourceClassInstance, PatchClass patchClassInstance,
+       xxx参数) {
+
+       }
+       */
+      StringBuilder methodBuilder = new StringBuilder();
+
+      CtClass[] parameterTypes = ctMethod.getParameterTypes();
+      // 方法有参数
+      if (parameterTypes.length > 0) {
+        methodBuilder.append("public static ")
+            .append(ctMethod.getReturnType().getName() + " " + ctMethod.getName())
+            .append("(")
+            .append(sourceClass.getName() + "sourceClassInstance, ")
+            .append(patchClass.getName() + "patchClassInstance, ")
+            .append(JavassistUtil.getMethodParameterSignature(ctMethod))
+            .append("){");
+      } else {
+        methodBuilder.append("public static ")
+            .append(ctMethod.getReturnType().getName() + " " + ctMethod.getName())
+            .append("(")
+            .append(sourceClass.getName() + "sourceClassInstance, ")
+            .append(patchClass.getName() + "patchClassInstance, ")
+            .append("){");
+      }
+
+      // 创建方法的assitClass
+      createInvokeSuperMethodAssistClass(sourceClass, patchClass, ctMethod);
+
+      methodBuilder.append("}");
+
+    }
+  }
+
+  /**
+   * 创建super.xxx()的AssistClass
+   */
+  private CtClass createInvokeSuperMethodAssistClass(
+      @NonNull CtClass sourceClass,
+      @NonNull CtClass patchClass,
+      @NonNull CtMethod invokeSuperMethod) {
+
   }
 
 }
