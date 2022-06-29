@@ -15,4 +15,7 @@ public class AutoPatchConstants {
   // 补丁类的<SourceClass mSourceClass>属性
   public static final String PATCH_CLASS_FIELD_SOURCE_CLASS = "mSourceClass";
 
+  // Assist后缀
+  public static final String ASSIST_SUFFIX = "HotfixAssist";
+
 }

@@ -108,6 +108,7 @@ public class PatchFactory {
    * 处理调用super方法
    */
   private void handleInvokeSuperMethod(
+      @NonNull ClassPool classPool,
       @NonNull CtClass sourceClass,
       @NonNull CtClass patchClass,
       @NonNull List<CtMethod> invokeSuperMethodList,
@@ -142,7 +143,8 @@ public class PatchFactory {
       }
 
       // 创建方法的assitClass
-      createInvokeSuperMethodAssistClass(sourceClass, patchClass, ctMethod);
+      createInvokeSuperMethodAssistClass(
+          classPool, sourceClass, patchClass, ctMethod, patchGenerateDirPath);
 
       methodBuilder.append("}");
 
@@ -152,10 +154,14 @@ public class PatchFactory {
   /**
    * 创建super.xxx()的AssistClass
    */
-  private CtClass createInvokeSuperMethodAssistClass(
+  private void createInvokeSuperMethodAssistClass(
+      @NonNull ClassPool classPool,
       @NonNull CtClass sourceClass,
       @NonNull CtClass patchClass,
-      @NonNull CtMethod invokeSuperMethod) {
+      @NonNull CtMethod invokeSuperMethod,
+      @NonNull String patchGenerateDirPath) {
+    // assist类名
+    String assistClassName = NameUtil.getAssistClassName(patchClass.getName());
 
   }
 
