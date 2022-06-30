@@ -50,7 +50,8 @@ public class PatchFactory {
       @NonNull CtClass sourceClass,
       @NonNull String patchClassName,
       @NonNull AutoPatchConfig patchConfig,
-      @NonNull String patchGenerateDirPath) throws NotFoundException, CannotCompileException {
+      @NonNull String patchGenerateDirPath)
+      throws NotFoundException, CannotCompileException, IOException {
     logger.quiet(TAG + "createPatchClass start. sourceClass:" + sourceClass.getName());
     // 不需要patch的方法
     List<CtMethod> noNeedPatchMethod = new ArrayList<>();
@@ -66,6 +67,7 @@ public class PatchFactory {
     }
 
     // clone出补丁类
+    logger.quiet(TAG + "createPatchClass clone class");
     CtClass patchClass =
         JavassistUtil.cloneClass(classPool, sourceClass, patchClassName, noNeedPatchMethod);
     // 没有方法的时候
@@ -74,6 +76,14 @@ public class PatchFactory {
     }
     // 添加构造器
     addConstructor(logger, sourceClass, patchClass);
+    // 处理super.xxx()
+    handleInvokeSuperMethod(
+        logger,
+        classPool,
+        sourceClass,
+        patchClass,
+        patchConfig.mInvokeSuperMethodMap.get(sourceClass),
+        patchGenerateDirPath);
 
 
     logger.quiet(TAG + "createPatchClass end. patchClass:" + patchClass.getName());
@@ -89,6 +99,9 @@ public class PatchFactory {
   private void addConstructor(
       @NonNull Logger logger, @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
     try {
+      logger.quiet(
+          TAG + "addConstructor, sourceClass:" + sourceClass.getName() + ", patchClass:" +
+              patchClass.getName());
       // 类型是sourceClass，名字是mSourceClass
       CtField ctField = new CtField(sourceClass, PATCH_CLASS_FIELD_SOURCE_CLASS, patchClass);
       patchClass.addField(ctField);
@@ -110,12 +123,15 @@ public class PatchFactory {
    * 处理调用super方法
    */
   private void handleInvokeSuperMethod(
+      @NonNull Logger logger,
       @NonNull ClassPool classPool,
       @NonNull CtClass sourceClass,
       @NonNull CtClass patchClass,
       @NonNull List<CtMethod> invokeSuperMethodList,
       @NonNull String patchGenerateDirPath)
       throws NotFoundException, CannotCompileException, IOException {
+    logger.quiet(
+        TAG + "handleInvokeSuperMethod, invokeSuperMethodList:" + invokeSuperMethodList);
     for (CtMethod ctMethod : invokeSuperMethodList) {
       // 生成新方法
       /*

@@ -6,6 +6,7 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import com.beggar.hotfix.autopatch.AutoPatchConfig
 import com.beggar.hotfix.autopatch.AutoPatchConstants
 import com.beggar.hotfix.autopatch.HotFixAnnotationHandler
+import com.beggar.hotfix.autopatch.PatchFactory
 import javassist.CannotCompileException
 import javassist.ClassPool
 import javassist.CtClass
@@ -124,12 +125,12 @@ class AutoPatchTransform extends Transform {
 //            MappingUtil.
         }
 
-        generatePatch(classPool, ctClasses, patchGenerateDirPath);
+        generatePatch(classPool, patchGenerateDirPath);
 
     }
 
     // 生成patch
-    private void generatePatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses, @NonNull String patchGenerateDirPath) {
+    private void generatePxatch(@NonNull ClassPool classPool @NonNull String patchGenerateDirPath) {
         mLogger.quiet(TAG + "generatePatch start.")
         // 没有modify方法，说明没有要修改的，直接结束
         if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
@@ -138,9 +139,16 @@ class AutoPatchTransform extends Transform {
         // 找到class中的super方法
         searchSuperMethod(mAutoPatchConfig.mModifyClassList);
 
-        for(String className : mAutoPatchConfig.mModifyClassList) {
+        for (String className : mAutoPatchConfig.mModifyClassList) {
             CtClass ctClass = classPool.get(className)
-
+            CtClass patchClass = PatchFactory.getInstance().createPatchClass(
+                mLogger,
+                classPool,
+                ctClass,
+                // todo name
+                "",
+                mAutoPatchConfig,
+                patchGenerateDirPath)
         }
 
         mLogger.quiet(TAG + "generatePatch end.")

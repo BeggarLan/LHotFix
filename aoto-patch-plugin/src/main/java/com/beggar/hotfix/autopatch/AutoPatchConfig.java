@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.android.annotations.NonNull;
 
+import javassist.CtMethod;
+
 /**
  * author: lanweihua
  * created on: 2022/6/15 12:55 下午
@@ -33,7 +35,7 @@ public class AutoPatchConfig {
 
   // 调用的super方法，key：CtClass.getName()  ----  value：<T>->MethodCall.method
   @NonNull
-  public final Map<String, List<String>> mInvokeSuperMethodMap = new HashMap<>();
+  public final Map<String, List<CtMethod>> mInvokeSuperMethodMap = new HashMap<>();
 
   // 经过插桩的方法，key: CtMethod.longName, value: number
   @NonNull
