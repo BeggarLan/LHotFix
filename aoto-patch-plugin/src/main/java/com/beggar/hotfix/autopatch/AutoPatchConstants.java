@@ -18,4 +18,7 @@ public class AutoPatchConstants {
   // Assist后缀
   public static final String ASSIST_SUFFIX = "HotfixAssist";
 
+  // Public后缀, 访问private方法的时候会生成一个public的方法去访问
+  public static final String PUBLIC_SUFFIX = "HotfixPublic";
+
 }

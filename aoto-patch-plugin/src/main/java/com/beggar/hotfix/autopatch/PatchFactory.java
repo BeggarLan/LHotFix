@@ -10,6 +10,7 @@ import java.util.List;
 import org.gradle.api.logging.Logger;
 
 import com.android.annotations.NonNull;
+import com.android.dx.rop.code.AccessFlags;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -87,6 +88,8 @@ public class PatchFactory {
         patchConfig.mInvokeSuperMethodMap.get(sourceClass),
         patchGenerateDirPath);
 
+    // 为类中的每一个private方法增加public的访问方法
+    createPublicMethodForPrivate(logger, patchClass);
 
     logger.quiet(TAG + "createPatchClass end. patchClass:" + patchClass.getName());
     return patchClass;
@@ -257,17 +260,40 @@ public class PatchFactory {
   }
 
   /**
-   * 为类中的每一个private方法增加public static的访问方法
+   * 为类中的每一个private方法增加public的访问方法
+   * private returnType methodName(xx参数)
+   * -->
+   * public returnType methodNameHotfixPublic(xx参数) {
+   * return methodName(xx参数)
+   * }
    */
-  private void createPublicMethodForPrivate(@NonNull CtClass ctClass)
-      throws CannotCompileException {
+  private void createPublicMethodForPrivate(@NonNull Logger logger, @NonNull CtClass ctClass)
+      throws CannotCompileException, NotFoundException {
+    logger.quiet(TAG + "createPublicMethodForPrivate start.");
     CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
     for (CtMethod ctMethod : declaredMethods) {
       // private方法
-      if (AccessFlag.isPrivate(ctMethod.getModifiers())) {
+      if (AccessFlags.isPrivate(ctMethod.getModifiers())) {
         StringBuilder methodBuilder = new StringBuilder();
-        methodBuilder.append("public static ");
-
+        methodBuilder.append("public ");
+        // static修饰和原方法保持一致
+        if (AccessFlags.isStatic(ctMethod.getModifiers())) {
+          methodBuilder.append(" static ");
+        }
+        methodBuilder.append(ctMethod.getReturnType().getName())
+            .append(" ")
+            .append(ctMethod.getName() + AutoPatchConstants.PUBLIC_SUFFIX)
+            .append("(")
+            .append(JavassistUtil.getMethodParameterSignature(ctMethod))
+            .append(") {");
+        if (ctMethod.getReturnType().equals(CtClass.voidType)) {
+          methodBuilder.append("return ");
+        }
+        methodBuilder.append(ctMethod.getName())
+            .append("(")
+            .append(JavassistUtil.getMethodParameterSignature(ctMethod))
+            .append(")")
+            .append("}");
 
         CtMethod newMethod = CtMethod.make(methodBuilder.toString(), ctClass);
         ctClass.addMethod(newMethod);
