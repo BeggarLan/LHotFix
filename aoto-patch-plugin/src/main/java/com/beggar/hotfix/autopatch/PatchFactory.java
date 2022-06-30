@@ -19,6 +19,7 @@ import javassist.CtField;
 import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.NotFoundException;
+import javassist.bytecode.AccessFlag;
 import javassist.bytecode.ClassFile;
 
 /**
@@ -52,6 +53,7 @@ public class PatchFactory {
       @NonNull AutoPatchConfig patchConfig,
       @NonNull String patchGenerateDirPath)
       throws NotFoundException, CannotCompileException, IOException {
+    android.R.style.Theme_Translucent_NoTitleBar_Fullscreen
     logger.quiet(TAG + "createPatchClass start. sourceClass:" + sourceClass.getName());
     // 不需要patch的方法
     List<CtMethod> noNeedPatchMethod = new ArrayList<>();
@@ -252,6 +254,25 @@ public class PatchFactory {
     CtMethod ctMethod = CtMethod.make(methodBuilder.toString(), assistClass);
     assistClass.addMethod(ctMethod);
     assistClass.writeFile(patchGenerateDirPath);
+  }
+
+  /**
+   * 为类中的每一个private方法增加public static的访问方法
+   */
+  private void createPublicMethodForPrivate(@NonNull CtClass ctClass)
+      throws CannotCompileException {
+    CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
+    for (CtMethod ctMethod : declaredMethods) {
+      // private方法
+      if (AccessFlag.isPrivate(ctMethod.getModifiers())) {
+        StringBuilder methodBuilder = new StringBuilder();
+        methodBuilder.append("public static ");
+
+
+        CtMethod newMethod = CtMethod.make(methodBuilder.toString(), ctClass);
+        ctClass.addMethod(newMethod);
+      }
+    }
   }
 
 }
