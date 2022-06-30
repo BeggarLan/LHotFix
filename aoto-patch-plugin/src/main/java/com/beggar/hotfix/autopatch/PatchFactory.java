@@ -20,8 +20,8 @@ import javassist.CtField;
 import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.NotFoundException;
-import javassist.bytecode.AccessFlag;
 import javassist.bytecode.ClassFile;
+import javassist.expr.ExprEditor;
 
 /**
  * author: lanweihua
@@ -80,7 +80,7 @@ public class PatchFactory {
     // 添加构造器
     addConstructor(logger, sourceClass, patchClass);
     // 处理super.xxx()
-    handleInvokeSuperMethod(
+    List<CtMethod> addedSuperAccessMethodList = handleInvokeSuperMethod(
         logger,
         classPool,
         sourceClass,
@@ -89,7 +89,20 @@ public class PatchFactory {
         patchGenerateDirPath);
 
     // 为类中的每一个private方法增加public的访问方法
-    createPublicMethodForPrivate(logger, patchClass);
+    List<CtMethod> addedPublicMethodForPrivate = createPublicMethodForPrivate(logger, patchClass);
+
+    for (CtMethod ctMethod : patchClass.getDeclaredMethods()) {
+      // 为super.xxx()增加的访问方法
+      if (addedSuperAccessMethodList.contains(ctMethod)) {
+        continue;
+      }
+      // 为private方法增加的public方法
+      if (addedPublicMethodForPrivate.contains(ctMethod)) {
+        continue;
+      }
+
+      ctMethod.instrument(new ExprEditor());
+    }
 
     logger.quiet(TAG + "createPatchClass end. patchClass:" + patchClass.getName());
     return patchClass;
@@ -125,9 +138,11 @@ public class PatchFactory {
   }
 
   /**
-   * 处理调用super方法
+   * 处理调用super方法, 会生成同名的public static的代理方法
+   *
+   * @return 增加的访问方法
    */
-  private void handleInvokeSuperMethod(
+  private List<CtMethod> handleInvokeSuperMethod(
       @NonNull Logger logger,
       @NonNull ClassPool classPool,
       @NonNull CtClass sourceClass,
@@ -137,6 +152,7 @@ public class PatchFactory {
       throws NotFoundException, CannotCompileException, IOException {
     logger.quiet(
         TAG + "handleInvokeSuperMethod, invokeSuperMethodList:" + invokeSuperMethodList);
+    List<CtMethod> addedSuperAccessMethodList = new ArrayList<>();
     for (CtMethod ctMethod : invokeSuperMethodList) {
       // 生成新方法
       /*
@@ -188,7 +204,9 @@ public class PatchFactory {
 
       CtMethod newMethod = CtMethod.make(methodBuilder.toString(), patchClass);
       patchClass.addMethod(newMethod);
+      addedSuperAccessMethodList.add(newMethod);
     }
+    return addedSuperAccessMethodList;
   }
 
   /**
@@ -266,10 +284,15 @@ public class PatchFactory {
    * public returnType methodNameHotfixPublic(xx参数) {
    * return methodName(xx参数)
    * }
+   *
+   * @return 增加的方法
    */
-  private void createPublicMethodForPrivate(@NonNull Logger logger, @NonNull CtClass ctClass)
+  private List<CtMethod> createPublicMethodForPrivate(@NonNull Logger logger,
+      @NonNull CtClass ctClass)
       throws CannotCompileException, NotFoundException {
     logger.quiet(TAG + "createPublicMethodForPrivate start.");
+    List<CtMethod> addedPublicMethod = new ArrayList<>();
+
     CtMethod[] declaredMethods = ctClass.getDeclaredMethods();
     for (CtMethod ctMethod : declaredMethods) {
       // private方法
@@ -297,8 +320,10 @@ public class PatchFactory {
 
         CtMethod newMethod = CtMethod.make(methodBuilder.toString(), ctClass);
         ctClass.addMethod(newMethod);
+        addedPublicMethod.add(newMethod);
       }
     }
+    return addedPublicMethod;
   }
 
 }
