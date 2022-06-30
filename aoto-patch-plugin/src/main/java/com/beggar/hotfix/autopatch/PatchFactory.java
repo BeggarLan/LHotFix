@@ -121,7 +121,8 @@ public class PatchFactory {
       /*
        public static methodName(SourceClass sourceClassInstance, PatchClass patchClassInstance,
        xxx参数) {
-
+          // 这个assist类：PatchClass.getName+ASSIST_SUFFIX
+          return assist类.methodName(sourceClassInstance,patchClassInstance,xxx参数);
        }
        */
       StringBuilder methodBuilder = new StringBuilder();
@@ -149,8 +150,23 @@ public class PatchFactory {
       createInvokeSuperMethodAssistClass(
           classPool, sourceClass, patchClass, ctMethod, patchGenerateDirPath);
 
+      if (ctMethod.getReturnType().equals(CtClass.voidType)) {
+        methodBuilder.append("return ");
+      }
+      methodBuilder.append(NameUtil.getAssistClassName(patchClass.getName()))
+          .append(".")
+          .append(ctMethod.getName())
+          .append("(")
+          .append("sourceClassInstance, patchClassInstance");
+      if (parameterTypes.length > 0) {
+        methodBuilder.append(",")
+            .append(JavassistUtil.getMethodParameterSignature(ctMethod))
+            .append(");");
+      }
       methodBuilder.append("}");
 
+      CtMethod newMethod = CtMethod.make(methodBuilder.toString(), patchClass);
+      patchClass.addMethod(newMethod);
     }
   }
 
