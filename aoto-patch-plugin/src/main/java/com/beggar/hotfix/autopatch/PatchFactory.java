@@ -3,6 +3,7 @@ package com.beggar.hotfix.autopatch;
 import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCH_CLASS_CONSTRUCTOR_NAME;
 import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import javassist.CtField;
 import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.NotFoundException;
+import javassist.bytecode.ClassFile;
 
 /**
  * author: lanweihua
@@ -112,7 +114,8 @@ public class PatchFactory {
       @NonNull CtClass sourceClass,
       @NonNull CtClass patchClass,
       @NonNull List<CtMethod> invokeSuperMethodList,
-      @NonNull String patchGenerateDirPath) throws NotFoundException {
+      @NonNull String patchGenerateDirPath)
+      throws NotFoundException, CannotCompileException, IOException {
     for (CtMethod ctMethod : invokeSuperMethodList) {
       // 生成新方法
       /*
@@ -159,10 +162,64 @@ public class PatchFactory {
       @NonNull CtClass sourceClass,
       @NonNull CtClass patchClass,
       @NonNull CtMethod invokeSuperMethod,
-      @NonNull String patchGenerateDirPath) {
+      @NonNull String patchGenerateDirPath)
+      throws NotFoundException, CannotCompileException, IOException {
     // assist类名
     String assistClassName = NameUtil.getAssistClassName(patchClass.getName());
 
+    // 创建assistClass
+    CtClass assistClass = classPool.getOrNull(assistClassName);
+    if (assistClass == null) {
+      assistClass = classPool.makeClass(assistClassName);
+      assistClass.getClassFile().setMajorVersion(ClassFile.JAVA_7);
+      if (sourceClass.getSuperclass() != null) {
+        assistClass.setSuperclass(sourceClass.getSuperclass());
+      }
+      if (sourceClass.getInterfaces() != null) {
+        assistClass.setInterfaces(sourceClass.getInterfaces());
+      }
+    }
+
+    // 先解冻，后面可以修改
+    if (assistClass.isFrozen()) {
+      assistClass.defrost();
+    }
+
+    // 生成方法
+    /*
+      public static methodName(SourceClass sourceClassInstance, PatchClass patchClassInstance,
+       xxx参数) {
+        return patchClassInstance.methodName(xxx参数);
+       }
+     */
+    StringBuilder methodBuilder = new StringBuilder();
+    CtClass[] parameterTypes = invokeSuperMethod.getParameterTypes();
+    // 方法有参数
+    if (parameterTypes.length > 0) {
+      methodBuilder.append("public static ")
+          .append(invokeSuperMethod.getReturnType().getName() + " " + invokeSuperMethod.getName())
+          .append("(")
+          .append(sourceClass.getName() + "sourceClassInstance, ")
+          .append(patchClass.getName() + "patchClassInstance, ")
+          .append(JavassistUtil.getMethodParameterSignature(invokeSuperMethod))
+          .append("){");
+    } else {
+      methodBuilder.append("public static ")
+          .append(invokeSuperMethod.getReturnType().getName() + " " + invokeSuperMethod.getName())
+          .append("(")
+          .append(sourceClass.getName() + "sourceClassInstance, ")
+          .append(patchClass.getName() + "patchClassInstance, ")
+          .append("){");
+    }
+
+    methodBuilder.append("return patchClassInstance." + invokeSuperMethod.getName() + "(")
+        .append(JavassistUtil.getMethodParameterSignature(invokeSuperMethod))
+        .append(");")
+        .append("}");
+
+    CtMethod ctMethod = CtMethod.make(methodBuilder.toString(), assistClass);
+    assistClass.addMethod(ctMethod);
+    assistClass.writeFile(patchGenerateDirPath);
   }
 
 }
