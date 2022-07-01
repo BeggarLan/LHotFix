@@ -109,7 +109,18 @@ public class PatchFactory {
         // 编辑字段访问表达式（可覆盖）。字段访问意味着读取和写入。默认实现不执行任何操作
         @Override
         public void edit(FieldAccess f) throws CannotCompileException {
+          // 新增类不需要处理
+          if (patchConfig.mNewClassList.contains(f.getClassName())) {
+            return;
+          }
+          // 把patchClassInstance内的字段(类filed)操作都转移到sourceClassInstance中
+          // 字段访问
+          if (f.isReader()) {
 
+          } else if (f.isWriter()) {
+            // 字段赋值
+
+          }
         }
 
         // 编辑新表达式（可覆盖）。默认实现不执行任何操作。参数： e - 创建对象的新表达式

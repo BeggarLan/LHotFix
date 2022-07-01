@@ -18,7 +18,7 @@ import javassist.CtMethod;
 public class AutoPatchConfig {
 
   // TODO: 2022/6/27 新增clss还未处理
-  // 新增的class：ADD注解的class
+  // ADD注解的新增class
   @NonNull
   public final List<String> mNewClassList = new ArrayList<>();
 
