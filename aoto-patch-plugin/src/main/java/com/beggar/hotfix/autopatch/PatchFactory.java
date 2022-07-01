@@ -21,7 +21,11 @@ import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.NotFoundException;
 import javassist.bytecode.ClassFile;
+import javassist.expr.Cast;
 import javassist.expr.ExprEditor;
+import javassist.expr.FieldAccess;
+import javassist.expr.MethodCall;
+import javassist.expr.NewExpr;
 
 /**
  * author: lanweihua
@@ -54,7 +58,6 @@ public class PatchFactory {
       @NonNull AutoPatchConfig patchConfig,
       @NonNull String patchGenerateDirPath)
       throws NotFoundException, CannotCompileException, IOException {
-    android.R.style.Theme_Translucent_NoTitleBar_Fullscreen
     logger.quiet(TAG + "createPatchClass start. sourceClass:" + sourceClass.getName());
     // 不需要patch的方法
     List<CtMethod> noNeedPatchMethod = new ArrayList<>();
@@ -101,7 +104,32 @@ public class PatchFactory {
         continue;
       }
 
-      ctMethod.instrument(new ExprEditor());
+      // 替换方法的表达式
+      ctMethod.instrument(new ExprEditor() {
+        // 编辑字段访问表达式（可覆盖）。字段访问意味着读取和写入。默认实现不执行任何操作
+        @Override
+        public void edit(FieldAccess f) throws CannotCompileException {
+
+        }
+
+        // 编辑新表达式（可覆盖）。默认实现不执行任何操作。参数： e - 创建对象的新表达式
+        @Override
+        public void edit(NewExpr e) throws CannotCompileException {
+          super.edit(e);
+        }
+
+        // 编辑显式类型转换的表达式（可重写）。默认实现不执行任何操作。
+        @Override
+        public void edit(Cast c) throws CannotCompileException {
+          super.edit(c);
+        }
+
+        // 编辑方法调用（可覆盖）。默认实现不执行任何操作。
+        @Override
+        public void edit(MethodCall m) throws CannotCompileException {
+          super.edit(m);
+        }
+      });
     }
 
     logger.quiet(TAG + "createPatchClass end. patchClass:" + patchClass.getName());
