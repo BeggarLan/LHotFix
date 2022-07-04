@@ -1,6 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
 import com.android.annotations.NonNull;
+import com.beggar.hotfix.base.util.JavassistUtil;
 
 import javassist.CtClass;
 import javassist.CtField;

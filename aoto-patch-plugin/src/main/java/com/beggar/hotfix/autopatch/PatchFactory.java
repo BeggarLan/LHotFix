@@ -11,6 +11,7 @@ import org.gradle.api.logging.Logger;
 
 import com.android.annotations.NonNull;
 import com.android.dx.rop.code.AccessFlags;
+import com.beggar.hotfix.base.util.JavassistUtil;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;

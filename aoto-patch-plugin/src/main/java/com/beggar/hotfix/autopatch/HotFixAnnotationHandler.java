@@ -7,6 +7,7 @@ import org.gradle.api.logging.Logger;
 import com.android.annotations.NonNull;
 import com.beggar.hotfix.base.Constants;
 import com.beggar.hotfix.base.annotation.Add;
+import com.beggar.hotfix.base.util.JavassistUtil;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
