@@ -7,6 +7,13 @@ package com.beggar.hotfix.autopatch;
  */
 public class MappingUtil {
 
-
+  /**
+   * 返回对应的值
+   *
+   * @param name 原名字
+   */
+  public static String getValue(String name) {
+    return name;
+  }
 
 }

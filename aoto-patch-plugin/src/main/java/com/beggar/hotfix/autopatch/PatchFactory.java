@@ -116,7 +116,13 @@ public class PatchFactory {
           // 把patchClassInstance内的字段(类filed)操作都转移到sourceClassInstance中
           // 字段访问
           if (f.isReader()) {
-
+            try {
+              f.replace(
+                  PatchUtil.getFieldAccessReplaceString(f.getField(), sourceClass, patchClass));
+            } catch (NotFoundException e) {
+              e.printStackTrace();
+              // TODO: 2022/7/4 log
+            }
           } else if (f.isWriter()) {
             // 字段赋值
 

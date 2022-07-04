@@ -3,6 +3,7 @@ package com.beggar.hotfix.autopatch;
 import java.util.List;
 
 import com.android.annotations.NonNull;
+import com.android.dx.rop.code.AccessFlags;
 
 import javassist.CannotCompileException;
 import javassist.ClassMap;
@@ -88,6 +89,10 @@ public class JavassistUtil {
       }
     }
     return stringBuilder.toString();
+  }
+
+  public static boolean isStatic(@NonNull CtField ctField) {
+    return AccessFlags.isStatic(ctField.getModifiers());
   }
 
 }
