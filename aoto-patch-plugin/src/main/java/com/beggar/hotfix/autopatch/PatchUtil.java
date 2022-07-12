@@ -1,7 +1,6 @@
 package com.beggar.hotfix.autopatch;
 
 import com.android.annotations.NonNull;
-import com.beggar.hotfix.base.util.JavassistUtil;
 
 import javassist.CtClass;
 import javassist.CtField;
@@ -20,13 +19,14 @@ public class PatchUtil {
     if (isStatic) {
 
     } else {
+      String patchClassName = patchClass.getName();
       // 定义一个变量，默认就是[$0：表达式访问的那个字段]
       stringBuilder.append("java.lang.Object instance = \\$0;");
-      stringBuilder.append("if(\\$0 instanceof " + patchClass.getName() + "){");
+      stringBuilder.append("if(\\$0 instanceof " + patchClassName + "){");
 
       // instance = ((patchClassName)$0).AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS
       // 让instance等于patchClass对象中的sourceClass对象
-      stringBuilder.append("instance = " + "((patchClassName)\\$0)." +
+      stringBuilder.append("instance = " + "((" + patchClassName + ")\\$0)." +
           AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS + ";}");
 
       stringBuilder.append();
