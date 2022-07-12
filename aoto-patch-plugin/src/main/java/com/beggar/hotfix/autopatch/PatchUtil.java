@@ -1,5 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
+import org.apache.tools.ant.util.ReflectUtil;
+
 import com.android.annotations.NonNull;
 
 import javassist.CtClass;
@@ -29,8 +31,15 @@ public class PatchUtil {
       stringBuilder.append("instance = " + "((" + patchClassName + ")\\$0)." +
           AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS + ";}");
 
-      stringBuilder.append();
+      // $_: 如果表达式是读操作，则结果值保存在 1 中，否则将舍弃存储在_ 中的值
+      // $r: 如果表达式是读操作，则 r 读取结果的类型。 否则r 为 void
+      stringBuilder.append("\\$_=(\\$r)" + ReflectUtil.class.getName() + ".getFieldValue")
+          .append("(" + ctField.getName())
+          .append(", instance")
+          .append(", " + ctField.getDeclaringClass().getName() + ".class")
+          .append(")");
     }
+    stringBuilder.append("}");
     return stringBuilder.toString();
   }
 
