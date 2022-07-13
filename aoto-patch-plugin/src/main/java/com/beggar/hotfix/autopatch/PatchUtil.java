@@ -19,6 +19,7 @@ public class PatchUtil {
     StringBuilder stringBuilder = new StringBuilder("{");
     boolean isStatic = JavassistUtil.isStatic(ctField);
     if (isStatic) {
+      // FieldAccess中: $proceed 代表最初访问成员的名称
 
     } else {
       String patchClassName = patchClass.getName();
