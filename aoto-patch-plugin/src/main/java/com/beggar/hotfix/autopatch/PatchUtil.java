@@ -1,11 +1,10 @@
 package com.beggar.hotfix.autopatch;
 
-import org.apache.tools.ant.util.ReflectUtil;
-
 import com.android.annotations.NonNull;
 
 import javassist.CtClass;
 import javassist.CtField;
+import javassist.bytecode.AccessFlag;
 
 /**
  * author: lanweihua
@@ -14,12 +13,33 @@ import javassist.CtField;
  */
 public class PatchUtil {
 
+  public static void setFieldAccessReplaceString(
+      @NonNull CtField ctField, @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
+    boolean isStatic = JavassistUtil.isStatic(ctField);
+    if (isStatic) {
+      // public static的不需要额外的逻辑，直接原语句
+      if (AccessFlag.isPublic(ctField.getModifiers())) {
+        // FieldAccess中: $proceed 代表最初访问成员的名称
+        stringBuilder.append("\\$_ = \\$proceed(\\$\\$);");
+      } else {
+
+      }
+
+    } else {
+
+    }
+  }
+
   public static String getFieldAccessReplaceString(
       @NonNull CtField ctField, @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
     StringBuilder stringBuilder = new StringBuilder("{");
     boolean isStatic = JavassistUtil.isStatic(ctField);
     if (isStatic) {
-      // FieldAccess中: $proceed 代表最初访问成员的名称
+      if (AccessFlag.isPublic(ctField.getModifiers())) {
+
+      } else {
+
+      }
 
     } else {
       String patchClassName = patchClass.getName();
@@ -34,7 +54,7 @@ public class PatchUtil {
 
       // $_: 如果表达式是读操作，则结果值保存在 1 中，否则将舍弃存储在_ 中的值
       // $r: 如果表达式是读操作，则 r 读取结果的类型。 否则r 为 void
-      stringBuilder.append("\\$_=(\\$r)" + ReflectUtil.class.getName() + ".getFieldValue")
+      stringBuilder.append("\\$_=(\\$r)" + ReflectUtils.class.getName() + ".getFieldValue")
           .append("(" + ctField.getName())
           .append(", instance")
           .append(", " + ctField.getDeclaringClass().getName() + ".class")

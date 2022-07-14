@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
  * created on: 2022/7/12 12:44 下午
  * description: 反射工具类
  */
-public class ReflectUtil {
+public class ReflectUtils {
 
   /**
    * 获得field的值
