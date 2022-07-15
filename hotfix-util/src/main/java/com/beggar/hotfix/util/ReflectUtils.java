@@ -13,6 +13,20 @@ import androidx.annotation.Nullable;
 public class ReflectUtils {
 
   /**
+   * 获得静态field的值
+   *
+   * @param fieldName 属性名
+   * @param clazz     所在类
+   * @return 该field的值
+   */
+  @Nullable
+  public static Object getStaticFieldValue(@NonNull String fieldName, @NonNull Class clazz)
+      throws NoSuchFieldException, IllegalAccessException {
+    Field field = getField(fieldName, clazz);
+    return field.get(null);
+  }
+
+  /**
    * 获得field的值
    * 为啥传递了classInstance还要传递一个class，因为class.getDeclaredFields拿不到继承的field的
    *

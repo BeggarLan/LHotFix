@@ -35,15 +35,16 @@ public class PatchUtil {
     StringBuilder stringBuilder = new StringBuilder("{");
     boolean isStatic = JavassistUtil.isStatic(ctField);
     if (isStatic) {
-      if (AccessFlag.isPublic(ctField.getModifiers())) {
-        // 如果是资源
-        if (RUtil.isRFile(ctField.getDeclaringClass().getName())) {
-          stringBuilder.append("\\$_ = " + ctField.getConstantValue() + ";");
-        } else {
-          stringBuilder.append("\\$_ = \\$proceed(\\$\\$);");
-        }
+      // TODO: 2022/7/15 这里和robust不一样了，不知道有没有坑
+      // 如果是patch类的字段，那么替换为原类的
+      if (ctField.getDeclaringClass().getName().equals(patchClass.getName())) {
+        stringBuilder.append("\\$_=(\\$r)" + ReflectUtils.class.getName() + ".getStaticFieldValue")
+            .append("(" + ctField.getName())
+            .append(", " + sourceClass.getName() + ".class")
+            .append(")");
       } else {
-
+        // 原语句
+        stringBuilder.append("\\$_ = \\$proceed(\\$\\$);");
       }
 
     } else {
