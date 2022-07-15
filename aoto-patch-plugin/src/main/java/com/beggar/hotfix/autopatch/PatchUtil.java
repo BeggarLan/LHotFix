@@ -36,7 +36,12 @@ public class PatchUtil {
     boolean isStatic = JavassistUtil.isStatic(ctField);
     if (isStatic) {
       if (AccessFlag.isPublic(ctField.getModifiers())) {
-
+        // 如果是资源
+        if (RUtil.isRFile(ctField.getDeclaringClass().getName())) {
+          stringBuilder.append("\\$_ = " + ctField.getConstantValue() + ";");
+        } else {
+          stringBuilder.append("\\$_ = \\$proceed(\\$\\$);");
+        }
       } else {
 
       }
