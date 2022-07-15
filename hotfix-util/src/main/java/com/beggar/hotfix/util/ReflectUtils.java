@@ -27,6 +27,23 @@ public class ReflectUtils {
   }
 
   /**
+   * 设置静态field的值
+   *
+   * @param fieldName 属性名
+   * @param clazz     所在类
+   * @param value     要设置的值
+   * @return 该field的值
+   */
+  public static void setStaticFieldValue(
+      @NonNull String fieldName,
+      @NonNull Class clazz,
+      @Nullable Object value)
+      throws NoSuchFieldException, IllegalAccessException {
+    Field field = getField(fieldName, clazz);
+    field.set(null, value);
+  }
+
+  /**
    * 获得field的值
    * 为啥传递了classInstance还要传递一个class，因为class.getDeclaredFields拿不到继承的field的
    *
@@ -42,6 +59,26 @@ public class ReflectUtils {
     Field field = getField(fieldName, clazz);
     return field.get(classInstance);
   }
+
+  /**
+   * 设置field的值
+   *
+   * @param fieldName     属性名
+   * @param classInstance 所在类实例
+   * @param clazz         所在类
+   * @param value         要设置的值
+   * @return 该field的值
+   */
+  public static void setFieldValue(
+      @NonNull String fieldName,
+      @NonNull Object classInstance,
+      @NonNull Class clazz,
+      @Nullable Object value)
+      throws NoSuchFieldException, IllegalAccessException {
+    Field field = getField(fieldName, clazz);
+    field.set(classInstance, value);
+  }
+
 
   /**
    * 通过属性名获得对应的field

@@ -119,14 +119,19 @@ public class PatchFactory {
           if (f.isReader()) {
             try {
               f.replace(
-                  PatchUtil.getFieldAccessReplaceString(f.getField(), sourceClass, patchClass));
+                  PatchUtil.getFieldAccessReadReplaceString(f.getField(), sourceClass, patchClass));
             } catch (NotFoundException e) {
               e.printStackTrace();
               // TODO: 2022/7/4 log
             }
           } else if (f.isWriter()) {
             // 字段赋值
-
+            try {
+              f.replace(
+                  PatchUtil.setFieldAccessWriteReplaceString(f.getField(), sourceClass, patchClass));
+            } catch (NotFoundException e) {
+              e.printStackTrace();
+            }
           }
         }
 
