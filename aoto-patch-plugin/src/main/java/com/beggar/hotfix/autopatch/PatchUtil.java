@@ -1,5 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
+import android.text.TextUtils;
+
 import com.android.annotations.NonNull;
 
 import javassist.CtClass;
@@ -108,6 +110,47 @@ public class PatchUtil {
     }
     stringBuilder.append("}");
     return stringBuilder.toString();
+  }
+
+  /**
+   * @param className            类名
+   * @param constructorSignature 构造函数的签名 签名由一个叫做方法描述符的字符串表示
+   * @param isClassStatic        该类是否是静态类
+   * @param patchClass           原类对应的补丁类
+   */
+  public static String getNewExprReplaceString(
+      @NonNull String className,
+      @NonNull String constructorSignature,
+      boolean isClassStatic,
+      @NonNull CtClass patchClass) {
+    StringBuilder stringBuilder = new StringBuilder("{");
+
+  }
+
+  /**
+   *
+   * @param constructorSignature
+   * @param patchClass
+   * @return
+   */
+  private static String getConstructorParameterSignure(
+      @NonNull String constructorSignature, @NonNull CtClass patchClass) {
+
+  }
+
+  /**
+   * 是否是一个类的内部类
+   *
+   * @param ctClassName 内部类
+   * @param sourceClass 所在的类
+   */
+  public static boolean isInnerClass(@NonNull String ctClassName, @NonNull CtClass sourceClass) {
+    int index = ctClassName.indexOf("$");
+    if (index < 0) {
+      // 不是内部类
+      return false;
+    }
+    return TextUtils.equals(ctClassName.substring(0, index), sourceClass.getName());
   }
 
 }

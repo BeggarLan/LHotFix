@@ -139,10 +139,20 @@ public class PatchFactory {
         }
 
         // 编辑新表达式（可覆盖）。默认实现不执行任何操作。参数： e - 创建对象的新表达式
-        // 如果构造器中的某参数是patchClass的，那么替换为SourceClass的
+        // 原类中的非静态内部类，需要处理下构造函数
         @Override
         public void edit(NewExpr e) throws CannotCompileException {
-          super.edit(e);
+          try {
+            boolean isStatic = AccessFlags.isStatic(classPool.get(e.getClassName()).getModifiers());
+            // 如果是原类的非静态内部类
+            if (!isStatic
+                && PatchUtil.isInnerClass(e.getClassName(), sourceClass)) {
+              e.replace(PatchUtil.getNewExprReplaceString(
+                  e.getClassName(), e.getSignature(), false, patchClass));
+            }
+          } catch (NotFoundException notFoundException) {
+            notFoundException.printStackTrace();
+          }
         }
 
         // 编辑显式类型转换的表达式（可重写）。默认实现不执行任何操作。
