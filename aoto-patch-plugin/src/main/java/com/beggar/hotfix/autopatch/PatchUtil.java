@@ -114,7 +114,7 @@ public class PatchUtil {
 
   /**
    * @param className            类名
-   * @param constructorSignature 构造函数的签名 签名由一个叫做方法描述符的字符串表示
+   * @param constructorSignature 构造函数的签名 方法描述符的字符串:(ID)V --->xxx(int xx, double xx)
    * @param isClassStatic        该类是否是静态类
    * @param patchClass           原类对应的补丁类
    */
@@ -124,16 +124,21 @@ public class PatchUtil {
       boolean isClassStatic,
       @NonNull CtClass patchClass) {
     StringBuilder stringBuilder = new StringBuilder("{");
+    // 构造函数的参数签名
+    String constructorParameterSignature =
+        getConstructorParameterSignature(constructorSignature, patchClass);
 
+    stringBuilder.append("}");
+    return stringBuilder.toString();
   }
 
   /**
+   * 获得构造器的参数签名：替换patchClass参数
    *
-   * @param constructorSignature
-   * @param patchClass
-   * @return
+   * @param constructorSignature 构造函数的签名
+   * @param patchClass           原类对应的补丁类
    */
-  private static String getConstructorParameterSignure(
+  private static String getConstructorParameterSignature(
       @NonNull String constructorSignature, @NonNull CtClass patchClass) {
 
   }
