@@ -107,7 +107,9 @@ public class PatchFactory {
 
       // 替换方法的表达式
       ctMethod.instrument(new ExprEditor() {
+
         // 编辑字段访问表达式（可覆盖）。字段访问意味着读取和写入。默认实现不执行任何操作
+        // 如果读写的字段是patchClass的，那么替换为原类的对应字段
         @Override
         public void edit(FieldAccess f) throws CannotCompileException {
           // 新增类不需要处理
@@ -128,7 +130,8 @@ public class PatchFactory {
             // 字段赋值
             try {
               f.replace(
-                  PatchUtil.setFieldAccessWriteReplaceString(f.getField(), sourceClass, patchClass));
+                  PatchUtil
+                      .setFieldAccessWriteReplaceString(f.getField(), sourceClass, patchClass));
             } catch (NotFoundException e) {
               e.printStackTrace();
             }
@@ -136,6 +139,7 @@ public class PatchFactory {
         }
 
         // 编辑新表达式（可覆盖）。默认实现不执行任何操作。参数： e - 创建对象的新表达式
+        // 如果构造器中的某参数是patchClass的，那么替换为SourceClass的
         @Override
         public void edit(NewExpr e) throws CannotCompileException {
           super.edit(e);
