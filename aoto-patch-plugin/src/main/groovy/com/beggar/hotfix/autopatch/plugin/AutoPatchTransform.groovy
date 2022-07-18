@@ -3,10 +3,7 @@ package com.beggar.hotfix.autopatch.plugin
 import com.android.annotations.NonNull
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.beggar.hotfix.autopatch.AutoPatchConfig
-import com.beggar.hotfix.autopatch.AutoPatchConstants
-import com.beggar.hotfix.autopatch.HotFixAnnotationHandler
-import com.beggar.hotfix.autopatch.PatchFactory
+import com.beggar.hotfix.autopatch.*
 import javassist.CannotCompileException
 import javassist.ClassPool
 import javassist.CtClass
@@ -130,7 +127,7 @@ class AutoPatchTransform extends Transform {
     }
 
     // 生成patch
-    private void generatePxatch(@NonNull ClassPool classPool @NonNull String patchGenerateDirPath) {
+    private void generatePxatch(@NonNull ClassPool classPool @ NonNull String patchGenerateDirPath) {
         mLogger.quiet(TAG + "generatePatch start.")
         // 没有modify方法，说明没有要修改的，直接结束
         if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
@@ -145,8 +142,7 @@ class AutoPatchTransform extends Transform {
                 mLogger,
                 classPool,
                 ctClass,
-                // todo name
-                "",
+                NameManager.instance.getPatchCtClassName(ctClass.name),
                 mAutoPatchConfig,
                 patchGenerateDirPath)
         }

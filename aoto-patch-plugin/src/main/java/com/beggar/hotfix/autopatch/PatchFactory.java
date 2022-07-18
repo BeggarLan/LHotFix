@@ -241,7 +241,7 @@ public class PatchFactory {
       if (ctMethod.getReturnType().equals(CtClass.voidType)) {
         methodBuilder.append("return ");
       }
-      methodBuilder.append(NameUtil.getAssistClassName(patchClass.getName()))
+      methodBuilder.append(NameManager.getInstance().getAssistClassName(patchClass.getName()))
           .append(".")
           .append(ctMethod.getName())
           .append("(")
@@ -271,7 +271,7 @@ public class PatchFactory {
       @NonNull String patchGenerateDirPath)
       throws NotFoundException, CannotCompileException, IOException {
     // assist类名
-    String assistClassName = NameUtil.getAssistClassName(patchClass.getName());
+    String assistClassName = NameManager.getInstance().getAssistClassName(patchClass.getName());
 
     // 创建assistClass
     CtClass assistClass = classPool.getOrNull(assistClassName);
