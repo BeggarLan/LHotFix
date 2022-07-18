@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.android.annotations.NonNull;
+import com.android.annotations.Nullable;
 
 /**
  * author: lanweihua
@@ -40,6 +41,16 @@ public class NameManager {
             AutoPatchConstants.PATCH_CLASS_NAME_SUFFIX;
     mPatchClassNameMap.put(patchClassName, sourceCtClassName);
     return patchClassName;
+  }
+
+  /**
+   * 获得某patch类对应的原类名称：不带.class
+   *
+   * @param patchCtClassName patch类名：不带.class
+   */
+  @Nullable
+  public String getSourceCtClassName(@NonNull String patchCtClassName) {
+    return mPatchClassNameMap.get(patchCtClassName);
   }
 
   /**
