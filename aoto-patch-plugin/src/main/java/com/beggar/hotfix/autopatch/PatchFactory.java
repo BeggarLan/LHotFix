@@ -148,7 +148,7 @@ public class PatchFactory {
             if (!isStatic
                 && PatchUtil.isInnerClass(e.getClassName(), sourceClass)) {
               e.replace(PatchUtil.getNewExprReplaceString(
-                  e.getClassName(), e.getSignature(), false, patchClass));
+                  e.getClassName(), e.getSignature(), false, sourceClass, patchClass));
             }
           } catch (NotFoundException notFoundException) {
             notFoundException.printStackTrace();

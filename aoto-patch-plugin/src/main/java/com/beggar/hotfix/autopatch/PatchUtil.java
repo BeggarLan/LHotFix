@@ -114,19 +114,23 @@ public class PatchUtil {
 
   /**
    * @param className            类名
-   * @param constructorSignature 构造函数的签名 方法描述符的字符串:(ID)V --->xxx(int xx, double xx)
+   * @param constructorSignature 构造函数的签名 方法描述符的字符串
+   *                             A类的构造函数：A(java.lang.Integer, float, java.lang.Object[])
+   *                             descriptor: (Ljava/lang/Integer;F[Ljava/lang/Object;)V
    * @param isClassStatic        该类是否是静态类
+   * @param sourceClass          原类
    * @param patchClass           原类对应的补丁类
    */
   public static String getNewExprReplaceString(
       @NonNull String className,
       @NonNull String constructorSignature,
       boolean isClassStatic,
+      @NonNull CtClass sourceClass,
       @NonNull CtClass patchClass) {
     StringBuilder stringBuilder = new StringBuilder("{");
     // 构造函数的参数签名
     String constructorParameterSignature =
-        getConstructorParameterSignature(constructorSignature, patchClass);
+        getConstructorParameterSignature(constructorSignature, sourceClass, patchClass);
 
     stringBuilder.append("}");
     return stringBuilder.toString();
@@ -135,12 +139,51 @@ public class PatchUtil {
   /**
    * 获得构造器的参数签名：替换patchClass参数
    *
-   * @param constructorSignature 构造函数的签名
+   * @param constructorSignature 构造函数的签名 方法描述符的字符串
+   *                             A类的构造函数：A(java.lang.Integer, float, java.lang.String)
+   *                             descriptor: (Ljava/lang/Integer;FLjava/lang/String;)V
    * @param patchClass           原类对应的补丁类
    */
   private static String getConstructorParameterSignature(
-      @NonNull String constructorSignature, @NonNull CtClass patchClass) {
+      @NonNull String constructorSignature,
+      @NonNull CtClass sourceClass,
+      @NonNull CtClass patchClass) {
+    StringBuilder parameterSignatureBuilder = new StringBuilder();
 
+    // *********************** 遍历所有参数
+    // 是否是数组
+    boolean isArray = false;
+    int parameterEndIndex = constructorSignature.indexOf(")");
+    for (int i = 1; i < parameterEndIndex; ++i) {
+      //当前的参数类型
+      char parameterType = constructorSignature.charAt(i);
+      // 如果是Object
+      if (parameterType == JavaByteCodeUtil.OBJECT_TYPE) {
+        // 获得搞参数的具体类型：全类名
+        String parameterClassName = constructorSignature.substring(
+            i + 1, constructorSignature.indexOf(JavaByteCodeUtil.OBJECT_NAME_END_FLAG, i))
+            .replace("/", ".");
+        // 如果类型是布丁类,那么替换为原类
+        if (TextUtils.equals(parameterClassName, patchClass.getName())) {
+          parameterSignatureBuilder.append(sourceClass.getName());
+        } else {
+          parameterSignatureBuilder.append(parameterClassName);
+        }
+        // 跳到下一个
+        i = constructorSignature.indexOf(";", i);
+
+        // 处理数组
+        if (isArray) {
+          parameterSignatureBuilder.append("[]");
+          isArray = false;
+        }
+        // 增加class后缀
+        parameterSignatureBuilder.append(".class,");
+      }
+
+
+    }
+    return parameterSignatureBuilder.toString();
   }
 
   /**
