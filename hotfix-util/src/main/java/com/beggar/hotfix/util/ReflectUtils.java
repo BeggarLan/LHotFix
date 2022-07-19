@@ -1,5 +1,6 @@
 package com.beggar.hotfix.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,29 @@ import androidx.annotation.Nullable;
  * description: 反射工具类
  */
 public class ReflectUtils {
+
+  /**
+   * 调用构造函数
+   *
+   * @param className        类名
+   * @param parameters       构造器的参数值
+   * @param parameterClasses 构造器的参数类型
+   * @return null表示失败
+   */
+  @Nullable
+  public static Object invokeConstruct(
+      @NonNull String className,
+      @Nullable Object[] parameters,
+      @Nullable Class[] parameterClasses) {
+    try {
+      Class<?> clazz = Class.forName(className);
+      Constructor<?> constructor = clazz.getDeclaredConstructor(parameterClasses);
+      return constructor.newInstance(parameterClasses);
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
 
   /**
    * 获得静态field的值
