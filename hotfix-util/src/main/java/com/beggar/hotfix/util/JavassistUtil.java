@@ -12,8 +12,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 
+import org.apache.commons.io.FileUtils;
+
 import androidx.annotation.NonNull;
 
+import com.android.SdkConstants;
 import com.android.build.api.transform.DirectoryInput;
 import com.android.build.api.transform.JarInput;
 import com.android.build.api.transform.TransformInput;
@@ -27,8 +30,6 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
 import javassist.bytecode.ClassFile;
-import org.apache.commons.io.FileUtils;
-import com.android.SdkConstants;
 
 /**
  * author: lanweihua

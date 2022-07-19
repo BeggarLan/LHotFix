@@ -3,10 +3,15 @@ package com.beggar.hotfix.autopatch;
 import android.text.TextUtils;
 
 import com.android.annotations.NonNull;
+import com.android.annotations.Nullable;
+import com.android.dx.rop.code.AccessFlags;
 
 import javassist.CtClass;
 import javassist.CtField;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 import javassist.expr.Cast;
+import javassist.expr.MethodCall;
 
 /**
  * author: lanweihua
@@ -134,6 +139,51 @@ public class PatchUtil {
         .append("} else {")
         .append("\\$_=(\\$r)\\$1;")
         .append("}");
+    stringBuilder.append("}");
+    return stringBuilder.toString();
+  }
+
+  /**
+   * methodCall表达式替换
+   *
+   * @param isInStaticMethod 方法调用所在的函数是否是static的
+   */
+  public static String getMethodCallReplaceString(
+      @NonNull MethodCall methodCall,
+      boolean isInStaticMethod,
+      @NonNull CtClass patchClass) throws NotFoundException {
+    // 调用的方法
+    CtMethod method = methodCall.getMethod();
+    // 参数
+    String parametersClassSignatureBuilder =
+        getParametersClassString(method.getParameterTypes());
+    StringBuilder stringBuilder = new StringBuilder("{");
+
+    // 调用方法的对象
+    stringBuilder.append(method.getDeclaringClass().getName() + " instance;");
+
+    // 4种case
+    // 调用方法是static和所在方法是static、调用方法是static和所在方法不是static
+    // 调用方法不是static和所在方法是static、调用方法不是static和所在方法不是static
+    if (AccessFlags.isStatic(method.getModifiers())) {
+      // 调用方法是static和所在方法是static
+      if (isInStaticMethod) {
+
+
+      } else {
+        // 调用方法是static和所在方法不是static
+
+      }
+    } else {
+      // 调用方法不是static和所在方法是static
+      if (isInStaticMethod) {
+
+
+      } else {
+        // 调用方法不是static和所在方法不是static
+
+      }
+    }
     stringBuilder.append("}");
     return stringBuilder.toString();
   }
@@ -311,6 +361,25 @@ public class PatchUtil {
     realParameterBuilder.append("  return realParameter;");
     realParameterBuilder.append(" }");
     return realParameterBuilder.toString();
+  }
+
+  /**
+   * 输入：参数类型数组
+   * 输出：参数类全name.class,参数类全name.class...
+   */
+  public static String getParametersClassString(@Nullable CtClass[] parameterClasses) {
+    if (parameterClasses == null || parameterClasses.length == 0) {
+      return "";
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    for (int i = 0; i < parameterClasses.length; ++i) {
+      CtClass parameterClass = parameterClasses[i];
+      stringBuilder.append(parameterClass.getName() + ".class");
+      if (i != parameterClasses.length - 1) {
+        stringBuilder.append(",");
+      }
+    }
+    return stringBuilder.toString();
   }
 
 }

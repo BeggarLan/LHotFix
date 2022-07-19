@@ -90,13 +90,14 @@ public class PatchFactory {
         CtMethod.make(PatchUtil.getRealParametersMethodBody(), patchClass);
     patchClass.addMethod(realParameterMethod);
 
+    List<CtMethod> invokeSuperMethodList = patchConfig.mInvokeSuperMethodMap.get(sourceClass);
     // 处理super.xxx()
     List<CtMethod> addedSuperAccessMethodList = handleInvokeSuperMethod(
         logger,
         classPool,
         sourceClass,
         patchClass,
-        patchConfig.mInvokeSuperMethodMap.get(sourceClass),
+        invokeSuperMethodList,
         patchGenerateDirPath);
 
     // 为类中的每一个private方法增加public的访问方法
@@ -178,7 +179,17 @@ public class PatchFactory {
         // 编辑方法调用（可覆盖）。默认实现不执行任何操作。
         @Override
         public void edit(MethodCall m) throws CannotCompileException {
-          super.edit(m);
+          // TODO: 2022/7/19 这里不懂，后面log看看啥情况
+          if (m.getMethodName().contains("lambdaFactory")) {
+            m.replace(PatchUtil.getNewExprReplaceString(
+                m.getClassName(),
+                m.getSignature(),
+                AccessFlags.isStatic(ctMethod.getModifiers()),
+                sourceClass, patchClass));
+            return;
+          }
+          m.replace(PatchUtil.getMethodCallReplaceString(
+              m, AccessFlags.isStatic(ctMethod.getModifiers()), patchClass));
         }
       });
     }
