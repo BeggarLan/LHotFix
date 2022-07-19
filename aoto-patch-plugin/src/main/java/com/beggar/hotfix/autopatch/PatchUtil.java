@@ -132,6 +132,19 @@ public class PatchUtil {
     String constructorParameterSignature =
         getConstructorParameterSignature(constructorSignature, sourceClass, patchClass);
 
+    // 静态类
+    if (isClassStatic) {
+
+
+    } else {
+      // 有参构造函数
+      if (constructorParameterSignature.length() > 1) {
+
+      } else {
+        // 无参
+
+      }
+    }
     stringBuilder.append("}");
     return stringBuilder.toString();
   }
@@ -218,6 +231,56 @@ public class PatchUtil {
       return false;
     }
     return TextUtils.equals(ctClassName.substring(0, index), sourceClass.getName());
+  }
+
+  /**
+   * 将一个函数的参数中的patchClass对象替换为原类对象
+   * public Object[] getRealParameter(Object[] args) {
+   * if (args == null || args.length < 1) {
+   * return args;
+   * }
+   * Object[] realParameter = (Object[]) java.lang.reflect.Array.newInstance(args.getClass()
+   * .getComponentType(), args.length);
+   * for (int i = 0; i < args.length; i++) {
+   * if (args[i] instanceof Object[]) {
+   * realParameter[i] = getRealParameter((Object[]) args[i]);
+   * } else {
+   * if (args[i] == this) {
+   * realParameter[i] = this.mSourceClassInstance;
+   * } else {
+   * realParameter[i] = args[i];
+   * }
+   * }
+   * }
+   * return realParameter;
+   * }
+   */
+  public static String getRealParametersMethodBody() {
+    StringBuilder realParameterBuilder = new StringBuilder();
+    realParameterBuilder
+        .append("public  Object[] " + AutoPatchConstants.GET_REAL_PARAMETER + " (Object[] args){");
+    realParameterBuilder.append("if (args == null || args.length < 1) {");
+    realParameterBuilder.append(" return args;");
+    realParameterBuilder.append("}");
+    realParameterBuilder.append(
+        " Object[] realParameter = (Object[]) java.lang.reflect.Array.newInstance(args.getClass()" +
+            ".getComponentType(), args.length);");
+    realParameterBuilder.append("for (int i = 0; i < args.length; i++) {");
+    realParameterBuilder.append("if (args[i] instanceof Object[]) {");
+    realParameterBuilder.append(
+        "realParameter[i] =" + AutoPatchConstants.GET_REAL_PARAMETER + "((Object[]) args[i]);");
+    realParameterBuilder.append("} else {");
+    realParameterBuilder.append("if (args[i] ==this) {");
+    realParameterBuilder.append(
+        " realParameter[i] =this." + AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS + ";");
+    realParameterBuilder.append("} else {");
+    realParameterBuilder.append(" realParameter[i] = args[i];");
+    realParameterBuilder.append(" }");
+    realParameterBuilder.append(" }");
+    realParameterBuilder.append(" }");
+    realParameterBuilder.append("  return realParameter;");
+    realParameterBuilder.append(" }");
+    return realParameterBuilder.toString();
   }
 
 }

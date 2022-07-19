@@ -83,6 +83,11 @@ public class PatchFactory {
     }
     // 添加构造器
     addConstructor(logger, sourceClass, patchClass);
+
+    // 添加函数参数处理的方法：将一个函数的参数中的patchClass对象替换为原类对象
+    CtMethod realParameterMethod = CtMethod.make(PatchUtil.getRealParametersMethodBody(), patchClass);
+    patchClass.addMethod(realParameterMethod);
+
     // 处理super.xxx()
     List<CtMethod> addedSuperAccessMethodList = handleInvokeSuperMethod(
         logger,
