@@ -188,8 +188,12 @@ public class PatchFactory {
                 sourceClass, patchClass));
             return;
           }
-          m.replace(PatchUtil.getMethodCallReplaceString(
-              m, AccessFlags.isStatic(ctMethod.getModifiers()), patchClass));
+          try {
+            m.replace(PatchUtil.getMethodCallReplaceString(
+                m, AccessFlags.isStatic(ctMethod.getModifiers()), patchClass));
+          } catch (NotFoundException e) {
+            e.printStackTrace();
+          }
         }
       });
     }

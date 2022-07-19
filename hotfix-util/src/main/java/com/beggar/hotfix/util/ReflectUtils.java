@@ -2,6 +2,8 @@ package com.beggar.hotfix.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +36,45 @@ public class ReflectUtils {
       e.printStackTrace();
     }
     return null;
+  }
+
+  /**
+   * 调用static方法
+   *
+   * @param methodName
+   * @param clazz            方法所在的类
+   * @param parameters       参数对象
+   * @param parameterClasses 参数类型
+   */
+  public static Object invokeStaticMethod(
+      @NonNull String methodName,
+      @NonNull Class clazz,
+      @Nullable Object[] parameters,
+      @Nullable Class[] parameterClasses)
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    Method method = clazz.getDeclaredMethod(methodName, parameterClasses);
+    method.setAccessible(true);
+    return method.invoke(null, parameters);
+  }
+
+  /**
+   * 调用方法
+   *
+   * @param targetOjebct     调用的对象
+   * @param clazz            方法所在的类
+   * @param parameters       参数对象
+   * @param parameterClasses 参数类型
+   */
+  public static Object invokeMethod(
+      @NonNull String methodName,
+      @NonNull Object targetOjebct,
+      @NonNull Class clazz,
+      @Nullable Object[] parameters,
+      @Nullable Class[] parameterClasses)
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    Method method = clazz.getDeclaredMethod(methodName, parameterClasses);
+    method.setAccessible(true);
+    return method.invoke(targetOjebct, parameters);
   }
 
   /**

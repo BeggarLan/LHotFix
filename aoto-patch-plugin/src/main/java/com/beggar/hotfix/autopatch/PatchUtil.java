@@ -159,29 +159,95 @@ public class PatchUtil {
         getParametersClassString(method.getParameterTypes());
     StringBuilder stringBuilder = new StringBuilder("{");
 
-    // 调用方法的对象
-    stringBuilder.append(method.getDeclaringClass().getName() + " instance;");
-
     // 4种case
-    // 调用方法是static和所在方法是static、调用方法是static和所在方法不是static
-    // 调用方法不是static和所在方法是static、调用方法不是static和所在方法不是static
+    // static方法中调用static方法、非static方法中调用static方法
+    // static方法中调用非static方法、非static方法中调用非static方法
     if (AccessFlags.isStatic(method.getModifiers())) {
-      // 调用方法是static和所在方法是static
+      // static方法中调用static方法
       if (isInStaticMethod) {
+        // 如果调用方法是public的那么不改变
+        if (AccessFlags.isPublic(method.getModifiers())) {
+          stringBuilder.append("\\$_ = \\$proceed(\\$\\$);");
+        } else {
+          // 非public方法的时候，需要先设置访问权限
 
+          // 参数类型描述
+          String parameterClassesStr = "null";
+          // 有参
+          if (parametersClassSignatureBuilder.length() > 1) {
+            parameterClassesStr = "new Class[]{" + parametersClassSignatureBuilder.toString() + "}";
+          }
+          stringBuilder
+              .append("\\$_=(\\$r)" + ReflectUtils.class.getName() + "invokeStaticMethod(")
+              .append(method.getName() + ",")
+              .append(method.getDeclaringClass().getName() + ".class,")
+              .append("\\$args,")
+              .append(parameterClassesStr)
+              .append(");");
+        }
 
       } else {
-        // 调用方法是static和所在方法不是static
-
+        // 非static方法中调用static方法
+        // 调用函数的参数如果有this(patchClass)的话，需要替换
+        stringBuilder.append(
+            "java.lang.Object parameters[]=" + AutoPatchConstants.GET_REAL_PARAMETER +
+                "(\\$args);");
+        // 参数类型描述
+        String parameterClassesStr = "null";
+        // 有参
+        if (parametersClassSignatureBuilder.length() > 1) {
+          parameterClassesStr = "new Class[]{" + parametersClassSignatureBuilder.toString() + "}";
+        }
+        stringBuilder
+            .append("\\$_=(\\$r)" + ReflectUtils.class.getName() + "invokeStaticMethod(")
+            .append(method.getName() + ",")
+            .append(method.getDeclaringClass().getName() + ".class,")
+            .append("parameters,")
+            .append(parameterClassesStr)
+            .append(");");
       }
     } else {
-      // 调用方法不是static和所在方法是static
+      // static方法中调用非static方法
       if (isInStaticMethod) {
-
+        // 参数类型描述
+        String parameterClassesStr = "null";
+        // 有参
+        if (parametersClassSignatureBuilder.length() > 1) {
+          parameterClassesStr = "new Class[]{" + parametersClassSignatureBuilder.toString() + "}";
+        }
+        stringBuilder
+            .append("\\$_=(\\$r)" + ReflectUtils.class.getName() + "invokeMethod(")
+            .append(method.getName() + ",")
+            .append("\\$0,")
+            .append(method.getDeclaringClass().getName() + ".class,")
+            .append("\\$args,")
+            .append(parameterClassesStr)
+            .append(");");
 
       } else {
-        // 调用方法不是static和所在方法不是static
+        // 非static方法中调用非static方法
+        // 调用方法的对象
+        stringBuilder
+            .append(method.getDeclaringClass().getName() + " instance=\\$0;")
+            .append("if(\\$0 == this) {")
+            .append("instance=((" + patchClass.getName() + ")\\$0)." +
+                AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE + "；")
+            .append("}");
 
+        // 参数类型描述
+        String parameterClassesStr = "null";
+        // 有参
+        if (parametersClassSignatureBuilder.length() > 1) {
+          parameterClassesStr = "new Class[]{" + parametersClassSignatureBuilder.toString() + "}";
+        }
+        stringBuilder
+            .append("\\$_=(\\$r)" + ReflectUtils.class.getName() + "invokeMethod(")
+            .append(method.getName() + ",")
+            .append("instance,")
+            .append(method.getDeclaringClass().getName() + ".class,")
+            .append("\\$args,")
+            .append(parameterClassesStr)
+            .append(");");
       }
     }
     stringBuilder.append("}");
