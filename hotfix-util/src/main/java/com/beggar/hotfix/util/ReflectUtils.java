@@ -115,4 +115,26 @@ public class ReflectUtils {
     return clazz.getDeclaredField(fieldName);
   }
 
+  /**
+   * 获得对象中某属性的值
+   */
+  @Nullable
+  public static Object getFieldValue(@NonNull Object classInstance, @NonNull String fieldName)
+      throws NoSuchFieldException, IllegalAccessException {
+    Field field = null;
+    Class<?> clazz = classInstance.getClass();
+    while (clazz != null) {
+      field = getField(fieldName, clazz);
+      if (field != null) {
+        field.setAccessible(true);
+        break;
+      }
+      clazz = clazz.getSuperclass();
+    }
+    if (field != null) {
+      return field.get(classInstance);
+    }
+    return null;
+  }
+
 }

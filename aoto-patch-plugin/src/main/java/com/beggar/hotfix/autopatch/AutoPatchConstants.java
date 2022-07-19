@@ -12,8 +12,8 @@ public class AutoPatchConstants {
 
   // 补丁类的构造器名
   public static final String PATCH_CLASS_CONSTRUCTOR_NAME = "Patch";
-  // 补丁类的<SourceClass mSourceClass>属性
-  public static final String PATCH_CLASS_FIELD_SOURCE_CLASS = "mSourceClassInstance";
+  // 补丁类的<SourceClass mSourceClassInstance>属性
+  public static final String PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE = "mSourceClassInstance";
 
   // Assist后缀
   public static final String ASSIST_SUFFIX = "HotfixAssist";

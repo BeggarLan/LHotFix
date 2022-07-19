@@ -6,6 +6,7 @@ import com.android.annotations.NonNull;
 
 import javassist.CtClass;
 import javassist.CtField;
+import javassist.expr.Cast;
 
 /**
  * author: lanweihua
@@ -49,7 +50,7 @@ public class PatchUtil {
       // instance = ((patchClassName)$0).AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS
       // 让instance等于patchClass对象中的sourceClass对象
       stringBuilder.append("instance = " + "((" + patchClassName + ")\\$0)." +
-          AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS + ";}");
+          AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE + ";}");
 
       // $_: 如果表达式是读操作，则结果值保存在 1 中，否则将舍弃存储在_ 中的值
       // $r: 如果表达式是读操作，则 r 读取结果的类型。 否则r 为 void
@@ -98,7 +99,7 @@ public class PatchUtil {
       // instance = ((patchClassName)$0).AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS
       // 让instance等于patchClass对象中的sourceClass对象
       stringBuilder.append("instance = " + "((" + patchClassName + ")\\$0)." +
-          AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS + ";}");
+          AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE + ";}");
 
       // $_: 如果表达式是读操作，则结果值保存在 1 中，否则将舍弃存储在_ 中的值
       // $r: 如果表达式是读操作，则 r 读取结果的类型。 否则r 为 void
@@ -113,6 +114,33 @@ public class PatchUtil {
   }
 
   /**
+   * 类型转换表达式替换：被强转的对象如果是patchClass对象(this)，那么替换为sourceClass对象
+   *
+   * @param cast       强转表达式
+   * @param patchClass 布丁类
+   */
+  public static String getCastReplaceString(@NonNull Cast cast, @NonNull CtClass patchClass) {
+    // 生成的代码
+//    if ( $1 == this ) {
+//      $_= ((patchClassName)$1).mSourceClassInstance;
+//    } else {
+//      $_=($r)$1;
+//    }
+    StringBuilder stringBuilder = new StringBuilder("{");
+    stringBuilder
+        .append("if(\\$1==this) {")
+        .append("\\$_=((" + patchClass.getName() + ")\\$1)." +
+            AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE + ";")
+        .append("} else {")
+        .append("\\$_=(\\$r)\\$1;")
+        .append("}");
+    stringBuilder.append("}");
+    return stringBuilder.toString();
+  }
+
+  /**
+   * new对象表达式替换：把构造器参数中的patchClass对象替换为sourceClass对象
+   *
    * @param className            类名
    * @param constructorSignature 构造函数的签名 方法描述符的字符串
    *                             A类的构造函数：A(java.lang.Integer, float, java.lang.Object[])
@@ -273,7 +301,8 @@ public class PatchUtil {
     realParameterBuilder.append("} else {");
     realParameterBuilder.append("if (args[i] ==this) {");
     realParameterBuilder.append(
-        " realParameter[i] =this." + AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS + ";");
+        " realParameter[i] =this." + AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE +
+            ";");
     realParameterBuilder.append("} else {");
     realParameterBuilder.append(" realParameter[i] = args[i];");
     realParameterBuilder.append(" }");

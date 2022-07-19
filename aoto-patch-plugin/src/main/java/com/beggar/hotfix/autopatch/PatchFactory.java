@@ -1,7 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
 import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCH_CLASS_CONSTRUCTOR_NAME;
-import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS;
+import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.NotFoundException;
 import javassist.bytecode.ClassFile;
+import javassist.bytecode.MethodInfo;
 import javassist.expr.Cast;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
@@ -85,7 +86,8 @@ public class PatchFactory {
     addConstructor(logger, sourceClass, patchClass);
 
     // 添加函数参数处理的方法：将一个函数的参数中的patchClass对象替换为原类对象
-    CtMethod realParameterMethod = CtMethod.make(PatchUtil.getRealParametersMethodBody(), patchClass);
+    CtMethod realParameterMethod =
+        CtMethod.make(PatchUtil.getRealParametersMethodBody(), patchClass);
     patchClass.addMethod(realParameterMethod);
 
     // 处理super.xxx()
@@ -163,7 +165,14 @@ public class PatchFactory {
         // 编辑显式类型转换的表达式（可重写）。默认实现不执行任何操作。
         @Override
         public void edit(Cast c) throws CannotCompileException {
-          super.edit(c);
+          // 获得c中的两个对象
+          MethodInfo thisMethod = ReflectUtils.readField(c, "thisMethod");
+          CtClass thisClass = ReflectUtils.readField(c, "thisClass");
+
+          // 静态函数没有this
+          if (!AccessFlags.isStatic(thisMethod.getAccessFlags())) {
+            c.replace(PatchUtil.getCastReplaceString(c, patchClass));
+          }
         }
 
         // 编辑方法调用（可覆盖）。默认实现不执行任何操作。
@@ -191,12 +200,13 @@ public class PatchFactory {
           TAG + "addConstructor, sourceClass:" + sourceClass.getName() + ", patchClass:" +
               patchClass.getName());
       // 类型是sourceClass，名字是mSourceClass
-      CtField ctField = new CtField(sourceClass, PATCH_CLASS_FIELD_SOURCE_CLASS, patchClass);
+      CtField ctField =
+          new CtField(sourceClass, PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE, patchClass);
       patchClass.addField(ctField);
       StringBuilder constructorCode = new StringBuilder();
       constructorCode
           .append("public " + PATCH_CLASS_CONSTRUCTOR_NAME + "(Object o) {")
-          .append(PATCH_CLASS_FIELD_SOURCE_CLASS + "=(" + sourceClass.getName() + ")o;")
+          .append(PATCH_CLASS_FIELD_SOURCE_CLASS_INSTANCE + "=(" + sourceClass.getName() + ")o;")
           .append("}");
       CtConstructor constructor = CtNewConstructor.make(constructorCode.toString(), patchClass);
       patchClass.addConstructor(constructor);
