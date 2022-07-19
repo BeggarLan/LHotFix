@@ -179,6 +179,17 @@ public class PatchUtil {
         }
         // 增加class后缀
         parameterSignatureBuilder.append(".class,");
+
+      } else if (JavaByteCodeUtil.isBasicType(parameterType)) {
+        // 基本类型
+        parameterSignatureBuilder.append(JavaByteCodeUtil.getByBasicTypeDescriptor(parameterType));
+        // 处理数组
+        if (isArray) {
+          parameterSignatureBuilder.append("[]");
+          isArray = false;
+        }
+        // 增加class后缀
+        parameterSignatureBuilder.append(".class,");
       }
 
 

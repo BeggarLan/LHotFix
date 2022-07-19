@@ -9,6 +9,9 @@ import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.INT_TYPE;
 import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.LONG_TYPE;
 import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.SHORT_TYPE;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * author: lanweihua
  * created on: 2022/7/19 12:29 下午
@@ -20,6 +23,7 @@ public class JavaByteCodeUtil {
   public static final char OBJECT_NAME_END_FLAG = ';';
 
   // 八大基本类型的表示
+  @Retention(RetentionPolicy.SOURCE)
   public @interface TypeDescriptor {
     public static final char OBJECT_TYPE = 'L'; // Object
 
@@ -31,6 +35,20 @@ public class JavaByteCodeUtil {
     public static final char LONG_TYPE = 'J'; // long
     public static final char FLOAT_TYPE = 'F'; // float
     public static final char DOUBLE_TYPE = 'D'; // double
+  }
+
+  /**
+   * 是否是基本类型
+   */
+  public static boolean isBasicType(char typeDescriptor) {
+    return BOOL_TYPE == typeDescriptor
+        || CHAR_TYPE == typeDescriptor
+        || BYTE_TYPE == typeDescriptor
+        || SHORT_TYPE == typeDescriptor
+        || INT_TYPE == typeDescriptor
+        || LONG_TYPE == typeDescriptor
+        || FLOAT_TYPE == typeDescriptor
+        || DOUBLE_TYPE == typeDescriptor;
   }
 
   /**
