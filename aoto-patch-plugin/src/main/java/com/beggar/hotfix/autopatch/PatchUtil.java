@@ -192,7 +192,15 @@ public class PatchUtil {
         parameterSignatureBuilder.append(".class,");
       }
 
-
+      // 数组
+      if (TextUtils.equals(JavaByteCodeUtil.ARRAY_TYPE, parameterType)) {
+        isArray = true;
+      }
+    }
+    // 除去最后的","
+    int length = parameterSignatureBuilder.length();
+    if (length > 0 && parameterSignatureBuilder.charAt(length - 1) == ',') {
+      parameterSignatureBuilder.deleteCharAt(length - 1);
     }
     return parameterSignatureBuilder.toString();
   }

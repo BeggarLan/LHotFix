@@ -19,6 +19,9 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class JavaByteCodeUtil {
 
+  // 数组类型
+  public static final char ARRAY_TYPE = '[';
+
   // Object类型名结束符：(Ljava/lang/Integer;FLjava/lang/String;)V
   public static final char OBJECT_NAME_END_FLAG = ';';
 
