@@ -132,18 +132,19 @@ public class PatchUtil {
     String constructorParameterSignature =
         getConstructorParameterSignature(constructorSignature, sourceClass, patchClass);
 
-    // 静态类
-    if (isClassStatic) {
-
-
+    // 有参构造函数
+    if (constructorParameterSignature.length() > 1) {
+      // 参数中的patchClass对象替换为原类对象
+      stringBuilder.append(
+          "java.lang.Object parameters[]=" + AutoPatchConstants.GET_REAL_PARAMETER +
+              "(\\$args);");
+      stringBuilder.append(
+          "\\$_= (\\$r)" + ReflectUtils.invokeConstruct + "(" + className +
+              ",parameters,new Class[]{" + constructorParameterSignature + "});");
     } else {
-      // 有参构造函数
-      if (constructorParameterSignature.length() > 1) {
-
-      } else {
-        // 无参
-
-      }
+      // 无参
+      stringBuilder.append(
+          "\\$_= (\\$r)" + ReflectUtils.invokeConstruct + "(" + className + ",\\$args,null);");
     }
     stringBuilder.append("}");
     return stringBuilder.toString();
