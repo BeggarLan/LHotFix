@@ -127,7 +127,7 @@ class AutoPatchTransform extends Transform {
     }
 
     // 生成patch
-    private void generatePxatch(@NonNull ClassPool classPool @NonNull String patchGenerateDirPath) {
+    private void generatePxatch(@NonNull ClassPool classPool @ NonNull String patchGenerateDirPath) {
         mLogger.quiet(TAG + "generatePatch start.")
         // 没有modify方法，说明没有要修改的，直接结束
         if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
@@ -137,19 +137,25 @@ class AutoPatchTransform extends Transform {
         searchSuperMethod(mAutoPatchConfig.mModifyClassList);
 
         for (String className : mAutoPatchConfig.mModifyClassList) {
-            CtClass ctClass = classPool.get(className)
+            // 原类
+            CtClass sourceCtClass = classPool.get(className)
+            // 生成对应的补丁类
             CtClass patchClass = PatchFactory.getInstance().createPatchClass(
                 mLogger,
                 classPool,
-                ctClass,
-                NameManager.instance.getPatchCtClassName(ctClass.name),
+                sourceCtClass,
+                NameManager.instance.getPatchCtClassName(sourceCtClass.name),
                 mAutoPatchConfig,
                 patchGenerateDirPath)
             // 生成类文件
             patchClass.writeFile(patchGenerateDirPath)
 
-
+            // 生成
+            def patchesControlClass = PatchesControlFactory.createPatchesControl(sourceCtClass)
+            patchesControlClass.writeFile(patchGenerateDirPath)
         }
+        //
+
 
         mLogger.quiet(TAG + "generatePatch end.")
     }
