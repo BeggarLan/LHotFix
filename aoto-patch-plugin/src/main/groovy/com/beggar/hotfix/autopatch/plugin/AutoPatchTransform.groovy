@@ -127,7 +127,7 @@ class AutoPatchTransform extends Transform {
     }
 
     // 生成patch
-    private void generatePxatch(@NonNull ClassPool classPool @ NonNull String patchGenerateDirPath) {
+    private void generatePxatch(@NonNull ClassPool classPool @NonNull String patchGenerateDirPath) {
         mLogger.quiet(TAG + "generatePatch start.")
         // 没有modify方法，说明没有要修改的，直接结束
         if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
@@ -145,6 +145,10 @@ class AutoPatchTransform extends Transform {
                 NameManager.instance.getPatchCtClassName(ctClass.name),
                 mAutoPatchConfig,
                 patchGenerateDirPath)
+            // 生成类文件
+            patchClass.writeFile(patchGenerateDirPath)
+
+
         }
 
         mLogger.quiet(TAG + "generatePatch end.")
