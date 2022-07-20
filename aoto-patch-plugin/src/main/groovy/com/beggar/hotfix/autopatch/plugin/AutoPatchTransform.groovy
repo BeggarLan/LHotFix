@@ -144,7 +144,7 @@ class AutoPatchTransform extends Transform {
                 mLogger,
                 classPool,
                 sourceCtClass,
-                NameManager.instance.getPatchCtClassName(sourceCtClass.name),
+                NameManager.instance.getPatchClassName(sourceCtClass.name),
                 mAutoPatchConfig,
                 patchGenerateDirPath)
             // 生成类文件

@@ -25,6 +25,8 @@ public class AutoPatchConstants {
   public static final String PATCH_CLASS_PACKAGE_NAME = "com.beggar.hotfix.patch";
   // patch类名的后缀
   public static final String PATCH_CLASS_NAME_SUFFIX = "Patch";
+  // patch控制类名的后缀
+  public static final String PATCH_CONTROL_CLASS_NAME_SUFFIX = "PatchControl";
 
   // 方法名
   public static final String GET_REAL_PARAMETER = "getRealParameter";

@@ -1,9 +1,11 @@
 package com.beggar.hotfix.autopatch;
 
 import com.android.annotations.NonNull;
+import com.beggar.hotfix.base.PatchTemplate;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.NotFoundException;
 
 /**
  * author: lanweihua
@@ -17,8 +19,15 @@ public class PatchControlFactory {
    * @param patchClass  布丁类
    */
   public static CtClass createPatchControlClass(
-      @NonNull ClassPool classPool, @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
-    classPool.getAndRename();
+      @NonNull ClassPool classPool, @NonNull CtClass sourceClass, @NonNull CtClass patchClass)
+      throws NotFoundException {
+    // 控制类名字
+    String patchControlClassName =
+        NameManager.getInstance().getPatchControlClassName(sourceClass.getSimpleName());
+    CtClass patchControlCtClass =
+        classPool.getAndRename(PatchTemplate.class.getName(), patchControlClassName);
+
+    return patchControlCtClass;
   }
 
 }

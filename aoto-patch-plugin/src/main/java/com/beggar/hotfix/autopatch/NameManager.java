@@ -33,7 +33,7 @@ public class NameManager {
    * @param sourceCtClassName 原类名：不带.class
    */
   @NonNull
-  public String getPatchCtClassName(@NonNull String sourceCtClassName) {
+  public String getPatchClassName(@NonNull String sourceCtClassName) {
     // package换了，类最后增加patch后缀
     String patchClassName =
         AutoPatchConstants.PATCH_CLASS_PACKAGE_NAME + "." +
@@ -44,12 +44,23 @@ public class NameManager {
   }
 
   /**
+   * 获得布丁控制类的类名
+   *
+   * @param sourceClassSimpleName 原类的名字
+   * @return
+   */
+  public String getPatchControlClassName(@NonNull String sourceClassSimpleName) {
+    return AutoPatchConstants.PATCH_CLASS_PACKAGE_NAME + "." + sourceClassSimpleName +
+        AutoPatchConstants.PATCH_CONTROL_CLASS_NAME_SUFFIX;
+  }
+
+  /**
    * 获得某patch类对应的原类名称：不带.class
    *
    * @param patchCtClassName patch类名：不带.class
    */
   @Nullable
-  public String getSourceCtClassName(@NonNull String patchCtClassName) {
+  public String getSourceClassName(@NonNull String patchCtClassName) {
     return mPatchClassNameMap.get(patchCtClassName);
   }
 
