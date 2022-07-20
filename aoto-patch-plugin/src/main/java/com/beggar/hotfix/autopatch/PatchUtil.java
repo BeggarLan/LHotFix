@@ -283,12 +283,13 @@ public class PatchUtil {
           "java.lang.Object parameters[]=" + AutoPatchConstants.GET_REAL_PARAMETER +
               "(\\$args);");
       stringBuilder.append(
-          "\\$_= (\\$r)" + ReflectUtils.invokeConstruct + "(" + className +
+          "\\$_= (\\$r)" + ReflectUtils.class.getName() + "invokeConstruct(" + className +
               ",parameters,new Class[]{" + constructorParameterSignature + "});");
     } else {
       // 无参
       stringBuilder.append(
-          "\\$_= (\\$r)" + ReflectUtils.invokeConstruct + "(" + className + ",\\$args,null);");
+          "\\$_= (\\$r)" + ReflectUtils.class.getName() + "invokeConstruct(" + className +
+              ",\\$args,null);");
     }
     stringBuilder.append("}");
     return stringBuilder.toString();
