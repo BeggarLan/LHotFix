@@ -151,7 +151,7 @@ class AutoPatchTransform extends Transform {
             patchClass.writeFile(patchGenerateDirPath)
 
             // 生成
-            def patchesControlClass = PatchesControlFactory.createPatchesControl(sourceCtClass)
+            def patchesControlClass = PatchControlFactory.createPatchControlClass(sourceCtClass)
             patchesControlClass.writeFile(patchGenerateDirPath)
         }
         //
