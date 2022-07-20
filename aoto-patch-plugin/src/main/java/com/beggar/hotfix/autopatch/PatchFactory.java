@@ -198,6 +198,14 @@ public class PatchFactory {
       });
     }
 
+    // 补丁类中不需要有field(都转给source类处理了)
+    for (CtField ctField : patchClass.getDeclaredFields()) {
+      patchClass.removeField(ctField);
+    }
+    // 因为字段读写、方法调用等，和patchClass相关的直接调用(如this.xxx)都转角给原类了，因此不需要有父类
+    // ps：补丁类被new的时候也是调用的无参构造
+    patchClass.setSuperclass(classPool.get("java.lang.Object"));
+
     logger.quiet(TAG + "createPatchClass end. patchClass:" + patchClass.getName());
     return patchClass;
   }
