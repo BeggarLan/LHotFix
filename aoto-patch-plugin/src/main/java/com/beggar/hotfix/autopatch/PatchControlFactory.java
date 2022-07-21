@@ -56,7 +56,7 @@ public class PatchControlFactory {
     // 方法中插入代码
     patchControlCtClass
         .getDeclaredMethod("isSupport")
-        .insertBefore(getIsSupportMethodBody(sourceClass, patchClass));
+        .insertBefore(getIsSupportMethodBody(sourceClass, patchClass, autoPatchConfig));
 
     patchControlCtClass
         .getDeclaredMethod("accessDispatch")
@@ -175,8 +175,33 @@ public class PatchControlFactory {
    * 获得isSupport方法体
    */
   private static String getIsSupportMethodBody(
-      @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
+      @NonNull CtClass sourceClass,
+      @NonNull CtClass patchClass,
+      @NonNull AutoPatchConfig autoPatchConfig) {
+    /* ***************************   生成的代码如下
+    // 要patch的方法的number
+    String methodNumber = $1.spilt(Constants.PROXY_METHOD_DESC_CONTENT_SPLIT)[1];
+    // 然后找出本类支持的patch的所有方法
+    // return 支持的方法中包含该方法
+     */
 
+    StringBuilder methodBodyBuilder = new StringBuilder();
+    methodBodyBuilder.append(
+        "String methodNumber = $1.spilt(" + Constants.PROXY_METHOD_DESC_CONTENT_SPLIT +
+            ")[1];");
+
+    // 需要patch的方法都补一下处理
+    StringBuilder classSupportPatchMethodIds = new StringBuilder();
+    for (CtMethod ctMethod : patchClass.getDeclaredMethods()) {
+      String methodSignatureName = JavassistUtil.getMethodSignatureName(ctMethod);
+      Integer currentMethodNo = autoPatchConfig.mCodeInsertMethodMap.get(methodSignatureName);
+      if (currentMethodNo != null) {
+        classSupportPatchMethodIds.append(":" + currentMethodNo + ":");
+      }
+    }
+    methodBodyBuilder
+        .append("return " + classSupportPatchMethodIds.toString() + ".contains(methodNumber);");
+    return methodBodyBuilder.toString();
   }
 
 }
