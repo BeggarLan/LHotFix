@@ -39,6 +39,8 @@ import javassist.bytecode.ClassFile;
  */
 public class JavassistUtil {
 
+  public static final String VOID = "void";
+
   /**
    * 把inputs中的class转换成 CtClass
    *
@@ -179,7 +181,8 @@ public class JavassistUtil {
   }
 
   /**
-   * 获得方法签名
+   * 获得方法签名，
+   * 带参数类型的描述，例如：javassist.CtMethod.setBody(String)
    */
   @NonNull
   public static String getMethodSignatureName(@NonNull CtMethod ctMethod) {
@@ -207,6 +210,13 @@ public class JavassistUtil {
 
   public static boolean isStatic(@NonNull CtField ctField) {
     return (ctField.getModifiers() & AccessFlag.STATIC) != 0;
+  }
+
+  /**
+   * 判断某方法是否是void类型的
+   */
+  public static boolean isVoidMethod(@NonNull CtMethod ctMethod) throws NotFoundException {
+    return ctMethod.getReturnType().getName().equals(VOID);
   }
 
 }

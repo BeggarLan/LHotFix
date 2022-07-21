@@ -408,7 +408,7 @@ public class PatchFactory {
         }
         methodBuilder.append(ctMethod.getReturnType().getName())
             .append(" ")
-            .append(ctMethod.getName() + AutoPatchConstants.PUBLIC_SUFFIX)
+            .append(PatchUtil.getPublicSuffixMethodName(ctMethod))
             .append("(")
             .append(JavassistUtil.getMethodParameterSignature(ctMethod))
             .append(") {");

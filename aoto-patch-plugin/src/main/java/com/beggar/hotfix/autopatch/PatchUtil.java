@@ -449,4 +449,13 @@ public class PatchUtil {
     return stringBuilder.toString();
   }
 
+  /**
+   * input: 方法名
+   *
+   * @return 方法名 + "HotfixPublic"
+   */
+  public static String getPublicSuffixMethodName(@NonNull CtMethod ctMethod) {
+    return ctMethod.getName() + AutoPatchConstants.PUBLIC_SUFFIX;
+  }
+
 }
