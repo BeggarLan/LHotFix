@@ -37,7 +37,9 @@ public class AutoPatchConfig {
   @NonNull
   public final Map<String, List<CtMethod>> mInvokeSuperMethodMap = new HashMap<>();
 
-  // 经过插桩的方法，key: CtMethod.longName, value: number
+  // 经过插桩的方法
+  // key: CtBehavior.getLongName()，带参数类型的方法或构造器的描述，比如 javassist.CtBehavior.stBody(String)
+  // value: number
   @NonNull
   public final Map<String, Integer> mCodeInsertMethodMap = new LinkedHashMap<>();
 
