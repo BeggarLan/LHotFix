@@ -13,23 +13,26 @@ public interface ChangeRedirect {
   String sClassName = "com.beggar.hotfix.base.ChangeRedirect";
   String sObjectName = "changeRedirect";
 
+  // 表示方法中的params参数
+  String METHOD_PARAMS = "params";
+
 
   /**
    * 是否可以patch
    *
-   * @param patchMethodName 格式为isStatic:methodNumber
+   * @param patchMethodDesc 格式为isStatic:methodNumber
    * @param params          最后一项为所属类对象(若是静态方法则没有类对象)。null代表函数无参数
    */
-  boolean isSupport(@NotNull String patchMethodName, @Nullable Object[] params);
+  boolean isSupport(@NotNull String patchMethodDesc, @Nullable Object[] params);
 
 
   /**
    * 访问方法
    *
-   * @param patchMethodName 格式为isStatic:methodNumber
+   * @param patchMethodDesc 格式为isStatic:methodNumber
    * @param params          最后一项为所属类对象(若是静态方法则没有类对象)。null代表函数无参数
    * @return 函数的返回值
    */
-  Object accessDispatch(String patchMethodName, Object[] params);
+  Object accessDispatch(String patchMethodDesc, Object[] params);
 
 }

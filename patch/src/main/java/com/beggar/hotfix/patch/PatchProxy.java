@@ -1,5 +1,7 @@
 package com.beggar.hotfix.patch;
 
+import static com.beggar.hotfix.base.Constants.PROXY_METHOD_DESC_CONTENT_SPLIT;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -79,7 +81,7 @@ public class PatchProxy {
    * @return isStatic:methodNumber
    */
   private static String getProxyMethodStr(boolean isStatic, int methodNumber) {
-    return isStatic + ":" + methodNumber;
+    return isStatic + PROXY_METHOD_DESC_CONTENT_SPLIT + methodNumber;
   }
 
   /**

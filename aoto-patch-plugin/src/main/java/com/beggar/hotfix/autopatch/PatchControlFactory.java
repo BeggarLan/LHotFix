@@ -47,9 +47,61 @@ public class PatchControlFactory {
     patchControlCtClass
         .addMethod(CtMethod.make(getRealParameterMethodBuilder.toString(), patchControlCtClass));
 
+    // 方法中插入代码
+    patchControlCtClass
+        .getDeclaredMethod("isSupport")
+        .insertBefore(getIsSupportMethodBody(sourceClass, patchClass));
 
+    patchControlCtClass
+        .getDeclaredMethod("accessDispatch")
+        .insertBefore(getAccessDispatchMethodBody(sourceClass, patchClass));
 
     return patchControlCtClass;
+  }
+
+  /**
+   * 获得AccessDispatch方法体
+   */
+  private static String getAccessDispatchMethodBody(
+      @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
+    /* ***************************   生成的代码如下
+    PatchClass patch = null;
+    // 是否是静态方法
+    String isStatic = $1.spil(Constants.PROXY_METHOD_DESC_CONTENT_SPLIT)[0];
+    // 不是静态方法
+    if (isStatic.equals(false)) {
+      // 非静态方法的最后一个参数是方法所属的对象
+      patch =
+          new PatchClass(ChangeRedirect.METHOD_PARAMS[ChangeRedirect.METHOD_PARAMS.length() - 1]);
+    } else {
+      // 静态方法
+      patch = new PatchClass(null);
+    }
+
+    // 要patch的方法的number
+    String methodNumber = $1.spil(Constants.PROXY_METHOD_DESC_CONTENT_SPLIT)[1];
+    // 这些numbr就是该类中要patch的所有的方法的编号，逐一匹配
+    if (number1.equals(methodNumber)) {
+      // 1. 这里如果要处理的method不是public的，那么访问 PUBLIC_SUFFIX后缀的那个生成方法。
+      // 2. 执行patch对象的方法访问
+    }
+    if (number1.equals(methodNumber)) {
+      // 同上
+    }
+    ...
+    *****************************************************/
+
+    StringBuilder methodBodyBuilder = new StringBuilder();
+
+
+  }
+
+  /**
+   * 获得isSupport方法体
+   */
+  private static String getIsSupportMethodBody(
+      @NonNull CtClass sourceClass, @NonNull CtClass patchClass) {
+
   }
 
 }

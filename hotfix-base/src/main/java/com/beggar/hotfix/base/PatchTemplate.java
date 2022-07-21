@@ -1,6 +1,9 @@
 package com.beggar.hotfix.base;
 
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 /**
  * author: BeggarLan
  * created on: 2022/5/6 23:11
@@ -8,13 +11,15 @@ package com.beggar.hotfix.base;
  */
 public class PatchTemplate implements ChangeRedirect {
 
+  private static final Map<Object, Object> keyToValueRelation = new WeakHashMap<>();
+
   @Override
-  public boolean isSupport(String patchMethodName, Object[] params) {
+  public boolean isSupport(String patchMethodDesc, Object[] params) {
     return true;
   }
 
   @Override
-  public Object accessDispatch(String patchMethodName, Object[] params) {
+  public Object accessDispatch(String patchMethodDesc, Object[] params) {
     return null;
   }
 

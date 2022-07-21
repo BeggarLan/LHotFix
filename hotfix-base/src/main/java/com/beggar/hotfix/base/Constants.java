@@ -22,6 +22,8 @@ public class Constants {
   public static final String HOTFIX_INTERFACE_NAME = ChangeRedirect.sClassName;
   public static final String HOTFIX_INSERT_FIELD_NAME = ChangeRedirect.sObjectName;
 
+  // ChangeRedirect的两个方法的第一个参数：方法描述的内容分割符
+  public static final String PROXY_METHOD_DESC_CONTENT_SPLIT = ":";
 
   public static final String LANG_VOID = "java.lang.Void";
   public static final String VOID = "void";
