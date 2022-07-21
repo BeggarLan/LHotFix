@@ -136,6 +136,7 @@ class AutoPatchTransform extends Transform {
         // 找到class中的super方法
         searchSuperMethod(mAutoPatchConfig.mModifyClassList);
 
+        // 生成补丁类和布丁控制类
         for (String className : mAutoPatchConfig.mModifyClassList) {
             // 原类
             CtClass sourceCtClass = classPool.get(className)
@@ -150,10 +151,11 @@ class AutoPatchTransform extends Transform {
             // 生成类文件
             patchClass.writeFile(patchGenerateDirPath)
 
-            // 生成
+            // 生成布丁控制类
             def patchesControlClass = PatchControlFactory.createPatchControlClass(sourceCtClass)
             patchesControlClass.writeFile(patchGenerateDirPath)
         }
+
         //
 
 

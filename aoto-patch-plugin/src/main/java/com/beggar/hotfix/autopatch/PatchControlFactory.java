@@ -157,6 +157,7 @@ public class PatchControlFactory {
 //        }
       }
 
+      // TODO: 2022/7/21 boolean被优化成byte的问题看下
       // 拼接参数
       CtClass[] parameterTypes = ctMethod.getParameterTypes();
       for (int i = 0; i < parameterTypes.length; ++i) {
