@@ -1,7 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/15 11:35 下午
  * description: 常量
  */

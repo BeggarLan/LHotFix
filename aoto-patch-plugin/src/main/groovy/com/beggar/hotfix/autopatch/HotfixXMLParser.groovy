@@ -4,7 +4,7 @@ import com.android.annotations.NonNull
 import org.gradle.api.logging.Logger
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/15 12:59 下午
  * description: 解析hotfix.xml
  */

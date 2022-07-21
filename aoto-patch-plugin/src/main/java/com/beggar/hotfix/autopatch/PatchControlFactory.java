@@ -13,15 +13,15 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/7/20 12:50 下午
- * description: 创建布丁控制类，用来调度布丁方法
+ * description: 创建补丁控制类，用来调度补丁方法
  */
 public class PatchControlFactory {
 
   /**
    * @param sourceClass 原类
-   * @param patchClass  布丁类
+   * @param patchClass  补丁类
    */
   public static CtClass createPatchControlClass(
       @NonNull AutoPatchConfig autoPatchConfig,

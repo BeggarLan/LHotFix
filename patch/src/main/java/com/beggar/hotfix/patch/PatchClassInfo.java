@@ -3,7 +3,7 @@ package com.beggar.hotfix.patch;
 import androidx.annotation.NonNull;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/10 10:59 下午
  * description: 被修补的类和补丁类信息
  */

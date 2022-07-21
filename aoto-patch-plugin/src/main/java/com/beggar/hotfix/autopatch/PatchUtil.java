@@ -14,7 +14,7 @@ import javassist.expr.Cast;
 import javassist.expr.MethodCall;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/7/4 12:45 下午
  * description: 工具方法
  */
@@ -122,7 +122,7 @@ public class PatchUtil {
    * 类型转换表达式替换：被强转的对象如果是patchClass对象(this)，那么替换为sourceClass对象
    *
    * @param cast       强转表达式
-   * @param patchClass 布丁类
+   * @param patchClass 补丁类
    */
   public static String getCastReplaceString(@NonNull Cast cast, @NonNull CtClass patchClass) {
     // 生成的代码
@@ -322,7 +322,7 @@ public class PatchUtil {
         String parameterClassName = constructorSignature.substring(
             i + 1, constructorSignature.indexOf(JavaByteCodeUtil.OBJECT_NAME_END_FLAG, i))
             .replace("/", ".");
-        // 如果类型是布丁类,那么替换为原类
+        // 如果类型是补丁类,那么替换为原类
         if (TextUtils.equals(parameterClassName, patchClass.getName())) {
           parameterSignatureBuilder.append(sourceClass.getName());
         } else {

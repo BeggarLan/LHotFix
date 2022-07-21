@@ -11,7 +11,7 @@ import com.android.annotations.NonNull;
 import javassist.CtMethod;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/15 12:55 下午
  * description: 打补丁包的配置
  */

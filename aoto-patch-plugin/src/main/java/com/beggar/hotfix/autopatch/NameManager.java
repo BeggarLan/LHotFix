@@ -7,7 +7,7 @@ import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/29 1:23 下午
  * description: name工具
  */
@@ -44,7 +44,7 @@ public class NameManager {
   }
 
   /**
-   * 获得布丁控制类的类名
+   * 获得补丁控制类的类名
    *
    * @param sourceClassSimpleName 原类的名字
    * @return

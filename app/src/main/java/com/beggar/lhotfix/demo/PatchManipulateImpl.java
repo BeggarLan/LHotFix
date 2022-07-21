@@ -10,7 +10,7 @@ import com.beggar.hotfix.patch.Patch;
 import com.beggar.hotfix.patch.PatchManipulate;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/10 11:54 下午
  * description:
  */

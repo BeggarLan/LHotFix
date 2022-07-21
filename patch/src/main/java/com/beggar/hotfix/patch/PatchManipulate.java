@@ -7,20 +7,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/9 9:34 下午
- * description: 布丁操作
+ * description: 补丁操作
  */
 public interface PatchManipulate {
 
   /**
-   * 获取布丁列表
+   * 获取补丁列表
    */
   @Nullable
   List<Patch> fetchPatchList(@NonNull Context context);
 
   /**
-   * 验证布丁md5
+   * 验证补丁md5
    * 验证不通过会触发下载
    */
   boolean verifyPatch(@NonNull Context context, @NonNull Patch patch);

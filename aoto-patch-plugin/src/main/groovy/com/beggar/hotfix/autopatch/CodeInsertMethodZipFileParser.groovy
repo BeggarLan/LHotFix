@@ -6,7 +6,7 @@ import org.gradle.api.logging.Logger
 import java.util.zip.GZIPInputStream;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/21 9:47 下午
  * description: 代码插桩的method文件解析器
  */

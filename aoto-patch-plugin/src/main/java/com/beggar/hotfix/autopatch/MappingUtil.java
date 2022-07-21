@@ -1,7 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/23 12:51 下午
  * description: 处理混淆mapping的
  */

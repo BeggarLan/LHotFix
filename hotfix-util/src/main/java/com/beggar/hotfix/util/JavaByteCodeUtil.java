@@ -13,7 +13,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/7/19 12:29 下午
  * description: 字节码工具类
  */

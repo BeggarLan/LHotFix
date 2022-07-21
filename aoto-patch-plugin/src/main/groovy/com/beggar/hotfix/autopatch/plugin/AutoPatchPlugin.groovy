@@ -9,7 +9,7 @@ import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/13 1:18 下午
  * description: 打patch包的插件
  */

@@ -15,9 +15,9 @@ import com.beggar.hotfix.base.ChangeRedirect;
 import dalvik.system.DexClassLoader;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/9 9:42 下午
- * description: 布丁执行
+ * description: 补丁执行
  */
 public class PatchExecutor extends Thread {
 
@@ -59,7 +59,7 @@ public class PatchExecutor extends Thread {
         continue;
       }
 
-      // 执行布丁
+      // 执行补丁
       boolean patchSucceed = patch(patch);
       Log.i(TAG, "patch path: " + patch.getPatchLocalPath() + ", patch result :" + patchSucceed);
       if (patchSucceed) {
@@ -72,7 +72,7 @@ public class PatchExecutor extends Thread {
   }
 
   /**
-   * 执行布丁
+   * 执行补丁
    *
    * @return {@code true} 成功
    */
@@ -179,7 +179,7 @@ public class PatchExecutor extends Thread {
   }
 
   /**
-   * 打布丁时的cache文件夹
+   * 打补丁时的cache文件夹
    */
   private File getPatchCacheDir(@NonNull Patch patch) {
     String key = patch.getName() + patch.getPatchMd5();

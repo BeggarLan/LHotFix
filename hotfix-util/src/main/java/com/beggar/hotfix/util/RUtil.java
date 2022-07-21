@@ -6,7 +6,7 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/7/14 7:10 下午
  * description: R相关工具
  */

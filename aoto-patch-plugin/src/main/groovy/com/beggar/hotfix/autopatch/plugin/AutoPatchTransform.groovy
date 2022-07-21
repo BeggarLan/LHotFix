@@ -14,7 +14,7 @@ import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 
 /**
- * author: lanweihua
+ * author: BeggarLan
  * created on: 2022/6/13 1:21 下午
  * description: 用来打patch包
  */
@@ -136,7 +136,7 @@ class AutoPatchTransform extends Transform {
         // 找到class中的super方法
         searchSuperMethod(mAutoPatchConfig.mModifyClassList);
 
-        // 生成补丁类和布丁控制类
+        // 生成补丁类和补丁控制类
         for (String className : mAutoPatchConfig.mModifyClassList) {
             // 原类
             CtClass sourceCtClass = classPool.get(className)
@@ -151,13 +151,13 @@ class AutoPatchTransform extends Transform {
             // 生成类文件
             patchClass.writeFile(patchGenerateDirPath)
 
-            // 生成布丁控制类
+            // 生成补丁控制类
             def patchesControlClass = PatchControlFactory.createPatchControlClass(sourceCtClass)
             patchesControlClass.writeFile(patchGenerateDirPath)
         }
 
         //
-
+        
 
         mLogger.quiet(TAG + "generatePatch end.")
     }
