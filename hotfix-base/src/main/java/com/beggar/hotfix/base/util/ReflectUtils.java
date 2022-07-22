@@ -1,12 +1,13 @@
-package com.beggar.hotfix.util;
+package com.beggar.hotfix.base.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.android.annotations.NonNull;
+import com.android.annotations.Nullable;
+
 
 /**
  * author: BeggarLan
@@ -31,7 +32,7 @@ public class ReflectUtils {
     try {
       Class<?> clazz = Class.forName(className);
       Constructor<?> constructor = clazz.getDeclaredConstructor(parameterClasses);
-      return constructor.newInstance(parameterClasses);
+      return constructor.newInstance(parameters);
     } catch (Throwable e) {
       e.printStackTrace();
     }

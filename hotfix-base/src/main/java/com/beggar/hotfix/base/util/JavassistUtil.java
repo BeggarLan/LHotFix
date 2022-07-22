@@ -1,4 +1,4 @@
-package com.beggar.hotfix.util;
+package com.beggar.hotfix.base.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +14,8 @@ import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.SdkConstants;
+import com.android.annotations.NonNull;
 import com.android.build.api.transform.DirectoryInput;
 import com.android.build.api.transform.JarInput;
 import com.android.build.api.transform.TransformInput;

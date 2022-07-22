@@ -1,9 +1,10 @@
-package com.beggar.hotfix.util;
+package com.beggar.hotfix.base.util;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
+import com.android.annotations.NonNull;
+
 
 /**
  * author: BeggarLan

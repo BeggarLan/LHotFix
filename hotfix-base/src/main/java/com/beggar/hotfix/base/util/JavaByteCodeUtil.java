@@ -1,13 +1,13 @@
-package com.beggar.hotfix.util;
+package com.beggar.hotfix.base.util;
 
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.BOOL_TYPE;
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.BYTE_TYPE;
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.CHAR_TYPE;
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.DOUBLE_TYPE;
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.FLOAT_TYPE;
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.INT_TYPE;
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.LONG_TYPE;
-import static com.beggar.hotfix.util.JavaByteCodeUtil.TypeDescriptor.SHORT_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.BOOL_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.BYTE_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.CHAR_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.DOUBLE_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.FLOAT_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.INT_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.LONG_TYPE;
+import static com.beggar.hotfix.base.util.JavaByteCodeUtil.TypeDescriptor.SHORT_TYPE;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

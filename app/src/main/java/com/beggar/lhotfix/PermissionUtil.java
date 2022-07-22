@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import androidx.annotation.NonNull;
 
-import com.tbruyelle.rxpermissions2.RxPermissions;
-
 import io.reactivex.functions.Consumer;
 
 /**
@@ -27,10 +25,10 @@ public class PermissionUtil {
       Consumer<Boolean> onNext,
       Consumer<? super Throwable> onError,
       final String... permissions) {
-    RxPermissions rxPermissions = new RxPermissions(activity);
-    rxPermissions
-        .request(permissions)
-        .subscribe(onNext, onError);
+//    RxPermissions rxPermissions = new RxPermissions(activity);
+//    rxPermissions
+//        .request(permissions)
+//        .subscribe(onNext, onError);
   }
 
 }

@@ -42,7 +42,7 @@ class HotFixPlugin implements Plugin<Project> {
                 mExceptPackageList,
                 mExceptMethodList))
             //
-            project.afterEvaluate(new HotfixApkHashAction())
+//            project.afterEvaluate(new HotfixApkHashAction())
         } catch (Throwable e) {
             e.printStackTrace()
             mLogger.error("********** hitFix codeInsert plugin parse " + Constants.ROBUST_XML + " error.*********");

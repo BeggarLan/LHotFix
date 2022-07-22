@@ -1,7 +1,7 @@
 package com.beggar.hotfix.base;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+import com.android.annotations.NonNull;
+import com.android.annotations.Nullable;
 
 /**
  * author: BeggarLan
@@ -23,7 +23,7 @@ public interface ChangeRedirect {
    * @param patchMethodDesc 格式为isStatic:methodNumber
    * @param params          最后一项为所属类对象(若是静态方法则没有类对象)。null代表函数无参数
    */
-  boolean isSupport(@NotNull String patchMethodDesc, @Nullable Object[] params);
+  boolean isSupport(@NonNull String patchMethodDesc, @Nullable Object[] params);
 
 
   /**

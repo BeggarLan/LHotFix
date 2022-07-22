@@ -34,5 +34,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // 向外直接传递hotfix-base这个库
-    api project(path:':hotfix-base')
+    implementation project(path:':hotfix-base')
 }
