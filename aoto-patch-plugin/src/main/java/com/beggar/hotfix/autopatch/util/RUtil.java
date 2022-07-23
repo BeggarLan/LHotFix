@@ -1,4 +1,4 @@
-package com.beggar.hotfix.base.util;
+package com.beggar.hotfix.autopatch.util;
 
 import java.util.HashSet;
 import java.util.Set;

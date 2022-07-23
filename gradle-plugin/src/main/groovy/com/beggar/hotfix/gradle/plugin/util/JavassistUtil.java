@@ -1,4 +1,4 @@
-package com.beggar.hotfix.base.util;
+package com.beggar.hotfix.gradle.plugin.util;
 
 import java.io.File;
 import java.io.IOException;

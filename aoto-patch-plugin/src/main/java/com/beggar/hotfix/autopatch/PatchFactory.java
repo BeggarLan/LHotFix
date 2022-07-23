@@ -11,7 +11,8 @@ import org.gradle.api.logging.Logger;
 
 import com.android.annotations.NonNull;
 import com.android.dx.rop.code.AccessFlags;
-import com.beggar.hotfix.base.util.JavassistUtil;
+import com.beggar.hotfix.autopatch.util.JavassistUtil;
+import com.beggar.hotfix.autopatch.util.ReflectUtils;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -166,13 +167,18 @@ public class PatchFactory {
         // 编辑显式类型转换的表达式（可重写）。默认实现不执行任何操作。
         @Override
         public void edit(Cast c) throws CannotCompileException {
-          // 获得c中的两个对象
-          MethodInfo thisMethod = ReflectUtils.readField(c, "thisMethod");
-          CtClass thisClass = ReflectUtils.readField(c, "thisClass");
-
-          // 静态函数没有this
-          if (!AccessFlags.isStatic(thisMethod.getAccessFlags())) {
-            c.replace(PatchUtil.getCastReplaceString(c, patchClass));
+          try {
+            // 获得c中的两个对象
+            MethodInfo thisMethod = (MethodInfo) ReflectUtils.getFieldValue(c, "thisMethod");
+            CtClass thisClass = (CtClass) ReflectUtils.getFieldValue(c, "thisClass");
+            // 静态函数没有this
+            if (!AccessFlags.isStatic(thisMethod.getAccessFlags())) {
+              c.replace(PatchUtil.getCastReplaceString(c, patchClass));
+            }
+          } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+          } catch (IllegalAccessException e) {
+            e.printStackTrace();
           }
         }
 

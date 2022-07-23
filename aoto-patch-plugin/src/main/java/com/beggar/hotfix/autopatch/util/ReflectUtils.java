@@ -1,4 +1,4 @@
-package com.beggar.hotfix.base.util;
+package com.beggar.hotfix.autopatch.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

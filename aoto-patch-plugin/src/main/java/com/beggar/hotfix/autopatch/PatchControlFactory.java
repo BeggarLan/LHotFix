@@ -2,6 +2,7 @@ package com.beggar.hotfix.autopatch;
 
 import com.android.annotations.NonNull;
 import com.android.dx.rop.code.AccessFlags;
+import com.beggar.hotfix.autopatch.util.JavassistUtil;
 import com.beggar.hotfix.base.ChangeRedirect;
 import com.beggar.hotfix.base.Constants;
 import com.beggar.hotfix.base.PatchTemplate;
