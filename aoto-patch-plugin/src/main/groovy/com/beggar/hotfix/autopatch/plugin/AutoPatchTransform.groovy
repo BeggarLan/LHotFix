@@ -76,7 +76,7 @@ class AutoPatchTransform extends Transform {
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         mLogger.quiet("******************************AutoPatchTransform transform.*************************");
-        long startTimeMs = System.currentTimeMillis();
+        long startTimeMs = System.currentTimeMillis()
         TransformOutputProvider outputProvider = transformInvocation.getOutputProvider();
         // 非增量编译的情况下，删除之前生成的文件
         if (!transformInvocation.isIncremental()) {
@@ -99,14 +99,17 @@ class AutoPatchTransform extends Transform {
 
         autoPatch(classPool, ctClasses)
 
-        costTimeMs = (System.currentTimeMillis() - startTimeMs) / 1000
-        mLogger.quiet("AutoPatchTransform transform time cost $costTimeMs ms")
+        costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
+        mLogger.quiet("AutoPatchTransform transform time cost $costTimeSec s")
         mLogger.quiet("******************************AutoPatchTransform transform end*************************")
         // 本来就是给项目打patch包用的，打完了直接终止
         throw new RuntimeException("auto patch successfully")
     }
 
     void autoPatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses) {
+        mLogger.quiet("autoPatch start.")
+        long startTimeMs = System.currentTimeMillis()
+
         // patch包生成文件夹
         String patchGenerateDirPath =
             mProject.buildDir.getAbsolutePath() + File.separator + AutoPatchConstants.PATCH_GENERATE_DIR + File.separator;
@@ -123,13 +126,21 @@ class AutoPatchTransform extends Transform {
 //            MappingUtil.
         }
 
-        generatePatch(classPool, patchGenerateDirPath);
+        // 生成patch类
+        generatePatch(classPool, patchGenerateDirPath)
 
+
+
+        def costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
+        mLogger.quiet("autoPatch method cost $costTimeSec s")
+        mLogger.quiet("autoPatch end.")
     }
 
     // 生成patch
-    private void generatePxatch(@NonNull ClassPool classPool @NonNull String patchGenerateDirPath) {
+    private void generatePatch(@NonNull ClassPool classPool, @NonNull String patchGenerateDirPath) {
         mLogger.quiet(TAG + "generatePatch start.")
+        long startTimeMs = System.currentTimeMillis()
+
         // 没有modify方法，说明没有要修改的，直接结束
         if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
             throw new RuntimeException("not has modify method, please check Modify annotation");
@@ -162,6 +173,8 @@ class AutoPatchTransform extends Transform {
             PatchedClassInfoFactory.createPatchedClassInfoProviderClass(classPool, mAutoPatchConfig)
         patchClassInfoProviderClass.writeFile(patchGenerateDirPath)
 
+        def costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
+        mLogger.quiet("generatePatch method cost $costTimeSec s")
         mLogger.quiet(TAG + "generatePatch end.")
     }
 
