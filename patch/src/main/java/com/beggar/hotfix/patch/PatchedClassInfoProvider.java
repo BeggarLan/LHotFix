@@ -7,8 +7,8 @@ import java.util.List;
  * created on: 2022/6/10 10:58 下午
  * description: 用于获取[原类]和[补丁]类信息
  */
-public interface PatchClassInfoProvider {
+public interface PatchedClassInfoProvider {
 
-  List<PatchClassInfo> getPatchClassInfoList();
+  List<PatchedClassInfo> getPatchedClassInfoList();
 
 }

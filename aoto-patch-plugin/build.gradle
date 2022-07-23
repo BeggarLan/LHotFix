@@ -11,6 +11,7 @@ dependencies {
     implementation "com.android.tools.build:gradle:4.1.1"
     implementation 'org.javassist:javassist:3.20.0-GA'
     implementation project(path: ':hotfix-base')
+    implementation project(path: ':patch')
 }
 
 ext {

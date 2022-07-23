@@ -93,21 +93,21 @@ public class PatchExecutor extends Thread {
     // 获取原类和其对应的补丁类
     Log.i(TAG, "start load patchClassInfoProviderClass");
     String patchClassInfoProviderClassFullName = patch.getPatchClassInfoProviderClassFullName();
-    PatchClassInfoProvider patchClassInfoProvider = null;
+    PatchedClassInfoProvider patchedClassInfoProvider = null;
     try {
       Class<?> patchClassInfoProviderClazz =
           classLoader.loadClass(patchClassInfoProviderClassFullName);
-      patchClassInfoProvider = (PatchClassInfoProvider) patchClassInfoProviderClazz.newInstance();
+      patchedClassInfoProvider = (PatchedClassInfoProvider) patchClassInfoProviderClazz.newInstance();
     } catch (Throwable throwable) {
       throwable.printStackTrace();
     }
-    if (patchClassInfoProvider == null) {
+    if (patchedClassInfoProvider == null) {
       Log.i(TAG, "patchClassInfoProvider is null");
       return false;
     }
 
-    List<PatchClassInfo> patchClassInfoList = patchClassInfoProvider.getPatchClassInfoList();
-    if (patchClassInfoList == null || patchClassInfoList.size() == 0) {
+    List<PatchedClassInfo> patchedClassInfoList = patchedClassInfoProvider.getPatchedClassInfoList();
+    if (patchedClassInfoList == null || patchedClassInfoList.size() == 0) {
       Log.i(TAG, "patchClassInfoList is empty");
       return true;
     }
@@ -115,12 +115,12 @@ public class PatchExecutor extends Thread {
     // 是否出错(一个错了，这个值就为true)
     boolean isError = false;
     // 每个类打补丁
-    for (PatchClassInfo patchClassInfo : patchClassInfoList) {
-      Log.i(TAG, "start patch class, patchClassInfo :" + patchClassInfo.toString());
+    for (PatchedClassInfo patchedClassInfo : patchedClassInfoList) {
+      Log.i(TAG, "start patch class, patchClassInfo :" + patchedClassInfo.toString());
       // 原类
-      String sourceClassName = patchClassInfo.getSourceClassName();
+      String sourceClassName = patchedClassInfo.getSourceClassName();
       // 补丁类
-      String patchClassName = patchClassInfo.getPatchClassName();
+      String patchClassName = patchedClassInfo.getPatchClassName();
 
       if (TextUtils.isEmpty(patchClassName) || TextUtils.isEmpty(sourceClassName)) {
         Log.i(TAG, "patchClassName or sourceClassName is empty");

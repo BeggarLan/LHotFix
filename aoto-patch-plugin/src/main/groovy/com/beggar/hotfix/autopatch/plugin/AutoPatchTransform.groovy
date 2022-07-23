@@ -4,6 +4,7 @@ import com.android.annotations.NonNull
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.beggar.hotfix.autopatch.*
+import com.beggar.hotfix.autopatch.patchinfo.PatchedClassInfoFactory
 import javassist.CannotCompileException
 import javassist.ClassPool
 import javassist.CtClass
@@ -127,7 +128,7 @@ class AutoPatchTransform extends Transform {
     }
 
     // 生成patch
-    private void generatePxatch(@NonNull ClassPool classPool @ NonNull String patchGenerateDirPath) {
+    private void generatePxatch(@NonNull ClassPool classPool @NonNull String patchGenerateDirPath) {
         mLogger.quiet(TAG + "generatePatch start.")
         // 没有modify方法，说明没有要修改的，直接结束
         if (mAutoPatchConfig.mModifyMethodSignatureList.isEmpty()) {
@@ -156,8 +157,10 @@ class AutoPatchTransform extends Transform {
             patchesControlClass.writeFile(patchGenerateDirPath)
         }
 
-        //
-        
+        // 生成[patch类信息]提供者类
+        def patchClassInfoProviderClass =
+            PatchedClassInfoFactory.createPatchedClassInfoProviderClass(classPool, mAutoPatchConfig)
+        patchClassInfoProviderClass.writeFile(patchGenerateDirPath)
 
         mLogger.quiet(TAG + "generatePatch end.")
     }
