@@ -12,7 +12,7 @@
     <name>com.beggar.lhotfix.demo1</name>
   </exceptPackage>
 
-  <!--  补丁的包名  -->
+  <!--  补丁类的包名  -->
   <patchPackName name = "patchPackName">
     <name>com.beggar.hotfix.patch</name>
   </patchPackName>

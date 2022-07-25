@@ -17,6 +17,9 @@ import javassist.CtMethod;
  */
 public class AutoPatchConfig {
 
+  // 补丁类的包名
+  public String mPatchPackName;
+
   // TODO: 2022/6/27 新增clss还未处理
   // ADD注解的新增class
   @NonNull

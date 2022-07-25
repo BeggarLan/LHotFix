@@ -5,6 +5,7 @@ import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.beggar.hotfix.autopatch.*
 import com.beggar.hotfix.autopatch.patchinfo.PatchedClassInfoFactory
+import com.beggar.hotfix.autopatch.util.FileUtil
 import javassist.CannotCompileException
 import javassist.ClassPool
 import javassist.CtClass
@@ -13,6 +14,8 @@ import javassist.expr.MethodCall
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
+
+import java.util.zip.ZipOutputStream
 
 /**
  * author: BeggarLan
@@ -129,6 +132,8 @@ class AutoPatchTransform extends Transform {
         // 生成patch类
         generatePatch(classPool, patchGenerateDirPath)
 
+        // 把所有的patch类打进jar包
+        zipPatchFile(patchGenerateDirPath)
 
 
         def costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
@@ -206,5 +211,37 @@ class AutoPatchTransform extends Transform {
         }
     }
 
+    // 把patch类打进jar包
+    private void zipPatchFile(@NonNull String patchGenerateDirPath) {
+        String jarFilePath = AutoPatchConstants.HOTFIX_JAR_FILE_PATH;
+        ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(jarFilePath))
+
+        // 补丁类包目录的第一个文件夹
+        String patchClassPackageFirstDirName = mAutoPatchConfig.mPatchPackName
+            .substring(0, mAutoPatchConfig.mPatchPackName.indexOf("."))
+        zipAllPatchClasses(patchGenerateDirPath, patchClassPackageFirstDirName, zipOutputStream)
+    }
+
+    // 把所有的patch类打进jar包
+    private void zipAllPatchClasses(
+        @NonNull String patchGenerateDirPath,
+        @NonNull String fullClassName,
+        @NonNull ZipOutputStream zipOutputStream) {
+        File file = new File(patchGenerateDirPath + fullClassName)
+        if (file.exists()) {
+            fullClassName = fullClassName + file.getName()
+            // 文件夹的话继续遍历
+            if (file.isDirectory()) {
+                def files = file.listFiles()
+                for (File childFile : files) {
+                    zipAllPatchClasses(file.getAbsolutePath(), fullClassName, zipOutputStream)
+                }
+            } else {
+                FileUtil.zipFile(file, fullClassName, zipOutputStream)
+            }
+        } else {
+            mLogger.error(TAG + "[zipAllPatchClasses][" + file.getAbsolutePath() + " 文件不存在]")
+        }
+    }
 
 }

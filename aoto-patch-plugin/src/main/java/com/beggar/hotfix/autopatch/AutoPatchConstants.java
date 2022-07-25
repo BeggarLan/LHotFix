@@ -9,6 +9,8 @@ public class AutoPatchConstants {
 
   // patch包生成文件夹
   public static final String PATCH_GENERATE_DIR = "output/hotfix";
+  // patch包打成的jar包路径
+  public static final String HOTFIX_JAR_FILE_PATH = PATCH_GENERATE_DIR + "/hotfix.jar";
 
   // 补丁类的构造器名
   public static final String PATCH_CLASS_CONSTRUCTOR_NAME = "Patch";
