@@ -110,12 +110,13 @@ class AutoPatchTransform extends Transform {
     }
 
     void autoPatch(@NonNull ClassPool classPool, @NonNull List<CtClass> ctClasses) {
-        mLogger.quiet("autoPatch start.")
+        mLogger.quiet(TAG + " autoPatch start.")
         long startTimeMs = System.currentTimeMillis()
 
         // patch包生成文件夹
         String patchGenerateDirPath =
-            mProject.buildDir.getAbsolutePath() + File.separator + AutoPatchConstants.PATCH_GENERATE_DIR + File.separator;
+            mProject.buildDir.getAbsolutePath() + File.separator + AutoPatchConstants.PATCH_GENERATE_DIR + File.separator
+        mLogger.quiet(TAG + " patchGenerateDirPath: `" + patchGenerateDirPath)
         // 先清理一下文件夹
         FileUtils.deleteDirectory(new File(patchGenerateDirPath))
 
@@ -130,7 +131,7 @@ class AutoPatchTransform extends Transform {
         }
 
         // 生成patch类
-        generatePatch(classPool, patchGenerateDirPath)
+        generatePatch(classPool, patchGenerateDirPath, mLogger)
 
         // 把所有的patch类打进jar包
         zipPatchFile(patchGenerateDirPath)
@@ -142,7 +143,8 @@ class AutoPatchTransform extends Transform {
     }
 
     // 生成patch
-    private void generatePatch(@NonNull ClassPool classPool, @NonNull String patchGenerateDirPath) {
+    private void generatePatch(
+        @NonNull ClassPool classPool, @NonNull String patchGenerateDirPath, @NonNull Logger logger) {
         mLogger.quiet(TAG + "generatePatch start.")
         long startTimeMs = System.currentTimeMillis()
 
