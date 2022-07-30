@@ -6,6 +6,7 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import com.beggar.hotfix.autopatch.*
 import com.beggar.hotfix.autopatch.patchinfo.PatchedClassInfoFactory
 import com.beggar.hotfix.autopatch.util.FileUtil
+import com.beggar.hotfix.base.Constants
 import javassist.CannotCompileException
 import javassist.ClassPool
 import javassist.CtClass
@@ -34,11 +35,21 @@ class AutoPatchTransform extends Transform {
     // 打包的配置
     @NonNull
     private AutoPatchConfig mAutoPatchConfig;
+    // jar命令处理
+    @NonNull
+    private JarCommandExecutor mJarCommandExecutor;
 
     AutoPatchTransform(@NonNull Project project, @NonNull AutoPatchConfig autoPatchConfig) {
         this.mProject = project
         mLogger = project.getLogger()
         mAutoPatchConfig = autoPatchConfig
+
+        String rootDirPath = "${project.projectDir}/"
+        mJarCommandExecutor = new JarCommandExecutor(
+            rootDirPath + Constants.HOTFIX_DIR,
+            rootDirPath + AutoPatchConstants.DX_TOOL_FILE_PATH,
+            rootDirPath + AutoPatchConstants.BAK_SMALI_TOOL_FILE_PATH,
+            rootDirPath + AutoPatchConstants.SMALI_TOOL_FILE_PATH)
     }
 
     // Transform对应的task的名称
@@ -135,6 +146,15 @@ class AutoPatchTransform extends Transform {
 
         // 把所有的patch类打进jar包
         zipPatchFile(patchGenerateDirPath)
+
+
+        // todo 这里路径应该是有问题的
+        jar2Dex()
+        dex2Smali()
+        smali2Dex()
+
+
+        // 把dex转为jar
 
 
         def costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
@@ -247,5 +267,34 @@ class AutoPatchTransform extends Transform {
             mLogger.error(TAG + "[zipAllPatchClasses][" + file.getAbsolutePath() + " 文件不存在]")
         }
     }
+
+    // ************************ jar包处理相关操作 ************************
+    private void jar2Dex() {
+        mLogger.quiet(TAG + "[jar2Dex]")
+        Process process = mJarCommandExecutor.jar2Dex(
+            AutoPatchConstants.HOTFIX_JAR_FILE_PATH, "jar2Dex.dex")
+        printProcessLog(process)
+    }
+
+    private void dex2Smali() {
+        mLogger.quiet(TAG + "[dex2Smali]")
+        Process process = mJarCommandExecutor.dex2Smali("jar2Dex.dex", "/")
+        printProcessLog(process)
+    }
+
+    private void smali2Dex() {
+        mLogger.quiet(TAG + "[smali2Dex]")
+        Process process = mJarCommandExecutor.smali2Dex("/", AutoPatchConstants.PATCH_DEX_NAME)
+        printProcessLog(process)
+    }
+
+    private void printProcessLog(@NonNull Process process) {
+        process.inputStream.eachLine { println commond + " inputStream output   " + it }
+        process.errorStream.eachLine {
+            println " errorStream output   " + it;
+            throw new RuntimeException("execute command " + commond + " error");
+        }
+    }
+    // ****************************************************************
 
 }

@@ -10,13 +10,16 @@ public class Constants {
   // 热修配置文件
   public static final String ROBUST_XML = "LHotfix.xml";
 
+  // 存放热修相关的文件夹
+  public static final String HOTFIX_DIR = "hotfix";
+  // 代码插入的方法汇总文件
+  // 放在项目的文件下下${mProject.projectDir.path}/
+  public static final String METHOD_MAP_OUT_PATH = HOTFIX_DIR + "/methodsMap.hotfix";
+
   // 两个注解的类
   public static final String ADD_CLASS_NAME = "com.beggar.hotfix.base.annotation.Add";
   public static final String MODIFY_CLASS_NAME = "com.beggar.hotfix.base.annotation.Modify";
 
-
-  // 代码插入的方法汇总文件
-  public static final String METHOD_MAP_OUT_PATH = "/outputs/hotfix/methodsMap.hotfix";
 
   // 插入的对象信息
   public static final String HOTFIX_INTERFACE_NAME = ChangeRedirect.sClassName;

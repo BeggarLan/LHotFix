@@ -18,12 +18,22 @@ public class JarCommandExecutor {
   // dx工具包, 此处用来把jar包转dex包
   private String mDxToolFailPath;
 
-  // 将dex文件转换成便于阅读的smali文件：java -jar baksmali.jar classes.dex -o outDir
-  // outDir是输出文件夹
+  // baksmali-2.1.3.jar，将dex文件转换成便于阅读的smali文件
   private String mBaksmaliToolFilePath;
 
-  // 将smali文件重新生成回dex文件：java -jar smali.jar outDir -o classes.dex
+  // smali-2.1.3.jar，将smali文件重新生成回dex文件
   private String mSmaliToolFilePath;
+
+  public JarCommandExecutor(
+      @NonNull String subProcessWorkingDirPath,
+      @NonNull String dxToolFailPath,
+      @NonNull String baksmaliToolFilePath,
+      @NonNull String smaliToolFilePath) {
+    mSubProcessWorkingDirPath = subProcessWorkingDirPath;
+    mDxToolFailPath = dxToolFailPath;
+    mBaksmaliToolFilePath = baksmaliToolFilePath;
+    mSmaliToolFilePath = smaliToolFilePath;
+  }
 
   /**
    * 把jar文件转为dex文件
@@ -44,6 +54,7 @@ public class JarCommandExecutor {
 
   /**
    * dex文件转smali文件
+   * java -jar baksmali-2.1.3.jar -o [输出文件夹] dex文件
    *
    * @param dexFileName      输入的dex文件
    * @param outputSubFileDir 输出文件所在当前目录的子文件夹
@@ -53,25 +64,25 @@ public class JarCommandExecutor {
     StringBuilder commandBuilder = new StringBuilder();
     commandBuilder
         .append("java -jar " + mBaksmaliToolFilePath)
-        .append(" " + dexFileName)
-        .append(" -o " + outputSubFileDir);
-
+        .append(" -o " + outputSubFileDir)
+        .append(" " + dexFileName);
     return executeCommand(commandBuilder.toString());
   }
 
   /**
    * smali文件转dex文件
+   * java -jar smali-2.1.3.jar -o 目标dex文件 [smali文件夹]
    *
    * @param smaliFileSubDirPath smali文件夹相对当前目录的文件夹路径
-   * @param outputDexFileName   输出的dex文件
+   * @param outputDexFileName   [工具包文件夹下]输出的dex文件
    */
   public Process smali2Dex(@NonNull String smaliFileSubDirPath, @NonNull String outputDexFileName)
       throws IOException {
     StringBuilder commandBuilder = new StringBuilder();
     commandBuilder
         .append("java -jar " + mSmaliToolFilePath)
-        .append(" " + smaliFileSubDirPath)
-        .append(" -o " + outputDexFileName);
+        .append(" -o " + outputDexFileName)
+        .append(" " + smaliFileSubDirPath);
     return executeCommand(commandBuilder.toString());
   }
 
