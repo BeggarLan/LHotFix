@@ -60,6 +60,22 @@ public class JarCommandExecutor {
   }
 
   /**
+   * smali文件转dex文件
+   *
+   * @param smaliFileSubDirPath smali文件夹相对当前目录的文件夹路径
+   * @param outputDexFileName   输出的dex文件
+   */
+  public Process smali2Dex(@NonNull String smaliFileSubDirPath, @NonNull String outputDexFileName)
+      throws IOException {
+    StringBuilder commandBuilder = new StringBuilder();
+    commandBuilder
+        .append("java -jar " + mSmaliToolFilePath)
+        .append(" " + smaliFileSubDirPath)
+        .append(" -o " + outputDexFileName);
+    return executeCommand(commandBuilder.toString());
+  }
+
+  /**
    * 执行命令
    */
   @NonNull
