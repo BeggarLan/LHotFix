@@ -150,8 +150,9 @@ class AutoPatchTransform extends Transform {
 
         // todo 这里路径应该是有问题的
         jar2Dex()
-        dex2Smali()
-        smali2Dex()
+        // todo 这里没处理一些case
+//        dex2Smali()
+//        smali2Dex()
 
 
         // 把dex转为jar
