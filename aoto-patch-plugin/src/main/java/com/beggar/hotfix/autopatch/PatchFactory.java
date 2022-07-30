@@ -396,8 +396,8 @@ public class PatchFactory {
    *
    * @return 增加的方法
    */
-  private List<CtMethod> createPublicMethodForPrivate(@NonNull Logger logger,
-      @NonNull CtClass ctClass)
+  private List<CtMethod> createPublicMethodForPrivate(
+      @NonNull Logger logger, @NonNull CtClass ctClass)
       throws CannotCompileException, NotFoundException {
     logger.quiet(TAG + "createPublicMethodForPrivate start.");
     List<CtMethod> addedPublicMethod = new ArrayList<>();

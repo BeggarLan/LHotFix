@@ -1,5 +1,7 @@
 package com.beggar.hotfix.autopatch;
 
+import org.gradle.api.logging.Logger;
+
 import com.android.annotations.NonNull;
 import com.android.dx.rop.code.AccessFlags;
 import com.beggar.hotfix.autopatch.util.JavassistUtil;
@@ -20,16 +22,20 @@ import javassist.NotFoundException;
  */
 public class PatchControlFactory {
 
+  private static final String TAG = "PatchControlFactory";
+
   /**
    * @param sourceClass 原类
    * @param patchClass  补丁类
    */
   public static CtClass createPatchControlClass(
+      @NonNull Logger logger,
       @NonNull AutoPatchConfig autoPatchConfig,
       @NonNull ClassPool classPool,
       @NonNull CtClass sourceClass,
       @NonNull CtClass patchClass)
       throws NotFoundException, CannotCompileException {
+    logger.quiet(TAG + "[createPatchControlClass] start.");
     // 控制类名字
     String patchControlClassName =
         NameManager.getInstance().getPatchControlClassName(sourceClass.getSimpleName());
@@ -63,6 +69,8 @@ public class PatchControlFactory {
         .getDeclaredMethod("accessDispatch")
         .insertBefore(getAccessDispatchMethodBody(sourceClass, patchClass, autoPatchConfig));
 
+    logger.quiet(TAG + "[createPatchControlClass] end. patchControlCtClass: " +
+        patchControlCtClass.getName());
     return patchControlCtClass;
   }
 

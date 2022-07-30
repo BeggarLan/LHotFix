@@ -5,6 +5,8 @@ import static com.beggar.hotfix.autopatch.AutoPatchConstants.PATCHED_CLASS_INFO_
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gradle.api.logging.Logger;
+
 import com.android.annotations.NonNull;
 import com.beggar.hotfix.autopatch.AutoPatchConfig;
 import com.beggar.hotfix.autopatch.AutoPatchConstants;
@@ -28,8 +30,10 @@ public class PatchedClassInfoFactory {
 
   @NonNull
   public static CtClass createPatchedClassInfoProviderClass(
+      @NonNull Logger logger,
       @NonNull ClassPool classPool,
       @NonNull AutoPatchConfig autoPatchConfig) {
+    logger.quiet(TAG + "[createPatchedClassInfoProviderClass] start.");
     try {
       // com.beggar.hotfix.patch.PatchedClassInfoProviderImpl
       CtClass patchedClassInfoProviderImplClass =
@@ -83,6 +87,8 @@ public class PatchedClassInfoFactory {
           .make(getPatchClassInfoListMethodBuilder.toString(), patchedClassInfoProviderImplClass);
       patchedClassInfoProviderImplClass.addMethod(getPatchClassInfoListMethod);
 
+      logger.quiet(TAG + "[createPatchedClassInfoProviderClass] start." +
+          " patchedClassInfoProviderImplClass: " + patchedClassInfoProviderImplClass.getName());
       return patchedClassInfoProviderImplClass;
     } catch (Throwable e) {
       e.printStackTrace();

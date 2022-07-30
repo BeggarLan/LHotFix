@@ -171,13 +171,14 @@ class AutoPatchTransform extends Transform {
             patchClass.writeFile(patchGenerateDirPath)
 
             // 生成补丁控制类
-            def patchesControlClass = PatchControlFactory.createPatchControlClass(sourceCtClass)
+            def patchesControlClass = PatchControlFactory.createPatchControlClass(
+                mLogger, sourceCtClass)
             patchesControlClass.writeFile(patchGenerateDirPath)
         }
 
         // 生成[patch类信息]提供者类
         def patchClassInfoProviderClass =
-            PatchedClassInfoFactory.createPatchedClassInfoProviderClass(classPool, mAutoPatchConfig)
+            PatchedClassInfoFactory.createPatchedClassInfoProviderClass(mLogger, classPool, mAutoPatchConfig)
         patchClassInfoProviderClass.writeFile(patchGenerateDirPath)
 
         def costTimeSec = (System.currentTimeMillis() - startTimeMs) / 1000
@@ -215,6 +216,7 @@ class AutoPatchTransform extends Transform {
 
     // 把patch类打进jar包
     private void zipPatchFile(@NonNull String patchGenerateDirPath) {
+        mLogger.quiet(TAG + "[zipPatchFile] start. patchGenerateDirPath: " + patchGenerateDirPath)
         String jarFilePath = AutoPatchConstants.HOTFIX_JAR_FILE_PATH;
         ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(jarFilePath))
 
