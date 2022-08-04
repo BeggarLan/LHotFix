@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.5",
-      "buildId": "4wisxeconfdgpjtfuum5qpvml4"
+      "buildId": "aklts6dn7bguxbrbdsqzymlbcu"
     }
   },
   "variants": [
@@ -28,11 +28,11 @@
         {
           "name": "hotfix-base-1.0.0.jar",
           "url": "hotfix-base-1.0.0.jar",
-          "size": 3834,
-          "sha512": "2c17f04b190b95234980da061b1831458448cedf3824a1475855139cfe5b107dfa9706c6ab5fdcd10d827f07a64519e41c8f762ed3d9f8aa256674beffee61f2",
-          "sha256": "a3e4453dc7e5ee6b00521f62e6542295833aee357e9b9a71e5cb02c75cbe0815",
-          "sha1": "11443ca014f4c9a30fddc00d04487c03c00f82b7",
-          "md5": "6bd581860137ed4451d0e392444f064f"
+          "size": 3918,
+          "sha512": "14de33cc5f382dfcadd16811e543abf6a1e15b860804a875c801df36e65468079777caddca59f21f8fc194323a1781cbc0f4c22dbaa469e05ae87b31b2ae2a92",
+          "sha256": "015b9a02556bdcb456a7ea4c19a9e7d972d02212b7e3af1261718772e601d8d4",
+          "sha1": "3742285d96238bcc1a7ca4f3e6527e36b51cb9a8",
+          "md5": "6572b7f383b49db916e7cae834659fb4"
         }
       ]
     },
@@ -58,11 +58,11 @@
         {
           "name": "hotfix-base-1.0.0.jar",
           "url": "hotfix-base-1.0.0.jar",
-          "size": 3834,
-          "sha512": "2c17f04b190b95234980da061b1831458448cedf3824a1475855139cfe5b107dfa9706c6ab5fdcd10d827f07a64519e41c8f762ed3d9f8aa256674beffee61f2",
-          "sha256": "a3e4453dc7e5ee6b00521f62e6542295833aee357e9b9a71e5cb02c75cbe0815",
-          "sha1": "11443ca014f4c9a30fddc00d04487c03c00f82b7",
-          "md5": "6bd581860137ed4451d0e392444f064f"
+          "size": 3918,
+          "sha512": "14de33cc5f382dfcadd16811e543abf6a1e15b860804a875c801df36e65468079777caddca59f21f8fc194323a1781cbc0f4c22dbaa469e05ae87b31b2ae2a92",
+          "sha256": "015b9a02556bdcb456a7ea4c19a9e7d972d02212b7e3af1261718772e601d8d4",
+          "sha1": "3742285d96238bcc1a7ca4f3e6527e36b51cb9a8",
+          "md5": "6572b7f383b49db916e7cae834659fb4"
         }
       ]
     }

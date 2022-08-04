@@ -34,7 +34,7 @@ import javassist.bytecode.ClassFile;
  * author: BeggarLan
  * created on: 2022/6/27 11:16 下午
  * description: Javassist工具类
- * <a href="https://blog.csdn.net/sid1109217623/article/details/89851056"> 官方文档翻译 </>
+ * <a href="https://blog.csdn.net/sid1109217623/article/details/89851056"> 官方文档翻译 </a>
  */
 public class JavassistUtil {
 
