@@ -9,8 +9,8 @@ import org.gradle.api.logging.Logger;
 
 import com.android.annotations.NonNull;
 import com.beggar.hotfix.autopatch.AutoPatchConfig;
-import com.beggar.hotfix.autopatch.AutoPatchConstants;
 import com.beggar.hotfix.autopatch.NameManager;
+import com.beggar.hotfix.base.Constants;
 import com.beggar.hotfix.patch.PatchedClassInfo;
 import com.beggar.hotfix.patch.PatchedClassInfoProvider;
 
@@ -38,7 +38,7 @@ public class PatchedClassInfoFactory {
       // com.beggar.hotfix.patch.PatchedClassInfoProviderImpl
       CtClass patchedClassInfoProviderImplClass =
           classPool.makeClass(
-              AutoPatchConstants.PATCH_CLASS_PACKAGE_NAME + "." + PATCHED_CLASS_INFO_PROVIDER_IMPL);
+              Constants.PATCH_CLASS_PACKAGE_NAME + "." + Constants.PATCHED_CLASS_INFO_PROVIDER_IMPL_FULL_NAME);
       // 设置java版本
       patchedClassInfoProviderImplClass.getClassFile().setMajorVersion(ClassFile.JAVA_7);
       // 设置继承自{@link PatchedClassInfoProvider}

@@ -41,7 +41,6 @@ class HotFixPlugin implements Plugin<Project> {
                 mHotfixMethodList,
                 mExceptPackageList,
                 mExceptMethodList))
-            //
 //            project.afterEvaluate(new HotfixApkHashAction())
         } catch (Throwable e) {
             e.printStackTrace()

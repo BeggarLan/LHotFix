@@ -31,15 +31,11 @@ public class AutoPatchConstants {
   // Public后缀, 访问private方法的时候会生成一个public的方法去访问
   public static final String PUBLIC_SUFFIX = "HotfixPublic";
 
-  // patch类所在的package
-  public static final String PATCH_CLASS_PACKAGE_NAME = "com.beggar.hotfix.patch";
+
   // patch类名的后缀
   public static final String PATCH_CLASS_NAME_SUFFIX = "Patch";
   // patch控制类名的后缀
   public static final String PATCH_CONTROL_CLASS_NAME_SUFFIX = "PatchControl";
-
-  // PatchedClassInfoProvider的实现类
-  public static final String PATCHED_CLASS_INFO_PROVIDER_IMPL = "PatchedClassInfoProviderImpl";
 
   // 方法名
   public static final String GET_REAL_PARAMETER = "getRealParameter";

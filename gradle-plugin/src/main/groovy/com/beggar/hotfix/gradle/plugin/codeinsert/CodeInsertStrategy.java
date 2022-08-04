@@ -82,7 +82,9 @@ public abstract class CodeInsertStrategy {
    * @param classBytes 文件内容
    * @param entryName  zip名
    */
-  protected void zipFile(@NonNull byte[] classBytes, @NonNull ZipOutputStream zipOutputStream,
+  protected void zipFile(
+      @NonNull byte[] classBytes,
+      @NonNull ZipOutputStream zipOutputStream,
       @NonNull String entryName) {
     try {
       ZipEntry zipEntry = new ZipEntry(entryName);

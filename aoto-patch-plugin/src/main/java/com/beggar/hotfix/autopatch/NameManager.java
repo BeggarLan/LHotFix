@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
+import com.beggar.hotfix.base.Constants;
 
 /**
  * author: BeggarLan
@@ -36,7 +37,7 @@ public class NameManager {
   public String getPatchClassName(@NonNull String sourceCtClassName) {
     // package换了，类最后增加patch后缀
     String patchClassName =
-        AutoPatchConstants.PATCH_CLASS_PACKAGE_NAME + "." +
+        Constants.PATCH_CLASS_PACKAGE_NAME + "." +
             sourceCtClassName.substring(sourceCtClassName.lastIndexOf(".") + 1) +
             AutoPatchConstants.PATCH_CLASS_NAME_SUFFIX;
     mPatchClassNameMap.put(patchClassName, sourceCtClassName);
@@ -50,7 +51,7 @@ public class NameManager {
    * @return
    */
   public String getPatchControlClassName(@NonNull String sourceClassSimpleName) {
-    return AutoPatchConstants.PATCH_CLASS_PACKAGE_NAME + "." + sourceClassSimpleName +
+    return Constants.PATCH_CLASS_PACKAGE_NAME + "." + sourceClassSimpleName +
         AutoPatchConstants.PATCH_CONTROL_CLASS_NAME_SUFFIX;
   }
 

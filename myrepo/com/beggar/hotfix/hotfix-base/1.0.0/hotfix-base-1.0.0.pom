@@ -10,4 +10,12 @@
   <groupId>com.beggar.hotfix</groupId>
   <artifactId>hotfix-base</artifactId>
   <version>1.0.0</version>
+  <dependencies>
+    <dependency>
+      <groupId>androidx.annotation</groupId>
+      <artifactId>annotation</artifactId>
+      <version>1.3.0</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
 </project>
