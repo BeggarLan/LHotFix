@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
 //    打补丁包用的插件
 //    id 'com.beggar.hotfix.autopatch'
-    id 'com.beggar.hotfix'
+//    id 'com.beggar.hotfix'
 }
 
 android {

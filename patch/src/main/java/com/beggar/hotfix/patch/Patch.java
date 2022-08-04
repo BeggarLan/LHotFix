@@ -25,8 +25,9 @@ public class Patch {
   // 是否apply成功
   private boolean mIsApplySucceed;
 
-  // 用于获取原类和其对应的补丁类
-  private String mPatchClassInfoProviderClassFullName;
+  // 用于获取[原类]和[补丁]类信息
+  // PatchedClassInfoProvider的实现类全名
+  private String mPatchedClassInfoProviderClassFullName;
 
   public String getName() {
     return mName;
@@ -76,12 +77,12 @@ public class Patch {
     mIsApplySucceed = applySucceed;
   }
 
-  public String getPatchClassInfoProviderClassFullName() {
-    return mPatchClassInfoProviderClassFullName;
+  public String getPatchedClassInfoProviderClassFullName() {
+    return mPatchedClassInfoProviderClassFullName;
   }
 
-  public void setPatchClassInfoProviderClassFullName(String patchClassInfoProviderClassFullName) {
-    mPatchClassInfoProviderClassFullName = patchClassInfoProviderClassFullName;
+  public void setPatchedClassInfoProviderClassFullName(String patchedClassInfoProviderClassFullName) {
+    mPatchedClassInfoProviderClassFullName = patchedClassInfoProviderClassFullName;
   }
 
 }

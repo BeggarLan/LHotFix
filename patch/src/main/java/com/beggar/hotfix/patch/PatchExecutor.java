@@ -92,7 +92,7 @@ public class PatchExecutor extends Thread {
 
     // 获取原类和其对应的补丁类
     Log.i(TAG, "start load patchClassInfoProviderClass");
-    String patchClassInfoProviderClassFullName = patch.getPatchClassInfoProviderClassFullName();
+    String patchClassInfoProviderClassFullName = patch.getPatchedClassInfoProviderClassFullName();
     PatchedClassInfoProvider patchedClassInfoProvider = null;
     try {
       Class<?> patchClassInfoProviderClazz =

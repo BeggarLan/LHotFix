@@ -16,6 +16,13 @@ public class Constants {
   // 放在项目的文件下下${mProject.projectDir.path}/
   public static final String METHOD_MAP_OUT_PATH = HOTFIX_DIR + "/methodsMap.hotfix";
 
+  // patch类所在的package
+  public static final String PATCH_CLASS_PACKAGE_NAME = "com.beggar.hotfix.patch";
+
+  // PatchedClassInfoProvider的实现类全名
+  public static final String PATCHED_CLASS_INFO_PROVIDER_IMPL_FULL_NAME =
+      PATCH_CLASS_PACKAGE_NAME + "PatchedClassInfoProviderImpl";
+
   // 两个注解的类
   public static final String ADD_CLASS_NAME = "com.beggar.hotfix.base.annotation.Add";
   public static final String MODIFY_CLASS_NAME = "com.beggar.hotfix.base.annotation.Modify";
