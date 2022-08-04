@@ -1,0 +1,91 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.beggar.hotfix",
+    "module": "gradle-plugin",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.5",
+      "buildId": "aeo3wff4rbfqpjld5qm6zrjbda"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "gradle-plugin-1.0.0.jar",
+          "url": "gradle-plugin-1.0.0.jar",
+          "size": 24709,
+          "sha512": "c347e7cdbd707a8aa719ed1b06169ce8f4dbf3df9f1767eaaa6ad5e92cd8a414d0bacf2e3dc71af666bec56a5690169fdc62bb4db949f822d68ad94c67360ff6",
+          "sha256": "991abd889a5ceb5bbfab5066067db545f3a0b36c9198babf54c8761d9a66d998",
+          "sha1": "f44f86f52f1c7035d97174689e1e0f07d1d183d0",
+          "md5": "177cba8ece1ab1eb4ea88f4c45c7a9d9"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.android.tools.build",
+          "module": "transform-api",
+          "version": {
+            "requires": "1.5.0"
+          }
+        },
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "4.1.1"
+          }
+        },
+        {
+          "group": "org.javassist",
+          "module": "javassist",
+          "version": {
+            "requires": "3.20.0-GA"
+          }
+        },
+        {
+          "group": "com.beggar.hotfix",
+          "module": "hotfix-base",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "gradle-plugin-1.0.0.jar",
+          "url": "gradle-plugin-1.0.0.jar",
+          "size": 24709,
+          "sha512": "c347e7cdbd707a8aa719ed1b06169ce8f4dbf3df9f1767eaaa6ad5e92cd8a414d0bacf2e3dc71af666bec56a5690169fdc62bb4db949f822d68ad94c67360ff6",
+          "sha256": "991abd889a5ceb5bbfab5066067db545f3a0b36c9198babf54c8761d9a66d998",
+          "sha1": "f44f86f52f1c7035d97174689e1e0f07d1d183d0",
+          "md5": "177cba8ece1ab1eb4ea88f4c45c7a9d9"
+        }
+      ]
+    }
+  ]
+}
